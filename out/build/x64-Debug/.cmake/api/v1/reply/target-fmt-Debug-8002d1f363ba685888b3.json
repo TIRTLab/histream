@@ -1,0 +1,244 @@
+{
+	"archive" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "/machine:x64",
+				"role" : "flags"
+			}
+		]
+	},
+	"artifacts" : 
+	[
+		{
+			"path" : "nvpro_core/third_party/fmt.lib"
+		}
+	],
+	"backtrace" : 2,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"_add_library",
+			"add_library",
+			"add_definitions",
+			"include",
+			"_add_package_VulkanSDK",
+			"include_directories",
+			"target_include_directories"
+		],
+		"files" : 
+		[
+			"D:/code/vcpkg/scripts/buildsystems/vcpkg.cmake",
+			"D:/work/nvpro_core/third_party/CMakeLists.txt",
+			"D:/work/nvpro_core/cmake/setup.cmake",
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 63,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 639,
+				"parent" : 1
+			},
+			{
+				"file" : 3
+			},
+			{
+				"command" : 3,
+				"file" : 3,
+				"line" : 49,
+				"parent" : 3
+			},
+			{
+				"file" : 2,
+				"parent" : 4
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 170,
+				"parent" : 5
+			},
+			{
+				"command" : 4,
+				"file" : 3,
+				"line" : 57,
+				"parent" : 3
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 347,
+				"parent" : 7
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 72,
+				"parent" : 5
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 349,
+				"parent" : 7
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 351,
+				"parent" : 7
+			},
+			{
+				"command" : 5,
+				"file" : 3,
+				"line" : 45,
+				"parent" : 3
+			},
+			{
+				"command" : 5,
+				"file" : 2,
+				"line" : 74,
+				"parent" : 5
+			},
+			{
+				"command" : 5,
+				"file" : 2,
+				"line" : 75,
+				"parent" : 5
+			},
+			{
+				"command" : 5,
+				"file" : 2,
+				"line" : 366,
+				"parent" : 7
+			},
+			{
+				"command" : 6,
+				"file" : 1,
+				"line" : 64,
+				"parent" : 0
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "/DWIN32 /D_WINDOWS /W3 /GR /EHsc /MP /MDd /Zi /Ob0 /Od /RTC1 -std:c++17   /wd26812 /wd26451"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 6,
+					"define" : "NOMINMAX"
+				},
+				{
+					"backtrace" : 8,
+					"define" : "NVP_SUPPORTS_VULKANSDK"
+				},
+				{
+					"backtrace" : 9,
+					"define" : "RESOURCE_DIRECTORY=\"D:/work/nvpro_core/resources/\""
+				},
+				{
+					"backtrace" : 10,
+					"define" : "VK_ENABLE_BETA_EXTENSIONS"
+				},
+				{
+					"backtrace" : 11,
+					"define" : "VULKAN_HPP_DISPATCH_LOADER_DYNAMIC=1"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"path" : "D:/work/field/out/build/x64-Debug/nvpro_core/third_party"
+				},
+				{
+					"path" : "D:/work/nvpro_core/third_party"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "D:/work/field/src"
+				},
+				{
+					"backtrace" : 13,
+					"path" : "D:/work/nvpro_core"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "D:/work/nvpro_core/nvp"
+				},
+				{
+					"backtrace" : 15,
+					"path" : "C:/VulkanSDK/1.3.275.0/Include"
+				},
+				{
+					"backtrace" : 16,
+					"path" : "D:/work/nvpro_core/third_party/fmt/include"
+				}
+			],
+			"language" : "CXX",
+			"languageStandard" : 
+			{
+				"backtraces" : 
+				[
+					2
+				],
+				"standard" : "17"
+			},
+			"sourceIndexes" : 
+			[
+				0
+			]
+		}
+	],
+	"folder" : 
+	{
+		"name" : "ThirdParty"
+	},
+	"id" : "fmt::@5b01a53f2adf05ebbe89",
+	"name" : "fmt",
+	"nameOnDisk" : "fmt.lib",
+	"paths" : 
+	{
+		"build" : "nvpro_core/third_party",
+		"source" : "D:/work/nvpro_core/third_party"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "D:/work/nvpro_core/third_party/fmt/src/format.cc",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "STATIC_LIBRARY"
+}
