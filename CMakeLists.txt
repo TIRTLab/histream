@@ -15,7 +15,8 @@ message(STATUS "Processing Project ${PROJNAME}:")
 #--------------------------------------------------------------------------------------------------
 # C++ target and defines
 set(CMAKE_CXX_STANDARD 17)
-add_executable(${PROJNAME})
+add_executable(${PROJNAME}
+        src/voxellst/voxellst.cpp)
 
 
 if (MSVC)
@@ -93,13 +94,16 @@ file(GLOB SOURCE_FILES
         src/base/*.cpp
         src/thirdparty/*.cpp
         src/raytracing/*.cpp
+        src/voxellst/*.cpp
 )
 
 file(GLOB HEADER_FILES
         src/*.h
         src/base/*.h
         src/thirdparty/*.h
-        src/raytracing/*.h)
+        src/raytracing/*.h
+        src/voxellst/*.h
+)
 
 #--------------------------------------------------------------------------------------------------
 # GLSL to SPIR-V custom build

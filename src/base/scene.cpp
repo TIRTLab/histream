@@ -223,20 +223,21 @@ bool Scene::createPrimScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<Vox
     bgModelXYZ.meshId = n_modelmesh;
     PrimMesh bgModel = XYZ2XZY(bgModelXYZ);
     //voxellistio->m_meshio->objmeshes.emplace_back(bgModel);
+    meshio->primMeshes.emplace_back(bgModel);
 
     // background model link
-    VOXELLST::MeshLink bgMeshLink;
+    MeshLink bgMeshLink;
     std::string bgSpectralName = scenexml.background.spectralName;
     bgMeshLink.spectralId =  meshio->spectralNames.find(bgSpectralName)->second;
     //int bgSpectralId = m_pXmlInput->compo.spectralNames.find(bgSpectralName)->second;
    // int bgSpectralId = getSpectralID(bgSpectralName);
-    std::string bgThermalName;
-    int bgThermalIndex = 0;
-    if (fileio->m_pVoxelLstXml->sensorxml.isTemperature == true)
-    {
-        bgThermalName = scenexml.background.thermalName;
-        bgThermalIndex = meshio->thermalNames.find(bgThermalName)->second;
-    }
+//    std::string bgThermalName;
+//    int bgThermalIndex = 0;
+//    if (fileio->m_pVoxelLstXml->sensorxml.isTemperature == true)
+//    {
+//        bgThermalName = scenexml.background.thermalName;
+//        bgThermalIndex = meshio->thermalNames.find(bgThermalName)->second;
+//    }
 
     int bgCanopyindex = 0;
   //  std::string bgCanopyName = scenexml.background.canopyName;
@@ -244,8 +245,9 @@ bool Scene::createPrimScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<Vox
     int bgPropIndex = 0;
     std::string bgPropName = scenexml.background.bgPropName;
     bgPropIndex = meshio->soilsetNames.find(bgPropName)->second;
-    bgMeshLink.propId = bgPropIndex;
+    bgMeshLink.soilsetId = bgPropIndex;
     bgMeshLink.type = (int)Type::SOIL;
+    meshio->meshLinks.emplace_back(bgMeshLink);
 
     /// ------------------------------------
     /// BACKGROUND instance
@@ -308,12 +310,14 @@ bool Scene::createPrimScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<Vox
         std::string meshName = voxelEntity.meshNames[0];
         std::string spectralName = voxelEntity.spectralNames[0];
         std::string thermalName;
-        if (voxellstxml->sensorxml.isTemperature == true)
-        {
-            thermalName = voxelEntity.thermalNames[0];
-        }
+//        if (voxellstxml->sensorxml.isTemperature == true)
+//        {
+//            thermalName = voxelEntity.thermalNames[0];
+//        }
         std::string canopyName = voxelEntity.canopyNames[0];
         std::string propName = voxelEntity.propNames[0];
+        Type type = voxelEntity.types[0];
+        //meshio->types[0] = voxelEntity.types[0];
        // std::string aeroName = voxelEntity.aeroNames[0];
 
         PrimMesh currentVoxelModelXYZ;
@@ -338,18 +342,22 @@ bool Scene::createPrimScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<Vox
          }*/
         // voxel attribute
         //int spectralIndex = m_pXmlInput->compo.spectralNames.find(spectralName)->second;
-        VOXELLST::MeshLink meshlink;
+        MeshLink meshlink;
         meshlink.spectralId = meshio->spectralNames.find(spectralName)->second;
         int thermalIndex = 0;
-        if (voxellstxml->sensorxml.isTemperature == true)
-        {
-            meshlink.thermalId = meshio->thermalNames.find(thermalName)->second;
-        }
+//        if (voxellstxml->sensorxml.isTemperature == true)
+//        {
+//            meshlink.thermalId = meshio->thermalNames.find(thermalName)->second;
+//        }
         meshlink.canopyId = meshio->canopyNames.find(canopyName)->second;
-        meshlink.propId = meshio->soilsetNames.find(propName)->second;
+        if(type == Type::VEGETATION) {
+            meshlink.leafbioId = meshio->leafbioNames.find(propName)->second;
+        }else if(type ==Type::SOIL){
+            meshlink.soilsetId = meshio->soilsetNames.find(propName)->second;
+        }
       //  meshlink.aeroId = meshio->aeroNames.find(aeroName)->second;
-        meshlink.type = (int)meshio->types[0];
-
+        meshlink.type = (int)type;
+        meshio->meshLinks.emplace_back(meshlink);
 
 
         // instance
@@ -452,6 +460,8 @@ bool Scene::createPrimScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<Vox
             n_instance++;
         }
 
+
+        n_modelmesh++;
         std::string info = "voxel entity " + std::to_string(kVoxelModel) + " done.\n";
         //LOGI(info.c_str());
     }

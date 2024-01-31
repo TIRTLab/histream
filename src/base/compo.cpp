@@ -38,9 +38,6 @@ bool Compo::createCompOptical(std::shared_ptr<FileIO> &fileio, std::shared_ptr<R
 
 
 
-
-
-
 float Compo::calctav(float alfa,float nr)
 {
     float rd,pi,n2,np,nm,a,k,sa,b1,b2,b,a3,b3,tp1,tp2,tp3,tp4,ts,tp5,tp,tav;
@@ -90,7 +87,7 @@ void Compo::fluspect(FluspectCoeff fluspectCoeff,FluspectParam fluspectParam,std
             t12, r12, t21, r21, denom, Ra, r, D, rq, tq, a, b, bNm1, bN2_g, a2, Rsub, Tsub,
             s, j, talf, ralf, tt, Ta;
 
-
+    spectrals.clear();
     for(int i=0; i<N1; i++)
     {
         nr          = nr_[i];
@@ -249,10 +246,10 @@ void Compo::fluspect(FluspectCoeff fluspectCoeff,FluspectParam fluspectParam,std
 }
 
 
-bool Compo::createCompProperty(std::shared_ptr<FileIO> &fileio, std::shared_ptr<VoxellstIO> &voxellstio) {
+bool Compo::createCompProperty(std::shared_ptr<FileIO> &fileio, std::shared_ptr<VoxellstIO> &modelio) {
 
-    auto & meshio = voxellstio->m_meshio;
-    auto & definedio = voxellstio->m_defined;
+    auto & meshio = modelio->m_meshio;
+    auto & definedio = modelio->m_defined;
 
     definedio->definedDir = fileio->m_pVoxelLstXml->definedDir;
     std::string predifineDir = definedio->definedDir+"/defined/";
@@ -285,7 +282,7 @@ bool Compo::createCompProperty(std::shared_ptr<FileIO> &fileio, std::shared_ptr<
             std::vector<Spectral> spectral_;
             fluspect(definedio->m_fluspectCoeff,meshio->fp,spectral_);
             spectral_.push_back(Spectral{spectralxml.refl_tir,spectralxml.tau_tir});
-            meshio->fixedSpectrals.insert(meshio->spectrals.end(),spectral_.begin(),spectral_.end());
+            meshio->fixedSpectrals.insert(meshio->fixedSpectrals.end(),spectral_.begin(),spectral_.end());
 //            meshio->spectrals.push_back(Spectral{spectralxml.reflectances[i],spectralxml.transmittance[i]});
         }
 

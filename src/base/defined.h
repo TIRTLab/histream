@@ -36,6 +36,11 @@ public:
     std::shared_ptr<nvvk::Buffer> m_pAeroBuffer;    // Aero
     std::vector<AeroCoeff> aerocoeffs;
 
+    LeafBio leafbio;
+    SoilSet soilset;
+    Canopy canopy;
+    MeteoMeta meta;
+    Spectral spectral;
 
 };
 

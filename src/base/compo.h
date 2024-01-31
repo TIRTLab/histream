@@ -6,7 +6,7 @@
 #define FIELD_COMPO_H
 
 #include "src/raytracing/raytracingio.h"
-#include "src/voxelist/voxellstio.h"
+#include "src/voxellst/voxellstio.h"
 #include "fileio.h"
 #include "src/base/utils.h"
 

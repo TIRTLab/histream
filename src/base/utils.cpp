@@ -1,10 +1,69 @@
 #include "utils.h"
 
+
+
+float* Utils::readascfile(std::string infileName, int skip, int col, int &num)
+{
+    std::string line;
+    std::vector <std::string> fields;
+    std::string deli(" ");
+
+    std::ifstream infile(infileName.c_str());
+    if (infile.is_open())
+    {
+        num = 0;
+        if (skip != 0)
+        {
+            for (int i = 0; i < skip; i++) std::getline(infile, line);
+        }
+        while (std::getline(infile, line))
+        {
+            fields = Utils::splitt(line, deli);
+            if (int(fields.size()) >= 1)
+            {
+                num++;
+            }
+        }
+    }
+    else std::cout << "Unable to open the file: " << infileName << std::endl;
+    infile.close();
+
+    float* mydata = new float[num];
+    if (num >= 1)
+    {
+
+        int jj = 0;
+        std::ifstream infilee(infileName.c_str());
+        mydata = new float[num];
+        //getline(infilee,line);
+
+        if (skip != 0)
+        {
+            for (int i = 0; i < skip; i++) std::getline(infilee, line);
+        }
+        while (std::getline(infilee, line))
+        {
+            fields = Utils::splitt(line, deli);
+            if (int(fields.size()) > col)
+            {
+                mydata[jj] = atof(fields[col].c_str());
+                jj = jj + 1;
+            }
+        }
+        infilee.close();
+    }
+
+    return mydata;
+}
+
+
+
 int Utils::readascfileinout(std::string infileName, int skip, int col, std::vector<float> &data, int &num)
 {
     std::string line;
     std::vector <std::string> fields;
     std::string deli(" ");
+    data.clear();
 
     std::ifstream infile(infileName.c_str());
     if (infile.is_open())

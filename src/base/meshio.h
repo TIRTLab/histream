@@ -22,7 +22,7 @@ public:
     std::shared_ptr<nvvk::Buffer>  m_pBufferThermal;
     std::vector<MeshBuffer>        m_bufferMeshes;
     std::shared_ptr<nvvk::Buffer>  m_pBufferMeshLink;
-    std::shared_ptr<nvvk::Buffer> m_pCanopyBuffer;
+//    std::shared_ptr<nvvk::Buffer> m_pCanopyBuffer;
     std::shared_ptr<nvvk::Buffer> m_pLeafBioBuffer; // Bio
     std::shared_ptr<nvvk::Buffer> m_pSoilSetBuffer;
 
@@ -41,7 +41,7 @@ public:
     std::vector<PrimMesh>     primMeshes;
     //std::vector<MeshBuffer>   meshBuffers;
     std::vector<MeshLink>     meshLinks;
-    std::vector<Type>  types;
+  //  std::vector<Type>  types;  type for each meshes;
 
 
     std::map<std::string,int>  spectralNames;

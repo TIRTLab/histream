@@ -40,14 +40,23 @@ typedef nvvk::ResourceAllocatorDedicated Allocator;
 
 
 
+
 class VoxellstIO {
 public:
-VoxellstIO(){};
+VoxellstIO(){
+    m_meshio = std::make_shared<MeshIO>();
+    m_instanceio = std::make_shared<InstanceIO>();
+    m_virtualio = std::make_shared<VirtualIO>();
+    m_pAccelStruct = std::make_shared<AccelStruct>();  // method and resource, have to make
+    m_defined = std::make_shared<Defined>();
+    m_voxelio = std::make_shared<VoxelIO>();
+
+};
 
 
     // system info
     std::string projectDir;
-    std::string shaderDir;
+    std::string definedDir;
 
     // Scene infor
     glm::vec3 sceneSize;  // (5,5,0) with height = 0
@@ -64,7 +73,7 @@ VoxellstIO(){};
     //Meteo Info
 
     std::vector<Meteo> meteos;
-
+    MeteoMeta meta;
 
     //Geometry info
     SensorMatrix sensor;   // original sensor become the angular sensor and spectral wavesets
@@ -72,6 +81,7 @@ VoxellstIO(){};
     std::vector<glm::vec4> angles;
     std::vector<float> waves;
     std::vector<WaveSet> wavesets;
+    std::vector<AeroCond>  aeroconds;
 
 
     // setting infor
@@ -100,6 +110,7 @@ VoxellstIO(){};
     std::shared_ptr<nvvk::Buffer> m_pBufferLight;
     std::shared_ptr<nvvk::Buffer> m_pMeteoBuffer;   // Meteo
     std::shared_ptr<AccelStruct>  m_pAccelStruct;
+    std::shared_ptr<nvvk::Buffer> m_pBufferAero;
 
     //std::shared_ptr<
 

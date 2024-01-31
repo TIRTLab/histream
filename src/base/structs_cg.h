@@ -18,8 +18,6 @@
 
 
 
-
-
 struct alignas(16) SensorMatrix
 {
     glm::mat4 viewInverse;
@@ -72,6 +70,27 @@ struct alignas(16) RayRTSetting
     int debugging_mode{ 0 };
 };
 
+
+struct alignas(16)  VoxelLstSetting
+{
+
+    int frame{0};
+    int maxIteration{3};
+    int maxDepth{16};
+    int n_sample{16};
+    int n_wave{5};
+    int n_jump{10};
+    float scale{1};
+    glm::vec2 resolution{100, 100};
+    glm::vec3 voxelSize{100, 10, 100};
+    int isDisplay{0};
+    int empty{5};
+    int empty_{80};
+    int dumpy;
+    int dumpyy;
+};
+
+
 // whole
 struct WaveSet
 {
@@ -87,13 +106,15 @@ struct Wave
 
 struct Canopy
 {
+    float lai;
     float density;
-    float hc;
+    float height;
+    float width;
     float G;
     float LIDFa;
     float LIDFb;
-    float hspot;
-    float leafwidth;
+    float hspot; // for the hotspot
+    float leafwidth; // for the aerodynamic boundary
 };
 
 
@@ -122,6 +143,9 @@ struct MeshLink
     int type;
     int spectralId;
     int thermalId;
+    int canopyId;
+    int leafbioId;
+    int soilsetId;
     uint64_t vertexAddress;
     uint64_t indexAddress;
 };
@@ -142,8 +166,8 @@ namespace VOXELLST {
         int spectralId;
         int thermalId;
         int canopyId;
-        int propId;
-        int aeroId;
+        int leafbioId;
+        int soilsetId;
         uint64_t vertexAddress;
         uint64_t indexAddress;
     };
@@ -249,22 +273,6 @@ struct VoxelHeatflux
     float Gshaded;  // change in heat storage of shaded component
 };
 
-struct VoxelLstSetting
-{
-    glm::vec2 size{100, 100};
-    int frame{0};
-    int maxIteration{3};
-    int maxSample{1};
-    int maxBand{5};
-    int maxStep{10};
-    float scale{1};
-    glm::vec3 voxelSize{100, 10, 100};
-    int isDisplay{0};
-    int bandVstep{5};
-    int bandTstep{80};
-    int dumpy;
-    int dumpyy;
-};
 
 struct LeafBio
 {
@@ -367,13 +375,14 @@ struct AeroCoeff
     float zo;
     float d;
     float Cd;		// drag coefficient for the vegetation
-    float rb;		//
+    float rbc;		//
     float CR;		// drag coefficient for a isolated tree
     float CD1;		// fitting parameter
     float Psicor;	// roughness layer correction
     float CSSOIL;	// drag coefficient for soil
     float rbs;		// for boundary soil resistance
     float rwc;		// for Aerodynamic resistance Within Canopy
+   // float rbc;
 };
 
 #endif //FIELD_STRUCTS_CG_H

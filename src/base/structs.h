@@ -275,7 +275,7 @@ struct Background
 {
     std::string spectralName;
     std::string thermalName;
-    std::string AeroCond;
+    //std::string AeroCond;
     //spectralType bgSpectralType;
     std::string bgPropName;
   //  std::string bgAeroName;
@@ -391,6 +391,28 @@ struct PrimMesh
     glm::vec3 meshcenter;
 };
 
+struct MeteoMeta
+{
+    float t;
+    float Oa;
+    float Ca;
+    float ea;
+    float dTime;
+    float z;
+    float RIn;
+    float Rli;
+    float Tsold;
+    float SatWater;
+    float sm;
+    float u;
+    float p;
+    int startYear;
+    int endYear;
+    int startDoy;
+    int endDoy;
+
+};
+
 struct RaytracingXml
 {
     std::string projectDir;
@@ -421,6 +443,23 @@ struct PropertyXml{
 };
 
 
+struct MeteoXml
+{
+//    float z;
+//    float Tsold;
+//    float satWater;
+//    float dTime;
+//    float Lat;
+//    float Lon;
+    std::string meteofile;
+    std::string rinfile;
+    std::string rlifile;
+    AeroCond aerocond;
+    MeteoMeta meta;
+    //std::vector<Meteo> meteos;
+
+};
+
 struct  VoxelLstXml
 {
     // main IO part
@@ -443,11 +482,15 @@ struct  VoxelLstXml
     std::vector<ThermalXml> thermalxmls;
     std::vector<PropertyXml> propxmls;
     std::vector<CanopyXml> canopyxmls;
-    std::vector<AeroCondXml> aerocondxmls;
+    //std::vector<AeroCondXml> aerocondxmls;
 
-    std::string meteopath;
-    std::string skypath;
-    std::string sunpath;
+//    std::string meteopath;
+//    MeteoMeta  meta;
+//    std::string skypath;
+//    std::string sunpath;
+
+    MeteoXml meteoxml;
+    AeroCondXml aerocondxml;
 
     // std::vector<LeafBioXml> leafbioxmls;
     // std::vector<SoilSetXml> soilsetxmls;
@@ -473,17 +516,7 @@ struct Meteo
     float dTime;
 };
 
-struct MeteoXml
-{
-    float z;
-    float Tsold;
-    float satWater;
-    float dTime;
-    float Lat;
-    float Lon;
-    std::string fileName;
-    std::vector<Meteo> meteos;
-};
+
 
 struct Aabb
 {

@@ -41,7 +41,6 @@ public:
     SettingXml readSetting(TiXmlNode *node, Mode mode=Mode::eRaytracing);
     SceneXml readScene(TiXmlNode *node, Mode mode=Mode::eRaytracing);
 
-
     XmlExamples xmlexamples;
 
     Mode m_mode = Mode::eRaytracing;

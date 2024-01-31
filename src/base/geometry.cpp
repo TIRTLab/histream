@@ -5,9 +5,9 @@
 #include "geometry.h"
 
 
-bool Geometry::createGeometry(std::shared_ptr<FileIO> &fileio, std::shared_ptr<RaytracingIO> &raytracingio){
+bool Geometry::createGeometry(std::shared_ptr<FileIO> &fileio, std::shared_ptr<RaytracingIO> &modelio){
 
-//    auto & sceneio = raytracingio->m_sceneio;
+//    auto & sceneio = modelio->m_sceneio;
 
 
 
@@ -16,8 +16,8 @@ bool Geometry::createGeometry(std::shared_ptr<FileIO> &fileio, std::shared_ptr<R
     //--------------------------------------------------------
     //--- Resolution
     //-------------------------------------------------------
-    raytracingio->resolution = fileio->m_pRaytracingXml->sensorxml.resolution;
-    CameraManip.setWindowSize(raytracingio->resolution.x,raytracingio->resolution.y );
+    modelio->resolution = fileio->m_pRaytracingXml->sensorxml.resolution;
+    CameraManip.setWindowSize(modelio->resolution.x,modelio->resolution.y );
     //---------------------------------------------------------
     // Angles
     //---------------------------------------------------------
@@ -34,29 +34,83 @@ bool Geometry::createGeometry(std::shared_ptr<FileIO> &fileio, std::shared_ptr<R
     {
         vza = sensorxml.viewAngles[i][0];
         vaa = sensorxml.viewAngles[i][1];
-        raytracingio->angles.emplace_back(glm::vec4{vza, vaa, sza, saa});
+        modelio->angles.emplace_back(glm::vec4{vza, vaa, sza, saa});
     }
-    //raytracingio->n_angle = sensorxml.viewAngles.size();
+    //modelio->n_angle = sensorxml.viewAngles.size();
     //---------------------------------------------------------
     // Bands
     //---------------------------------------------------------
-    raytracingio->waves = fileio->m_pRaytracingXml->sensorxml.waves;
+    modelio->waves = fileio->m_pRaytracingXml->sensorxml.waves;
 
     //---------------------------------------------------------
     // LIGHT AND SENSOR INI with Angle 0 and Band 0
     //---------------------------------------------------------
-    vza = raytracingio->angles[0].x;
-    vaa = raytracingio->angles[0].y;
-    sza = raytracingio->angles[0].z;
-    saa = raytracingio->angles[0].w;
-    raytracingio->sensor = createSensor(raytracingio->sceneSize,raytracingio->sceneOrigin, vza, vaa, 1.0);
-    raytracingio->light = createLight(sza, saa, fileio->m_pRaytracingXml->lightxml.direct, fileio->m_pRaytracingXml->lightxml.diffuse,
+    vza = modelio->angles[0].x;
+    vaa = modelio->angles[0].y;
+    sza = modelio->angles[0].z;
+    saa = modelio->angles[0].w;
+    modelio->sensor = createSensor(modelio->sceneSize,modelio->sceneOrigin, vza, vaa, 1.0);
+    modelio->light = createLight(sza, saa, fileio->m_pRaytracingXml->lightxml.direct, fileio->m_pRaytracingXml->lightxml.diffuse,
                                       fileio->m_pRaytracingXml->lightxml.solarTemperature,
                                       fileio->m_pRaytracingXml->lightxml.skyTemperature);
 
     return true;
 
 }
+
+bool Geometry::createGeometry(std::shared_ptr<FileIO> &fileio, std::shared_ptr<VoxellstIO> &modelio){
+
+//    auto & sceneio = modelio->m_sceneio;
+
+
+
+
+
+    //--------------------------------------------------------
+    //--- Resolution
+    //-------------------------------------------------------
+    modelio->resolution = fileio->m_pVoxelLstXml->sensorxml.resolution;
+    CameraManip.setWindowSize(modelio->resolution.x,modelio->resolution.y );
+    //---------------------------------------------------------
+    // Angles
+    //---------------------------------------------------------
+    float vza, vaa, sza, saa;
+    LightXml lightxml = fileio->m_pVoxelLstXml->lightxml;
+    SensorXml sensorxml = fileio->m_pVoxelLstXml->sensorxml;
+
+
+
+
+    sza = lightxml.solarAngle[0];
+    saa = lightxml.solarAngle[1];
+    for (int i = 0; i < sensorxml.viewAngles.size(); i++)
+    {
+        vza = sensorxml.viewAngles[i][0];
+        vaa = sensorxml.viewAngles[i][1];
+        modelio->angles.emplace_back(glm::vec4{vza, vaa, sza, saa});
+    }
+    //modelio->n_angle = sensorxml.viewAngles.size();
+    //---------------------------------------------------------
+    // Bands
+    //---------------------------------------------------------
+    modelio->waves = fileio->m_pVoxelLstXml->sensorxml.waves;
+
+    //---------------------------------------------------------
+    // LIGHT AND SENSOR INI with Angle 0 and Band 0
+    //---------------------------------------------------------
+    vza = modelio->angles[0].x;
+    vaa = modelio->angles[0].y;
+    sza = modelio->angles[0].z;
+    saa = modelio->angles[0].w;
+    modelio->sensor = createSensor(modelio->sceneSize,modelio->sceneOrigin, vza, vaa, 1.0);
+    modelio->light = createLight(sza, saa, fileio->m_pVoxelLstXml->lightxml.direct, fileio->m_pVoxelLstXml->lightxml.diffuse,
+                                      fileio->m_pVoxelLstXml->lightxml.solarTemperature,
+                                      fileio->m_pVoxelLstXml->lightxml.skyTemperature);
+
+    return true;
+
+}
+
 
 LightSet Geometry::createLight(float sza, float saa, float direct, float diffuse,float solarT,float skyT)
 {
@@ -79,7 +133,7 @@ LightSet Geometry::createLight(float sza, float saa, float direct, float diffuse
 
 SensorMatrix Geometry::createSensor(glm::vec3 scenesize, glm::vec3 sceneorigen, float vza, float vaa, float ratio) {
 
-   // auto & sceneio = raytracingio->m_sceneio;
+   // auto & sceneio = modelio->m_sceneio;
 
     SensorMatrix sensor;
     if (vza == 0.0 || vza == 45.0) vza = vza + ANGLE_COR;
@@ -125,18 +179,18 @@ SensorMatrix Geometry::createSensor(glm::vec3 scenesize, glm::vec3 sceneorigen, 
     sensor.aperture = 0.0;
     sensor.direction = eye - center;
 
-  //  sensor.n_wave = raytracingio->waves.size();
+  //  sensor.n_wave = modelio->waves.size();
 
     return sensor;
 }
 
 
-void Geometry::updateSensor( std::shared_ptr<RaytracingIO> &raytracingio, SensorMatrix &sensor){
+void Geometry::updateSensor( std::shared_ptr<RaytracingIO> &modelio, SensorMatrix &sensor){
 
 
-    auto &m_pBufferSensor = raytracingio->m_pBufferSensor;
-    auto &m_device = raytracingio->m_device;
-    auto &m_queueIndex = raytracingio->m_queueIndex;
+    auto &m_pBufferSensor = modelio->m_pBufferSensor;
+    auto &m_device = modelio->m_device;
+    auto &m_queueIndex = modelio->m_queueIndex;
 
     nvvk::CommandPool cmdBufGet(m_device, m_queueIndex);
     vk::CommandBuffer cmdBuf = cmdBufGet.createCommandBuffer();
@@ -145,12 +199,12 @@ void Geometry::updateSensor( std::shared_ptr<RaytracingIO> &raytracingio, Sensor
 }
 
 
-void Geometry::updateLight(std::shared_ptr<RaytracingIO> &raytracingio, LightSet &light){
+void Geometry::updateLight(std::shared_ptr<RaytracingIO> &modelio, LightSet &light){
 
 
-    auto &m_pBufferLight = raytracingio->m_pBufferLight;
-    auto &m_device = raytracingio->m_device;
-    auto &m_queueIndex = raytracingio->m_queueIndex;
+    auto &m_pBufferLight = modelio->m_pBufferLight;
+    auto &m_device = modelio->m_device;
+    auto &m_queueIndex = modelio->m_queueIndex;
 
     nvvk::CommandPool cmdBufGet(m_device, m_queueIndex);
     vk::CommandBuffer cmdBuf = cmdBufGet.createCommandBuffer();

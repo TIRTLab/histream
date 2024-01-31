@@ -5,11 +5,6 @@
 #include "command.h"
 
 
-Command::Command()
-{
-
-}
-
 
 bool Command::create(std::shared_ptr<VoxellstIO> &modelio){
     // for the firest init

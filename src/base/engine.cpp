@@ -15,8 +15,8 @@ void Engine::init(Mode mode)
         m_pRaytracingio = std::make_shared<RaytracingIO>();
 
     }else if(mode == Mode::eVoxelLST) {
-        m_pVoxellist = std::make_shared<Voxellst>();
-        m_pVoxellistio = std::make_shared<VoxellstIO>();
+        m_pVoxellst = std::make_shared<Voxellst>();
+        m_pVoxellstio = std::make_shared<VoxellstIO>();
     }
 
 }
@@ -64,11 +64,11 @@ void Engine::input(std::string path){
         m_pRaytracingio->projectDir = m_pFileio->m_pRaytracingXml->projectDir;
     }else if(m_mode == Mode::eVoxelLST){
 
-        m_pRaytracing->setup(appSetting, m_pRaytracingio);
-        m_pRaytracing->upload(m_pFileio, m_pRaytracingio);
+        m_pVoxellst->setup(appSetting, m_pVoxellstio);
+        m_pVoxellst->upload(m_pFileio, m_pVoxellstio);
 
-        m_pRaytracingio->shaderDir = m_pFileio->m_pRaytracingXml->shaderDir;
-        m_pRaytracingio->projectDir = m_pFileio->m_pRaytracingXml->projectDir;
+        m_pVoxellstio->definedDir = m_pFileio->m_pVoxelLstXml->definedDir;
+        m_pVoxellstio->projectDir = m_pFileio->m_pVoxelLstXml->projectDir;
     }
 
   //  m_pRaytracing->upload(m_fileio, m_pRaytracingio);
@@ -77,7 +77,12 @@ void Engine::input(std::string path){
 
 void Engine::create() {
 
-    m_pRaytracing->create(m_pRaytracingio);
+    if(m_mode == Mode::eRaytracing) {
+        m_pRaytracing->create(m_pRaytracingio);
+    }else if(m_mode == Mode::eVoxelLST){
+        m_pVoxellst->create(m_pVoxellstio);
+    }
+
 
 //    n_work = m_pRaytracingio->n_angle;
 //    VkCommandBufferAllocateInfo allocateInfo{ VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO };
@@ -99,59 +104,20 @@ void Engine::create() {
 
 void Engine::run() {
 
-    m_pRaytracing->run(m_pRaytracingio,m_pFileio);
-//    for (int kangle = 0; kangle < n_work; kangle++)
-//    {
-//        VkResult result = vkWaitForFences(m_device, 1, &m_waitFences[kangle], VK_TRUE, 10000000000);
-//
-//        const VkCommandBuffer &cmdBuf = m_commandBuffers[kangle];
-//        VkCommandBufferBeginInfo beginInfo{VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO};
-//        beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-//        vkBeginCommandBuffer(cmdBuf, &beginInfo);
-//
-//        glm::vec4 angles = m_pRaytracingio->m_sceneio->angles[kangle];
-//        std::cout << "Angle Info:"
-//                  << "    vza_" << std::to_string(angles.x) << "    vaa_" << std::to_string(angles.y)
-//                  << "    sza_" << std::to_string(angles.z) << "    saa_" << std::to_string(angles.w) << std::endl;
-//
-//        float ratio = 1.0;
-//        //ratio = 0.707;
-//        SensorMatrix sensorMatrix =  m_pRaytracing->m_pGeometry->createSensor(m_pRaytracingio, angles.x, angles.y, ratio);
-//        m_pRaytracingio->updateSensor(sensorMatrix);
-//
-//        LightSet lightSet = m_pRaytracing->m_pGeometry->createLight(angles.z, angles.w,
-//                                                                  m_pRayTracerIO->m_pRtInput->waveSets[0].direct,
-//                                                                  m_pRayTracerIO->m_pRtInput->waveSets[0].diffuse);
-//        m_pRayTracerIO->updateLight(lightSet);
-//
-//        m_pRayTracerIO->updateSetting(m_pRayTracerIO->m_pSetting);
-//
-//        m_pRayTracer->run(cmdBuf, m_size);
-//        vkEndCommandBuffer(cmdBuf);
-//
-//        // pipeline stage at which the queue submission will wait
-//        vkResetFences(m_device, 1, &m_waitFences[kangle]);
-//        const VkPipelineStageFlags waitStageMask = VK_PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR;
-//        VkSubmitInfo submitInfo{VK_STRUCTURE_TYPE_SUBMIT_INFO};
-//        submitInfo.pWaitDstStageMask = &waitStageMask;
-//        submitInfo.pCommandBuffers = &m_commandBuffers[kangle];
-//        submitInfo.commandBufferCount = 1;
-//        vkQueueSubmit(m_queue, 1, &submitInfo, m_waitFences[kangle]);
-//
-//        // output
-//        output(angles);
-//
-//        std::cout << "Success: " << kangle << std::endl;
-//    }
-//
-//    m_pRaytracing->run()
+    if(m_mode == Mode::eRaytracing)
+        m_pRaytracing->run(m_pRaytracingio,m_pFileio);
+    else if(m_mode == Mode::eVoxelLST)
+        m_pVoxellst->run(m_pVoxellstio,m_pFileio);
 
 }
 
 
 void Engine::destroy() {
 
-    m_pRaytracing->destroy(m_pRaytracingio);
+    if(m_mode == Mode::eRaytracing)
+        m_pRaytracing->destroy(m_pRaytracingio);
+    else if(m_mode == Mode::eVoxelLST)
+        m_pVoxellst->destroy(m_pVoxellstio);
 //    m_pRaytracingio->destroy();
 
 //    for (uint32_t i = 0; i < n_work; i++)

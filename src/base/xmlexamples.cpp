@@ -36,7 +36,7 @@ void XmlExamples::createRaytracingxml(){
     m_pRaytracingXml->scenexml.sceneOrigin={0,0,0};
     m_pRaytracingXml->scenexml.sMin={0,0,0};
     m_pRaytracingXml->scenexml.sMax={50,50,10};
-    m_pRaytracingXml->scenexml.background = {"soil","K310","natural","soilset"};
+    m_pRaytracingXml->scenexml.background = {"soil","K310","soilset"};
     ObjEntity objEntity = ObjEntity{"objTree","D:\\work\\field_obj_project\\speed_tree.obj",
                            {"Leaf1","Trunk","Bough"},{"leaf","soil","leaf"},{"K300","K310","K300"},
                            false,{{10,10,0},{25,25,0},{40,40,0}},{1,1,1},{0,0,0}};
@@ -71,7 +71,7 @@ void XmlExamples::createVoxellstxml(){
     m_pVoxelLstXml=std::make_shared<VoxelLstXml>();
 
     m_pVoxelLstXml->projectDir = "D:\\work\\field_obj_project\\";
-    m_pVoxelLstXml->definedDir = "D:\\work\\field\\shader\\RayTracing\\";
+    m_pVoxelLstXml->definedDir = "D:\\work\\field\\";
 
     m_pVoxelLstXml->settingxml.n_sample=32;
     m_pVoxelLstXml->settingxml.maxDepth = 32;
@@ -102,7 +102,7 @@ void XmlExamples::createVoxellstxml(){
     m_pVoxelLstXml->scenexml.stepsize_atmosphere = 1000;
 
 
-    m_pVoxelLstXml->scenexml.background = {"soil","K310","natural","soilset"};
+    m_pVoxelLstXml->scenexml.background = {"soil","K310","soilset"};
     ObjEntity objEntity = ObjEntity{"objTree","D:\\work\\field_obj_project\\speed_tree.obj",
                                     {"Leaf1","Trunk","Bough"},{"leaf","soil","leaf"},{"K300","K310","K300"},
                                     false,{{10,10,0},{25,25,0},{40,40,0}},{1,1,1},{0,0,0}};
@@ -121,7 +121,7 @@ void XmlExamples::createVoxellstxml(){
     spectralXml1.type = spectralType::OTHER;
     spectralXml1.reflectances = {0.23,0.25,0.05};
     spectralXml1.transmittance ={0.23,0.25,0};
-    spectralXml1.path = "";
+    spectralXml1.path = "D:\\work\\field\\defined\\soilnew.txt";
     spectralXml1.tau_tir = 0;
     spectralXml1.refl_tir = 0.05;
 
@@ -140,20 +140,21 @@ void XmlExamples::createVoxellstxml(){
     m_pVoxelLstXml->thermalxmls = {{"K310",320,300},{"K300",305,295}};
 
 
-    PropertyXml propertyXml1 = {"soilset",Type::VEGETATION,
+    PropertyXml propertyXml1 = {"soilset",Type::SOIL,
                                 LeafBio{25,8,0.01,1,0.6396,0.025,{0.2,0.3,288,313,328},15,0.4,0,1,1,0},
                                 SoilSet{0,500,1180,1800,1.55,25,0.01,10,25}};
-    PropertyXml propertyXml2 = {"soilset",Type::SOIL,
+    PropertyXml propertyXml2 = {"leafbio",Type::VEGETATION,
                                 LeafBio{25,8,0.01,1,0.6396,0.025,{0.2,0.3,288,313,328},15,0.4,0,1,1,0},
                                 SoilSet{0,500,1180,1800,1.55,25,0.01,10,25}};
     m_pVoxelLstXml->propxmls ={propertyXml1,propertyXml2};
 
     m_pVoxelLstXml->canopyxmls ={{"crown",{1,10,0.5,-0.35,-0.15,0.2,0.2}}};
 
-    m_pVoxelLstXml->aerocondxmls ={{AeroType::defined,"natural",{10,10,3,0.36}}};
+    m_pVoxelLstXml->aerocondxml = {AeroType::defined,"natural",{10,10,3,0.36}};
 
-    m_pVoxelLstXml->meteopath ="";
-    m_pVoxelLstXml->skypath ="";
-    m_pVoxelLstXml->sunpath ="";
+    m_pVoxelLstXml->meteoxml.meteofile ="D:\\work\\field\\defined\\meteo.txt";
+    m_pVoxelLstXml->meteoxml.rlifile ="D:\\work\\field\\defined\\Esky_.dat";
+    m_pVoxelLstXml->meteoxml.rinfile ="D:\\work\\field\\defined\\Esun_.dat";
+ //   m_pVoxelLstXml->meteoxml.aerocond = {10,10,3,0.36};
 }
 

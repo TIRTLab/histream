@@ -12,11 +12,12 @@ public:
 
     enum VoxellstbindingInd
     {
-        spectral,
-        fixedSpectral,
-        thermal,
-        tempe,
+        spectral,  // for the specific band
+        fixedSpectral, // for the all band;
+        thermal,  // for the voxel with constant temperature;
+        tempe, // voxel temperatures
         canopy,
+        meshLink,
         instanceLink,
         voxelLink,
         nano,
@@ -30,9 +31,8 @@ public:
         netRad,
         pnet,
         storage,
-        aero,
         meteo,
-        surfL,
+        aerocond,
         raa,
         leafBio,
         soilSet,

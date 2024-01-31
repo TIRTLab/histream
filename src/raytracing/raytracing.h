@@ -49,6 +49,8 @@ public:
 
     bool uploadSetting(std::shared_ptr<FileIO> &fileio, std::shared_ptr<RaytracingIO> &raytracingio);
     bool updateSetting(std::shared_ptr<RaytracingIO> &raytracingio);
+
+
   //  bool defineOPO(std::shared_ptr<RaytracingIO> &raytracingio);
 
     std::shared_ptr<Geometry> m_pGeometry;

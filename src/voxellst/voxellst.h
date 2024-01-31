@@ -8,17 +8,17 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "src/voxelist/voxellstio.h"
+#include "src/voxellst/voxellstio.h"
 #include "src/base/structs.h"
 #include "src/base/geometry.h"
 #include "src/base/compo.h"
 #include "src/base/scene.h"
-#include "src/raytracing/pipeline.h"
+#include "src/voxellst/pipeline.h"
 #include "src/base/virtualscreen.h"
-#include "src/raytracing/buffer.h"
+#include "src/voxellst/buffer.h"
 #include "src/base/accelstruct.h"
-#include "src/raytracing/descriptor.h"
-#include "src/raytracing/command.h"
+#include "src/voxellst/descriptor.h"
+#include "src/voxellst/command.h"
 #include "src/base/utils.h"
 
 class Voxellst {
@@ -38,10 +38,17 @@ public:
 
     bool setup(AppSetting &appsetting, std::shared_ptr<VoxellstIO> &voxellstio);
     bool upload(std::shared_ptr<FileIO> &fileio, std::shared_ptr<VoxellstIO> &voxellstio);
+    bool create(std::shared_ptr<VoxellstIO> & modelio);
+    bool run(std::shared_ptr<VoxellstIO> &raytracingio, std::shared_ptr<FileIO> &fileio);
+    bool destroy( std::shared_ptr<VoxellstIO> &raytracingio);
+
 
 
     bool updateSetting(std::shared_ptr<VoxellstIO> &voxellstio);
     bool uploadSetting(std::shared_ptr<FileIO> &fileio, std::shared_ptr<VoxellstIO> &voxellstio);
+
+    bool uploadMeteo(std::shared_ptr<FileIO> &fileio, std::shared_ptr<VoxellstIO> &modelio);
+    bool updateMeteo(std::shared_ptr<VoxellstIO> &modelio);
 
 
     std::shared_ptr<Geometry> m_pGeometry;
@@ -53,6 +60,7 @@ public:
     std::shared_ptr<Descriptor> m_pDescriptor;
     std::shared_ptr<Command> m_pCommand;
 
+    bool uploadDefined(std::shared_ptr<FileIO> &fileio, std::shared_ptr<VoxellstIO> &modelio);
 };
 
 

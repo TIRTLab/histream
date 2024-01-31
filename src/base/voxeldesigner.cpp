@@ -112,6 +112,9 @@ std::vector<glm::ivec3> VoxelDesigner::createCube(float length, float width, flo
 PrimMesh VoxelDesigner::createTriCube(Shape shape, float stepSize)
 {
     PrimMesh voxelTriModel;
+    voxelTriModel.nVertices = 0;
+    voxelTriModel.nIndices = 0;
+    voxelTriModel.meshId = 0;
 
     // 绘制每一层x,y平面
     for (int k = 0; k < shape.height / stepSize; k++) //height,绘制每一层的面
@@ -361,6 +364,10 @@ PrimMesh VoxelDesigner::createTriCube(Shape shape, float stepSize)
 PrimMesh VoxelDesigner::createTriEllipsoid(Shape shape, float stepSize)
 {
     PrimMesh voxelTriModel;
+
+    voxelTriModel.nVertices = 0;
+    voxelTriModel.nIndices = 0;
+    voxelTriModel.meshId = 0;
 
     int widthSize = std::ceil(shape.width / stepSize);
     int heightSize = std::ceil(shape.height / stepSize);
@@ -781,7 +788,9 @@ std::vector<glm::ivec3> VoxelDesigner::createBackground(float sceneLength, float
 PrimMesh VoxelDesigner::createTriBackground(float sceneLength, float sceneWidth, float stepSize)
 {
     PrimMesh mesh;
-
+    mesh.meshId = 0;
+    mesh.nVertices = 0;
+    mesh.nIndices = 0;
     float bgZ = 0;
 
     for (int i = 0; i < sceneLength/stepSize; i++)

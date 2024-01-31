@@ -7,8 +7,8 @@
 
 #include "src/raytracing/raytracingio.h"
 #include "src/raytracing/raytracing.h"
-#include "src/voxelist/voxellst.h"
-#include "src/voxelist/voxellstio.h"
+#include "src/voxellst/voxellst.h"
+#include "src/voxellst/voxellstio.h"
 #include "src/base/appsetting.h"
 #include "src/base/fileio.h"
 
@@ -32,8 +32,8 @@ public:
     std::shared_ptr<FileIO>       m_pFileio;
     std::shared_ptr<Raytracing>   m_pRaytracing;
     std::shared_ptr<RaytracingIO> m_pRaytracingio;
-    std::shared_ptr<Voxellst>    m_pVoxellist;
-    std::shared_ptr<VoxellstIO>  m_pVoxellistio;
+    std::shared_ptr<Voxellst>    m_pVoxellst;
+    std::shared_ptr<VoxellstIO>  m_pVoxellstio;
 
 //    int n_work;
 //    VkInstance m_instance;

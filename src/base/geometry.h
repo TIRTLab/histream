@@ -6,7 +6,7 @@
 #define FIELD_GEOMETRY_H
 
 #include "src/raytracing/raytracingio.h"
-#include "src/voxelist/voxellstio.h"
+#include "src/voxellst/voxellstio.h"
 #include "nvh/cameramanipulator.hpp"
 #include "nvmath/nvmath.h"
 

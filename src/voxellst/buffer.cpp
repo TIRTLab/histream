@@ -40,25 +40,22 @@ bool Buffer::createBuffer(std::shared_ptr<VoxellstIO> &voxellstio){
         cmdGen.submitAndWait(cmdBufSpectral);
     }
 
-    if (voxellstio->waves.size() > 0)
+    if (meshio->thermals.size() > 0)
     {
-        VkCommandBuffer cmdBufWave = cmdGen.createCommandBuffer();
-        voxellstio->m_pBufferWave = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufWave, voxellstio->waves, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT));
-        cmdGen.submitAndWait(cmdBufWave);
+        VkCommandBuffer cmdBufSpectral = cmdGen.createCommandBuffer();
+        VkBufferUsageFlags usage_ = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
+        meshio->m_pBufferThermal = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufSpectral, meshio->thermals, usage_));
+        cmdGen.submitAndWait(cmdBufSpectral);
     }
 
-    if (voxellstio->wavesets.size() > 0)
-    {
-        VkCommandBuffer cmdBufWave = cmdGen.createCommandBuffer();
-        voxellstio->m_pBufferWaveset = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufWave, voxellstio->wavesets, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT));
-        cmdGen.submitAndWait(cmdBufWave);
-    }
+
+
 
     // canopy
     if (meshio->canopies.size() > 0)
     {
         VkCommandBuffer cmdBufCanopy = cmdGen.createCommandBuffer();
-        meshio->m_pCanopyBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufCanopy, meshio->canopies, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT));
+        meshio->m_pBufferCanopy = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufCanopy, meshio->canopies, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT));
         cmdGen.submitAndWait(cmdBufCanopy);
     }
 
@@ -69,8 +66,6 @@ bool Buffer::createBuffer(std::shared_ptr<VoxellstIO> &voxellstio){
                                                                            VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
                                                                            VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
     cmdGen.submitAndWait(cmdBufTempe);
-
-
 
 
     ///--------------------------------------------------------------------
@@ -159,6 +154,21 @@ bool Buffer::createBuffer(std::shared_ptr<VoxellstIO> &voxellstio){
                                                                                        VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT));
     cmdGen.submitAndWait(cmdBufLight);
 
+    // sensor wave
+    if (voxellstio->waves.size() > 0)
+    {
+        VkCommandBuffer cmdBufWave = cmdGen.createCommandBuffer();
+        voxellstio->m_pBufferWave = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufWave, voxellstio->waves, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT));
+        cmdGen.submitAndWait(cmdBufWave);
+    }
+
+    // meteo and aero
+    if (voxellstio->wavesets.size() > 0)
+    {
+        VkCommandBuffer cmdBufWave = cmdGen.createCommandBuffer();
+        voxellstio->m_pBufferWaveset = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufWave, voxellstio->wavesets, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT));
+        cmdGen.submitAndWait(cmdBufWave);
+    }
 
     // dir
     VkCommandBuffer cmdBufDir = cmdGen.createCommandBuffer();
@@ -197,7 +207,7 @@ bool Buffer::createBuffer(std::shared_ptr<VoxellstIO> &voxellstio){
     ///--------------------------------------------------------------------
     // aero
     auto cmdBufAero = cmdGen.createCommandBuffer();
-    defined->m_pAeroBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufAero, defined->aerocoeffs,
+    voxellstio->m_pBufferAero = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufAero, voxellstio->aeroconds,
                                                                           VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
                                                                           VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
     cmdGen.submitAndWait(cmdBufAero);
@@ -209,14 +219,14 @@ bool Buffer::createBuffer(std::shared_ptr<VoxellstIO> &voxellstio){
     auto cmdBufMeteo = cmdGen.createCommandBuffer();
     uint32_t size = sizeof(Meteo);
     voxellstio->m_pMeteoBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(size,
-                                                                           VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT));
+                                                                 VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT));
     cmdGen.submitAndWait(cmdBufMeteo);
 
     // surfL
-    VkCommandBuffer cmdBufSurfL = cmdGen.createCommandBuffer();
-    VkBufferUsageFlags usage_ = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
-    voxelio->m_pSurfLBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufSurfL, voxelio->surfLs, usage_));
-    cmdGen.submitAndWait(cmdBufSurfL);
+//    VkCommandBuffer cmdBufSurfL = cmdGen.createCommandBuffer();
+//    VkBufferUsageFlags usage_ = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
+//    voxelio->m_pSurfLBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufSurfL, voxelio->surfLs, usage_));
+//    cmdGen.submitAndWait(cmdBufSurfL);
 
     // raa
     VkCommandBuffer cmdBufRaa = cmdGen.createCommandBuffer();
@@ -283,9 +293,15 @@ bool Buffer::createBuffer(std::shared_ptr<VoxellstIO> &voxellstio){
                                                                              VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
     cmdGen.submitAndWait(cmdBufStorage);
 
+
     m_pAlloc->finalizeAndReleaseStaging();
 
+    return false;
+
 }
+
+
+
 void Buffer::destroy(std::shared_ptr<VoxellstIO> &voxellstio){
 
     VkDevice & m_device = voxellstio->m_device;
@@ -353,6 +369,7 @@ void Buffer::destroy(std::shared_ptr<VoxellstIO> &voxellstio){
     m_pAlloc->destroy(*(voxelio->m_pStateBuffer));
     m_pAlloc->destroy(*(meshio->m_pFixedSpectralBuffer));
     m_pAlloc->destroy(*(voxelio->m_pSurfLBuffer));
+
 
     //m_rtBuilder.destroy();
 }

@@ -43,20 +43,20 @@ bool Pipeline::createPipeline(std::shared_ptr<VoxellstIO> &modelio)
     vkCreatePipelineLayout(m_device, &pipelineLayoutCreateInfo, nullptr, &m_pipelineLayout);
 
 
-    std::string baseDirectory = modelio->shaderDir;
+    std::string baseDirectory = modelio->definedDir;
     std::map<VoxellstStage, std::string> VoxellstPaths{
-            {VoxellstStage::gap, baseDirectory + "/shader/Voxelrad/voxelrad_solar.comp.spv"},
-            {VoxellstStage::directVNIR, baseDirectory + "/shader/Voxelrad/voxelrad_direct_VNIR.comp.spv"},
-            {VoxellstStage::directTIR, baseDirectory + "/shader/Voxelrad/voxelrad_direct_TIR.comp.spv"},
-            {VoxellstStage::diffuseVNIR, baseDirectory + "/shader/Voxelrad/voxelrad_diffuse_VNIR_single.comp.spv"},
-            {VoxellstStage::diffuseTIR, baseDirectory + "/shader/Voxelrad/voxelrad_diffuse_TIR_single.comp.spv"},
-            {VoxellstStage::budget, baseDirectory + "/shader/EB/budget.comp.spv"},
-            {VoxellstStage::evapo, baseDirectory + "/shader/ET/evapo.comp.spv"},
-            {VoxellstStage::updateTp, baseDirectory + "/shader/ET/updateTp.comp.spv"},
-            {VoxellstStage::updateL, baseDirectory + "/shader/EB/updateL.comp.spv"},
-            {VoxellstStage::aero, baseDirectory + "/shader/aero/aeresist.comp.spv"},
-            {VoxellstStage::bio, baseDirectory + "/shader/bio/biochemical.comp.spv"},
-            {VoxellstStage::out, baseDirectory + "/shader/Voxelrad/voxelrad_image.comp.spv"}};
+            {VoxellstStage::gap, baseDirectory + "/shader/voxellst/voxelrad_solar.comp.spv"},
+            {VoxellstStage::directVNIR, baseDirectory + "/shader/voxellst/voxelrad_direct_VNIR.comp.spv"},
+            {VoxellstStage::directTIR, baseDirectory + "/shader/voxellst/voxelrad_direct_TIR.comp.spv"},
+            {VoxellstStage::diffuseVNIR, baseDirectory + "/shader/voxellst/voxelrad_diffuse_VNIR_single.comp.spv"},
+            {VoxellstStage::diffuseTIR, baseDirectory + "/shader/voxellst/voxelrad_diffuse_TIR_single.comp.spv"},
+            {VoxellstStage::budget, baseDirectory + "/shader/voxellst/budget.comp.spv"},
+            {VoxellstStage::evapo, baseDirectory + "/shader/voxellst/evapo.comp.spv"},
+            {VoxellstStage::updateTp, baseDirectory + "/shader/voxellst/updateTp.comp.spv"},
+            {VoxellstStage::updateL, baseDirectory + "/shader/voxellst/updateL.comp.spv"},
+            {VoxellstStage::aero, baseDirectory + "/shader/voxellst/aeresist.comp.spv"},
+            {VoxellstStage::bio, baseDirectory + "/shader/voxellst/biochemical.comp.spv"},
+            {VoxellstStage::out, baseDirectory + "/shader/voxellst/voxelrad_image.comp.spv"}};
 
 
     if (_access(VoxellstPaths[VoxellstStage::gap].c_str(), 0) == -1)
@@ -98,13 +98,13 @@ bool Pipeline::createRTPipeline(std::shared_ptr<VoxellstIO> &modelio)
     auto & m_rtSBTBuffer = modelio->m_rtSBTBuffer;
     auto & m_debug = modelio->m_debug;
 
-    std::string baseDirectory = modelio->shaderDir;
+    std::string baseDirectory = modelio->definedDir;
     std::map<VoxelRadStage, std::string> VoxeltracingPaths{
-            {VoxelRadStage::gap, baseDirectory + "/shader/Voxelrad/voxelrad_solar.comp.spv"},
-            {VoxelRadStage::directVNIR, baseDirectory + "/shader/Voxelrad/voxelrad_direct_VNIR.comp.spv"},
-            {VoxelRadStage::directTIR, baseDirectory + "/shader/Voxelrad/voxelrad_direct_TIR.comp.spv"},
-            {VoxelRadStage::diffuseVNIR, baseDirectory + "/shader/Voxelrad/voxelrad_diffuse_VNIR_single.comp.spv"},
-            {VoxelRadStage::diffuseTIR, baseDirectory + "/shader/Voxelrad/voxelrad_diffuse_TIR_single.comp.spv"},
+            {VoxelRadStage::gap, baseDirectory + "/shader/Voxellst/voxelrad_solar.comp.spv"},
+            {VoxelRadStage::directVNIR, baseDirectory + "/shader/Voxellst/voxelrad_direct_VNIR.comp.spv"},
+            {VoxelRadStage::directTIR, baseDirectory + "/shader/Voxellst/voxelrad_direct_TIR.comp.spv"},
+            {VoxelRadStage::diffuseVNIR, baseDirectory + "/shader/Voxellst/voxelrad_diffuse_VNIR_single.comp.spv"},
+            {VoxelRadStage::diffuseTIR, baseDirectory + "/shader/Voxellst/voxelrad_diffuse_TIR_single.comp.spv"},
             };
 
 
@@ -156,7 +156,7 @@ bool Pipeline::createETPipeline(std::shared_ptr<VoxellstIO> &modelio)
     pipelineLayoutCreateInfo.pSetLayouts = &m_descSetLayout;
     vkCreatePipelineLayout(m_device, &pipelineLayoutCreateInfo, nullptr, &m_pipelineLayout);
 
-    std::string baseDirectory = modelio->shaderDir;
+    std::string baseDirectory = modelio->definedDir;
     std::map<ETStage, std::string> ETShaderPaths{
             {ETStage::evapo, baseDirectory + "/shader/ET/evapo.comp.spv"},
             {ETStage::updateTp, baseDirectory + "/shader/ET/updateTp.comp.spv"}};
@@ -202,7 +202,7 @@ bool Pipeline::createEBPipeline(std::shared_ptr<VoxellstIO> &modelio)
     pipelineLayoutCreateInfo.pSetLayouts = &m_descSetLayout;
     vkCreatePipelineLayout(m_device, &pipelineLayoutCreateInfo, nullptr, &m_pipelineLayout);
 
-    std::string baseDirectory = modelio->shaderDir;
+    std::string baseDirectory = modelio->definedDir;
     std::map<EBStage, std::string> EBShaderPaths{
             {EBStage::budget, baseDirectory + "/shader/EB/budget.comp.spv"},
             {EBStage::updateL, baseDirectory + "/shader/EB/updateL.comp.spv"}};
@@ -247,7 +247,7 @@ bool Pipeline::createAeroPipeline(std::shared_ptr<VoxellstIO> &modelio)
     pipelineLayoutCreateInfo.pSetLayouts = &m_descSetLayout;
     vkCreatePipelineLayout(m_device, &pipelineLayoutCreateInfo, nullptr, &m_pipelineLayout);
 
-    std::string baseDirectory = modelio->shaderDir;
+    std::string baseDirectory = modelio->definedDir;
     const std::string aeroShader = baseDirectory + "/shader/aero/aeresist.comp.spv";
 
     VkComputePipelineCreateInfo computePipelineCreateInfo{VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO};
@@ -288,7 +288,7 @@ bool Pipeline::createBioPipeline(std::shared_ptr<VoxellstIO> &modelio)
     pipelineLayoutCreateInfo.pSetLayouts = &m_descSetLayout;
     vkCreatePipelineLayout(m_device, &pipelineLayoutCreateInfo, nullptr, &m_pipelineLayout);
 
-    std::string baseDirectory =  modelio->shaderDir;
+    std::string baseDirectory =  modelio->definedDir;
     const std::string bioShader = baseDirectory + "/shader/bio/biochemical.comp.spv";
 
     VkComputePipelineCreateInfo computePipelineCreateInfo{VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO};

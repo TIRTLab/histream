@@ -10,7 +10,7 @@
 #include "structs.h"
 #include "src/base/objloader.h"
 #include "src/raytracing/raytracingio.h"
-#include "src/voxelist/voxellstio.h"
+#include "src/voxellst/voxellstio.h"
 #include "src/thirdparty/NanoVDB.h"
 #include "src/thirdparty/nanoutil/GridBuilder.h"
 #include "src/thirdparty/nanoutil/Primitives.h"
