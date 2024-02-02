@@ -374,6 +374,9 @@ float atan2(float y,float x)
 //     return Gamma;
 // }
 
+float cross0(vec3 A, vec3 B){
+    return A.x*B.x+A.y*B.y+A.z*B.z;
+}
 
 vec2 scattering_phase_function_direct_XZY(vec3 directioni,vec3 directionj)
 {

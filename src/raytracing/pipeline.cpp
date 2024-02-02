@@ -253,7 +253,7 @@ bool Pipeline::createPipeline(std::shared_ptr<RaytracingIO> &raytracingio)
 void Pipeline::destroy(std::shared_ptr<RaytracingIO> &raytracingio) {
 
    // raytracingio->m_sbtWrapper.destroy();
-    raytracingio->m_pAlloc->destroy((raytracingio->m_rtSBTBuffer));
+  //  raytracingio->m_pAlloc->destroy((raytracingio->m_rtSBTBuffer));
 
 
     vkDestroyPipeline(raytracingio->m_device, raytracingio->m_pipeline, nullptr);

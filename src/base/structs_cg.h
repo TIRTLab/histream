@@ -71,23 +71,23 @@ struct alignas(16) RayRTSetting
 };
 
 
-struct alignas(16)  VoxelLstSetting
+struct alignas(32)  VoxelLstSetting
 {
 
     int frame{0};
     int maxIteration{3};
     int maxDepth{16};
+    int maxStep{5};
     int n_sample{16};
     int n_wave{5};
     int n_jump{10};
     float scale{1};
-    glm::vec2 resolution{100, 100};
-    glm::vec3 voxelSize{100, 10, 100};
+    glm::ivec2 resolution{100, 100};
     int isDisplay{0};
-    int empty{5};
-    int empty_{80};
-    int dumpy;
-    int dumpyy;
+    int semiRange{80};
+    glm::ivec3 voxelSize{50, 0, 50};
+    int dumpy{0};
+    int dumpyy{0};
 };
 
 
@@ -144,8 +144,9 @@ struct MeshLink
     int spectralId;
     int thermalId;
     int canopyId;
-    int leafbioId;
-    int soilsetId;
+    // int leafbioId;
+    // int soilsetId;
+    int bioId;
     uint64_t vertexAddress;
     uint64_t indexAddress;
 };
@@ -153,38 +154,41 @@ struct MeshLink
 // voxel link
 struct VoxelLink
 {
-    glm::ivec3 voxelId;
-    int instanceId;
-    int meshId;
+    glm::ivec3 voxelPos{0,0,0};
+    int instanceId{0};
+   // int meshId{0};
+    int aeroId{0};
+    int primId{0};
+    int empty{0};
+    int empty_{0};// which faces ? 0 center 1, up, 2 bottom, 3 left, 4 right, 5, forward, 6 backward
+    // now only 0 and 1 was used for the veg and soil, respectively;
 };
 
 
-namespace VOXELLST {
-// voxel model link
-    struct MeshLink {
-        int type;
-        int spectralId;
-        int thermalId;
-        int canopyId;
-        int leafbioId;
-        int soilsetId;
-        uint64_t vertexAddress;
-        uint64_t indexAddress;
-    };
+//namespace VOXELLST {
+//// voxel model link
+//    struct MeshLink {
+//        int type;
+//        int spectralId;
+//        int thermalId;
+//        int canopyId;
+//        int leafbioId;
+//        int soilsetId;
+//        uint64_t vertexAddress;
+//        uint64_t indexAddress;
+//    };
+//
+//    struct InstanceLink{
+//        int voxelIdOffset;
+//        int type;
+//        int spectralId;
+//        int thermalId;
+//        int canopyId;
+//        int bioId;
+//        int aeroId;
+//    };
+//}
 
-    struct InstanceLink{
-        int voxelIdOffset;
-
-        int type;
-        int spectralId;
-        int thermalId;
-        int canopyId;
-        int bioId;
-        int aeroId;
-
-
-    };
-}
 struct VertexAttribute
 {
     glm::vec3 pos;
@@ -233,6 +237,17 @@ struct VoxelRaa
     float raa;  // aerodynamic resistance
 };
 
+struct AeroCond
+{
+    float L;
+    float ustar;
+    float hc_veg;
+    float hc_build;
+    float lai;
+    float cover;
+};
+
+
 // surface resistance
 struct VoxelRss
 {
@@ -246,6 +261,17 @@ struct VoxelAir
     float cs;       // Carbon surface
     float ci;       // Carbon inside
     float es;       // Water Surface
+};
+
+// Rn - H - LE - G = 0
+struct VoxelHeatflux
+{
+    float Hsunlit;  // sensible heat flux of sunlit component
+    float Hshaded;  // sensible heat flux of shaded component
+    float LEsunlit; // latent heat flux of sunlit component
+    float LEshaded; // latent heat flux of shaded component
+    float Gsunlit;  // change in heat storage of sunlit component
+    float Gshaded;  // change in heat storage of shaded component
 };
 
 // temperature at LAST time nodes
@@ -262,16 +288,7 @@ struct EBState
 
 
 
-// Rn - H - LE - G = 0
-struct VoxelHeatflux
-{
-    float Hsunlit;  // sensible heat flux of sunlit component
-    float Hshaded;  // sensible heat flux of shaded component
-    float LEsunlit; // latent heat flux of sunlit component
-    float LEshaded; // latent heat flux of shaded component
-    float Gsunlit;  // change in heat storage of sunlit component
-    float Gshaded;  // change in heat storage of shaded component
-};
+
 
 
 struct LeafBio
@@ -300,89 +317,108 @@ struct SoilSet
     float cs;			// volumetric heat capacity of the soil
     float rhos;
     float lambdas;
-    float SMC;			// volumetric soil moisture content
-    float csSoil;
-    float rbs;
-    float Tsoil;
+    float SMC;			// volumetric soil moisture content 0.25
+//    float csSoil;
+  //  float rbs;      // boundary prop
+    float Tsoil;  // aeverage temperature 25
+    float SatWater;
 
     //BSMParam bsm;
 };
 
-struct alignas(16) VoxelRTSetting
+struct Meteo
 {
-    glm::vec2 size{100, 100};
-    int frame{0};
-    int maxIteration{1};
-    int maxSample{5};
-    int maxBand{5};
-    int maxStep{50};
-    float scale{1};
-    glm::vec3 voxelSize{100, 10, 100};
-    int band1{0};
-    int band2{0};
-    int band3{0};
-    int isDisplay{0};
-    int isTemperature{0};
+    float z;
+    float t;		// time node
+    float u;		// wind speed
+    float p;		// air pressure
+    float Rin;		// incoming shortwave radiation
+    float Rli;		// incoming longwave radiation
+    float Ta;		// air temperature
+    float sm;		// volumetric soil moisture content
+    float ea;		// atmospheric vapor pressure
+    float Ca;		// CO2 concentration in the air
+    float Oa;		// O2 concentration in the air
+   // float Tsold;	//
+   // float SatWater;
+    float dTime;
 };
 
+//struct alignas(16) VoxelRTSetting
+//{
+//    glm::vec2 size{100, 100};
+//    int frame{0};
+//    int maxIteration{1};
+//    int maxSample{5};
+//    int maxBand{5};
+//    int maxStep{50};
+//    float scale{1};
+//    glm::vec3 voxelSize{100, 10, 100};
+//    int band1{0};
+//    int band2{0};
+//    int band3{0};
+//    int isDisplay{0};
+//    int isTemperature{0};
+//};
 
-struct alignas(16) AeroSetting
-{
-    glm::vec2 size;
-    float scale;
-    float empty;
-    glm::vec3 voxelSize;
-};
 
-struct alignas(16) BioSetting
-{
-    glm::vec3 voxelSize;
-    float scale;
-};
-
-struct alignas(16) ETSetting
-{
-    glm::vec2 size;
-    float scale;
-    float empty;
-    glm::vec3 voxelSize;
-};
-
-struct alignas(16) EBSetting
-{
-    int maxIteration{50};
-    float minTempe{250};
-    float maxTempe{350};
-    float wc{0.2};
-    int theIteration{3};
-    float scale{1.0};
-    float empty;
-    float empty1;
-    glm::vec3 voxelSize{10, 10, 10};
-};
+//struct alignas(16) AeroSetting
+//{
+//    glm::vec2 size;
+//    float scale;
+//    float empty;
+//    glm::vec3 voxelSize;
+//};
+//
+//struct alignas(16) BioSetting
+//{
+//    glm::vec3 voxelSize;
+//    float scale;
+//};
+//
+//struct alignas(16) ETSetting
+//{
+//    glm::vec2 size;
+//    float scale;
+//    float empty;
+//    glm::vec3 voxelSize;
+//};
+//
+//struct alignas(16) EBSetting
+//{
+//    int maxIteration{50};
+//    float minTempe{250};
+//    float maxTempe{350};
+//    float wc{0.2};
+//    int theIteration{3};
+//    float scale{1.0};
+//    float empty;
+//    float empty1;
+//    glm::vec3 voxelSize{10, 10, 10};
+//};
 
 // surface L
-struct alignas(16) SurfL
-{
-    float L;
-    float ustar; //  wind speed  / friction velocity
-    float hvmax;
-    float laimax;
-};
+//struct alignas(16) SurfL
+//{
+//    float L;
+//    float ustar; //  wind speed  / friction velocity
+//    float hvmax;
+//    float laimax;
+//};
 
-struct AeroCoeff
-{
-    float zo;
-    float d;
-    float Cd;		// drag coefficient for the vegetation
-    float rbc;		//
-    float CR;		// drag coefficient for a isolated tree
-    float CD1;		// fitting parameter
-    float Psicor;	// roughness layer correction
-    float CSSOIL;	// drag coefficient for soil
-    float rbs;		// for boundary soil resistance
-    float rwc;		// for Aerodynamic resistance Within Canopy
-   // float rbc;
-};
+//struct AeroCoeff
+//{
+//    float zo;
+//    float d;
+//    float Cd;		// drag coefficient for the vegetation
+//    float rbc;		//
+//    float CR;		// drag coefficient for a isolated tree
+//    float CD1;		// fitting parameter
+//    float Psicor;	// roughness layer correction
+//    float CSSOIL;	// drag coefficient for soil
+//    float rbs;		// for boundary soil resistance
+//    float rwc;		// for Aerodynamic resistance Within Canopy
+//   // float rbc;
+//};
 
 #endif //FIELD_STRUCTS_CG_H

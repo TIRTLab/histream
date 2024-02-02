@@ -211,3 +211,81 @@ void Geometry::updateLight(std::shared_ptr<RaytracingIO> &modelio, LightSet &lig
     vkCmdUpdateBuffer(cmdBuf, (*m_pBufferLight).buffer, 0, sizeof(LightSet), &light);
     cmdBufGet.submitAndWait(cmdBuf);
 }
+
+void Geometry::updateSensor( std::shared_ptr<VoxellstIO> &modelio, SensorMatrix &sensor){
+
+
+    auto &m_pBufferSensor = modelio->m_pBufferSensor;
+    auto &m_device = modelio->m_device;
+    auto &m_queueIndex = modelio->m_queueIndex;
+
+    nvvk::CommandPool cmdBufGet(m_device, m_queueIndex);
+    vk::CommandBuffer cmdBuf = cmdBufGet.createCommandBuffer();
+    vkCmdUpdateBuffer(cmdBuf, (*m_pBufferSensor).buffer, 0, sizeof(SensorMatrix), &sensor);
+    cmdBufGet.submitAndWait(cmdBuf);
+}
+
+
+void Geometry::updateLight(std::shared_ptr<VoxellstIO> &modelio, LightSet &light){
+
+
+    auto &m_pBufferLight = modelio->m_pBufferLight;
+    auto &m_device = modelio->m_device;
+    auto &m_queueIndex = modelio->m_queueIndex;
+
+    nvvk::CommandPool cmdBufGet(m_device, m_queueIndex);
+    vk::CommandBuffer cmdBuf = cmdBufGet.createCommandBuffer();
+    vkCmdUpdateBuffer(cmdBuf, (*m_pBufferLight).buffer, 0, sizeof(LightSet), &light);
+    cmdBufGet.submitAndWait(cmdBuf);
+}
+
+
+void Geometry::updateAngle(std::shared_ptr<VoxellstIO> &modelio, int kangle){
+
+    glm::vec4 angles = modelio->angles[kangle];
+//    std::cout << "Angle Info:"
+//              << "    vza_" << std::to_string(angles.x) << "    vaa_" << std::to_string(angles.y)
+//              << "    sza_" << std::to_string(angles.z) << "    saa_" << std::to_string(angles.w) << std::endl;
+
+    float ratio = 1.0;
+    //ratio = 0.707;
+    SensorMatrix sensorMatrix = createSensor(modelio->sceneSize,modelio->sceneOrigin,
+                                                          angles.x, angles.y, ratio);
+    updateSensor(modelio, sensorMatrix);
+
+    LightSet lightSet = createLight(angles.z, angles.w,modelio->light.direct,
+                                                 modelio->light.diffuse,modelio->light.solarTemperature,
+                                                 modelio->light.skyTemperature);
+    updateLight(modelio,lightSet);
+
+}
+
+
+void Geometry::updateAngle(std::shared_ptr<RaytracingIO> &modelio, int kangle){
+
+    glm::vec4 angles = modelio->angles[kangle];
+//    std::cout << "Angle Info:"
+//              << "    vza_" << std::to_string(angles.x) << "    vaa_" << std::to_string(angles.y)
+//              << "    sza_" << std::to_string(angles.z) << "    saa_" << std::to_string(angles.w) << std::endl;
+
+    float ratio = 1.0;
+    //ratio = 0.707;
+    SensorMatrix sensorMatrix = createSensor(modelio->sceneSize,modelio->sceneOrigin,
+                                                          angles.x, angles.y, ratio);
+    updateSensor(modelio, sensorMatrix);
+
+    LightSet lightSet = createLight(angles.z, angles.w,modelio->light.direct,
+                                                 modelio->light.diffuse,modelio->light.solarTemperature,
+                                                 modelio->light.skyTemperature);
+    updateLight(modelio,lightSet);
+
+}
+
+
+
+
+
+
+
+
+

@@ -218,9 +218,11 @@ bool Buffer::createBuffer(std::shared_ptr<VoxellstIO> &voxellstio){
     // meteo
     auto cmdBufMeteo = cmdGen.createCommandBuffer();
     uint32_t size = sizeof(Meteo);
-    voxellstio->m_pMeteoBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(size,
+    voxellstio->m_pMeteoBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufMeteo,sizeof(Meteo), &voxellstio->meteos[voxellstio->k_node],
                                                                  VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT));
     cmdGen.submitAndWait(cmdBufMeteo);
+
+
 
     // surfL
 //    VkCommandBuffer cmdBufSurfL = cmdGen.createCommandBuffer();
@@ -322,19 +324,26 @@ void Buffer::destroy(std::shared_ptr<VoxellstIO> &voxellstio){
         m_pAlloc->destroy(*(meshio->m_pBufferSpectral));
     }
 
+    m_pAlloc->destroy(*(meshio->m_pFixedSpectralBuffer));
+//    m_pAlloc->destroy(*(voxelio->m_pSurfLBuffer));
+
+
     if (meshio->thermals.size() > 0) // no utilise the isTemperature
     {
         m_pAlloc->destroy(*(meshio->m_pBufferThermal));
     }
+    m_pAlloc->destroy(*(voxelio->m_pTempeBuffer));
 
     if (meshio->canopies.size() > 0)
     {
         m_pAlloc->destroy(*(meshio->m_pBufferCanopy));
     }
+    m_pAlloc->destroy(*(meshio->m_pBufferMeshLink));
 
     m_pAlloc->destroy(*(instanceio->m_pBufferInstanceLink));
     m_pAlloc->destroy(*(voxelio->m_pVoxelLinkBuffer));
     m_pAlloc->destroy(*(voxelio->m_pVoxelNanoBuffer));
+
     m_pAlloc->destroy(*(voxellstio->m_pBufferSensor));
     m_pAlloc->destroy(*(voxellstio->m_pBufferWave));
    // m_pAlloc->destroy(*(voxellstio->m_pBufferWaveset));
@@ -351,25 +360,25 @@ void Buffer::destroy(std::shared_ptr<VoxellstIO> &voxellstio){
         m_pAlloc->destroy(*(voxellstio->m_pBufferWaveset));
     }
 
-    m_pAlloc->destroy(*(virtualio->m_pBufferStorage));
     m_pAlloc->destroy(*(voxelio->m_pDirBuffer));
     m_pAlloc->destroy(*(voxelio->m_pRadsBuffer));
     m_pAlloc->destroy(*(voxelio->m_pNetRadBuffer));
     m_pAlloc->destroy(*(voxelio->m_pPnetBuffer));
-    m_pAlloc->destroy(*(voxelio->m_pTempeBuffer));
+    m_pAlloc->destroy(*(virtualio->m_pBufferStorage));
+
     m_pAlloc->destroy(*(voxellstio->m_pMeteoBuffer));
+    m_pAlloc->destroy(*(voxellstio->m_pBufferAero));
+
+    m_pAlloc->destroy(*(voxelio->m_pRaaBuffer));
     m_pAlloc->destroy(*(meshio->m_pLeafBioBuffer));
     m_pAlloc->destroy(*(meshio->m_pSoilSetBuffer));
+
     m_pAlloc->destroy(*(voxelio->m_pRssBuffer));
     m_pAlloc->destroy(*(voxelio->m_pAirBuffer));
-    m_pAlloc->destroy(*(defined->m_pAeroBuffer));
-    m_pAlloc->destroy(*(voxelio->m_pRaaBuffer));
+
     m_pAlloc->destroy(*(voxelio->m_pFluxBuffer));
     m_pAlloc->destroy(*(voxelio->m_pTLASTBuffer));
     m_pAlloc->destroy(*(voxelio->m_pStateBuffer));
-    m_pAlloc->destroy(*(meshio->m_pFixedSpectralBuffer));
-    m_pAlloc->destroy(*(voxelio->m_pSurfLBuffer));
-
 
     //m_rtBuilder.destroy();
 }

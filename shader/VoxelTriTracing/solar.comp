@@ -47,12 +47,12 @@ bool TraversalDirection(vec3 lightDirection)
     //------------------------------------------------------------
     // Initialization for the position and SSBO index
     //------------------------------------------------------------
-    // get bufferId, voxelId, instanceId and typeId
+    // get bufferId, voxelPos, instanceId and typeId
     uint bufferId0 = uint(gl_GlobalInvocationID.x);
-    ivec3 voxelId0 = voxelLinks[bufferId0].voxelId;
+    ivec3 voxelId0 = voxelLinks[bufferId0].voxelPos;
     // uint instanceId0 = voxelLinks[bufferId0].instanceId;
     // uint typeId0 = instanceLinks[instanceId0].type;
-    // Get nanoVDBLink: from voxelId to bufferId 
+    // Get nanoVDBLink: from voxelPos to bufferId
     NanoVDBLink nanoVDBLink = nanovdbInit();
 
     // get center position of a voxel
@@ -60,7 +60,7 @@ bool TraversalDirection(vec3 lightDirection)
     vec3 semiRange = settingxml.scale * settingxml.voxelSize/2.0;
     vec3 voxelPos0 = vec3(voxelId0.x + scale/2.0, voxelId0.y + scale/2.0, voxelId0.z + scale/2.0);
 
-    ivec3 voxelId;                      // current passed voxel
+    ivec3 voxelPos;                      // current passed voxel
     int bufferId;                       // passed voxel Id
     uint instanceId, canopyId, typeId;  //passed voxel Id through voxelLink and instanceLink.
     float alpha_toSolar = 1.0;
@@ -87,8 +87,8 @@ bool TraversalDirection(vec3 lightDirection)
 
         // get hit information, especially get ffnormal to avoid hit self.
         ShadeState sstate = GetShadeState(prd);
-        voxelId = getPassedVoxelId(sstate.position, scale, normalize(lightDirection));
-        bufferId = nanovdbGet(nanoVDBLink, voxelId);
+        voxelPos = getPassedVoxelId(sstate.position, scale, normalize(lightDirection));
+        bufferId = nanovdbGet(nanoVDBLink, voxelPos);
         
         // a valid voxel and get this voxel information.
         if(bufferId >= 0)
@@ -136,7 +136,7 @@ bool Voxel_raytracing_diffuse_single(vec3 voxelPos0, uint bufferId0, NanoVDBLink
     Ray ray;
     /// transmittance from voxel to solar; from voxel to current voxel; current voxel
     float alpha_toSolar, alpha_toVoxel, alpha_voxel;
-    ivec3 voxelId;                          // current passed voxel
+    ivec3 voxelPos;                          // current passed voxel
     int bufferId;                           // passed voxel Id
     float scale = settingxml.scale;
     uint instanceId, typeId;                // passed voxel Id through voxelLink and instanceLink.
@@ -218,8 +218,8 @@ bool Voxel_raytracing_diffuse_single(vec3 voxelPos0, uint bufferId0, NanoVDBLink
             ///////////////////////////////////////////////////
             /// get hit information.
             ShadeState sstate = GetShadeState(prd);
-            voxelId = getPassedVoxelId(sstate.position, scale, normalize(ray.direction));
-            bufferId = nanovdbGet(nanoVDBLink, voxelId);
+            voxelPos = getPassedVoxelId(sstate.position, scale, normalize(ray.direction));
+            bufferId = nanovdbGet(nanoVDBLink, voxelPos);
             // a valid voxel and get this voxel information.
             if(bufferId >= 0)
             {
@@ -374,10 +374,10 @@ void main()
     //------------------------------------------------------------
     // Initialization for the position and SSBO index
     //------------------------------------------------------------
-    // get bufferId, voxelId, instanceId and typeId
+    // get bufferId, voxelPos, instanceId and typeId
     uint bufferId0 = uint(gl_GlobalInvocationID.x);
-    ivec3 voxelId0 = voxelLinks[bufferId0].voxelId;
-    // Get nanoVDBLink: from voxelId to bufferId 
+    ivec3 voxelId0 = voxelLinks[bufferId0].voxelPos;
+    // Get nanoVDBLink: from voxelPos to bufferId
     NanoVDBLink nanoVDBLink = nanovdbInit();
 
     // get center position of a voxel

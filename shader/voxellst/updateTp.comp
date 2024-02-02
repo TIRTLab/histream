@@ -19,7 +19,7 @@
 #extension GL_EXT_shader_atomic_float: require 
 
 #define VOXEL_LST_BIND_ININDEX
-#define VOXELEVAPO
+#define VOXELLST
 
 #include "../bindinglayout.h"
 #include "../parameters.h"
@@ -35,7 +35,7 @@ void main()
     //------------------------------------------------------------
     // Initialization for the position and SSBO index
     //------------------------------------------------------------
-    // get bufferId, voxelId, instanceId and typeId
+    // get bufferId, voxelPos, instanceId and typeId
     uint bufferId = uint(gl_GlobalInvocationID.x);
     //voxelRes: voxel number in 3 dimentions
     ivec3 voxelRes = ivec3(setting.voxelSize);
@@ -44,10 +44,12 @@ void main()
     // various parameters index
     //-------------------------
     uint instanceId = voxelLinks[bufferId].instanceId;
-    VoxelInstanceLink instanceLink = instanceLinks[instanceId];
+    // VoxelInstanceLink instanceLink = instanceLinks[instanceId];
+    InstanceLink instanceLink = instanceLinks[instanceId];
+    MeshLink meshLink = meshLinks[instanceLink.meshId];
     uint spectralId,canopyId,bioId,typeId;
-    bioId = instanceLink.bioId;
-    typeId = instanceLink.type;
+    bioId = meshLink.bioId;
+    typeId = meshLink.type;
     float Ta = ubom.meteo.Ta;
 
 

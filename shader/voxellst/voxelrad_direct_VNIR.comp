@@ -48,15 +48,16 @@ void main()
     //------------------------------------------------------------
     // Initialization for the position and SSBO index
     //------------------------------------------------------------
-    // get bufferId, voxelId, instanceId and typeId
+    // get bufferId, voxelPos, instanceId and typeId
     uint bufferId0 = uint(gl_GlobalInvocationID.x);
-    ivec3 voxelId0 = voxelLinks[bufferId0].voxelId;
-    // Get nanoVDBLink: from voxelId to bufferId 
+    ivec3 voxelId0 = voxelLinks[bufferId0].voxelPos;
+    // Get nanoVDBLink: from voxelPos to bufferId
     NanoVDBLink nanoVDBLink = nanovdbInit();
     uint bufferId = nanovdbGet(nanoVDBLink, voxelId0);
     uint instanceId = voxelLinks[bufferId].instanceId;
-    uint typeId = instanceLinks[instanceId].type;
-    uint spectralId = instanceLinks[instanceId].spectralId;
+    uint meshId = instanceLinks[instanceId].meshId;
+    uint typeId = meshLinks[meshId].type;
+    uint spectralId = meshLinks[meshId].spectralId;
     uint spectralIdBase = spectralId * NUM_BAND;
 
     voxelNetRads[bufferId0].directVrad = 0.0;

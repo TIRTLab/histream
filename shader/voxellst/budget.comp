@@ -20,7 +20,7 @@
 
 
 #define VOXEL_LST_BIND_ININDEX
-#define VOXELBUDGET
+#define VOXELLST 
 
 #include "../bindinglayout.h"
 #include "../parameters.h"
@@ -42,12 +42,14 @@ void main()
     //-------------------------
     // various parameters index
     //-------------------------
-    VoxelInstanceLink instanceLink = instanceLinks[instanceId];
+    // VoxelInstanceLink instanceLink = instanceLinks[instanceId];
+    InstanceLink instanceLink = instanceLinks[instanceId];
+    MeshLink meshLink = meshLinks[instanceLink.meshId];
     uint spectralId,canopyId,bioId,typeId;
-    spectralId = instanceLink.spectralId;
-    canopyId = instanceLink.canopyId;
-    bioId = instanceLink.bioId;
-    typeId = instanceLink.type;
+    spectralId = meshLink.spectralId;
+    canopyId = meshLink.canopyId;
+    bioId = meshLink.bioId;
+    typeId = meshLink.type;
     if(typeId == TYPE_NULL) return;
     //-------------------------
     // various parameters associated with radiation 

@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <iomanip>
 #include "src/voxellst/voxellstio.h"
 #include "src/base/structs.h"
 #include "src/base/geometry.h"
@@ -39,16 +40,23 @@ public:
     bool setup(AppSetting &appsetting, std::shared_ptr<VoxellstIO> &voxellstio);
     bool upload(std::shared_ptr<FileIO> &fileio, std::shared_ptr<VoxellstIO> &voxellstio);
     bool create(std::shared_ptr<VoxellstIO> & modelio);
-    bool run(std::shared_ptr<VoxellstIO> &raytracingio, std::shared_ptr<FileIO> &fileio);
-    bool destroy( std::shared_ptr<VoxellstIO> &raytracingio);
+    bool run(std::shared_ptr<VoxellstIO> &modelio, std::shared_ptr<FileIO> &fileio);
+    bool destroy( std::shared_ptr<VoxellstIO> &modelio);
 
 
 
     bool updateSetting(std::shared_ptr<VoxellstIO> &voxellstio);
     bool uploadSetting(std::shared_ptr<FileIO> &fileio, std::shared_ptr<VoxellstIO> &voxellstio);
 
+    bool uploadAero(std::shared_ptr<FileIO> &fileio, std::shared_ptr<VoxellstIO> &voxellstio);
+
+
+
     bool uploadMeteo(std::shared_ptr<FileIO> &fileio, std::shared_ptr<VoxellstIO> &modelio);
-    bool updateMeteo(std::shared_ptr<VoxellstIO> &modelio);
+    bool updateMeteo(std::shared_ptr<VoxellstIO> &modelio,int knode);
+
+    void output(std::shared_ptr<VoxellstIO> &modelio, std::shared_ptr<FileIO> &fileio, int knode, int kangle);
+    void outputVoxel(std::shared_ptr<VoxellstIO> &modelio, std::shared_ptr<FileIO> &fileio);
 
 
     std::shared_ptr<Geometry> m_pGeometry;

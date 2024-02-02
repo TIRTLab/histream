@@ -55,7 +55,7 @@ public:
     std::shared_ptr<nvvk::Buffer> m_pStateBuffer;   // budget
     EBState m_state{};
 
-    std::vector<SurfL> surfLs;
+//    std::vector<SurfL> surfLs;
 
 };
 

@@ -19,7 +19,7 @@
 #extension GL_EXT_shader_atomic_float: require 
 
 #define VOXEL_LST_BIND_ININDEX
-#define VOXELAERO
+#define VOXELLST 1
 
 #include "../bindinglayout.h"
 #include "../parameters.h"
@@ -122,9 +122,9 @@ void main()
     uint bufferId0 = gl_GlobalInvocationID.x;
     //voxelRes: voxel number in 3 dimentions
     ivec3 voxelRes = ivec3(setting.voxelSize);
-    ivec3 voxelId0 = voxelLinks[bufferId0].voxelId;
+    ivec3 voxelId0 = voxelLinks[bufferId0].voxelPos;
     uint surf1DId = SurfFlatten(voxelId0,voxelRes);
-    // Get nanoVDBLink: from voxelId to bufferId 
+    // Get nanoVDBLink: from voxelPos to bufferId
     NanoVDBLink nanoVDBLink = nanovdbInit();
 
     //-------------------------
@@ -139,13 +139,14 @@ void main()
     //-------------------------
     // various parameters
     //-------------------------
-    float z, L, kappa, u, ra, cd1, csSoil, cd, cr, psicor, rbs, rwc;
+    float z, L, kappa, u, ra, rbs, rwc;
     float z0m, d, zr, hcmax, hvmax, hcmin, laimax, lai, n, leafwidth;
     float rai, rar, rac, rbc, raa;
     float pm_z, ph_z, ph_zr, pm_zr, phs_zr, phs_h, pms_zr, ph_h, pm_h, ustar;
     int voxelMaxY;
     Canopy canopy0, canopy;
-    VoxelInstanceLink instanceLink;
+    InstanceLink   instanceLink;
+    MeshLink       meshLink;
 
 
     // It is a valid position and then continue
@@ -157,30 +158,36 @@ void main()
 
         // various indexes
         instanceId = voxelLinks[bufferId0].instanceId;
+        aeroId = voxelLinks[bufferId0].aeroId;
         instanceLink = instanceLinks[instanceId];
-        canopyId = instanceLink.canopyId; 
-        typeId = instanceLink.type;
-        aeroId = instanceLink.aeroId; 
+        meshLink = meshLinks[instanceLink.meshId];
+        canopyId = meshLink.canopyId; 
+        typeId = meshLink.type; 
 
+        L = aeroConds[aeroId].L;
+        hcmax = aeroConds[aeroId].hc_veg;
+        laimax = aeroConds[aeroId].lai;
         // variable parameters
-        cd1 = aeros[aeroId].cd1;        // fitting parameter
-        csSoil = aeros[aeroId].csSoil;  // drag coefficient for soil
-        cd = aeros[aeroId].cd;          // drag coefficient for the vegetation 
-        cr = aeros[aeroId].CR;          // drag coefficient for a isolated tree
-        psicor = aeros[aeroId].psicor;  // Roughness layer correction
-        rbs = aeros[aeroId].rbs;        // for boundary soil resistance
-        rwc = aeros[aeroId].rwc;        // for Aerodynamic Resistance within canopy
+        // CD1 = aeros[aeroId].CD1;        // fitting parameter
+        // CSSOIL = aeros[aeroId].CSSOIL;  // drag coefficient for soil
+        // CD = aeros[aeroId].CD;          // drag coefficient for the vegetation 
+        // CR = aeros[aeroId].CR;          // drag coefficient for a isolated tree
+        // PSICOR = aeros[aeroId].PSICOR;  // Roughness layer correction
+        // rbs = aeros[aeroId].rbs;        // for boundary soil resistance
+        // rwc = aeros[aeroId].rwc;        // for Aerodynamic Resistance within canopy
 
         // dynamic variable in iteration
-        L = surfLs[surf1DId].L;
-        hvmax = surfLs[surf1DId].hvmax;
-        hcmax = hvmax * setting.scale;
-        laimax = surfLs[surf1DId].laimax;   // LAI in this surface
+      //  L = surfLs[surf1DId].L;
+        // hvmax = surfLs[surf1DId].hvmax;
+        // hcmax = hvmax * setting.scale;
+        // laimax = surfLs[surf1DId].laimax;   // LAI in this surface
+
+
         canopy = canopies[canopyId];
         kappa = KAPPA; 
 
-// voxelRaas[bufferId0].raa = laimax;
-// return;
+        // voxelRaas[bufferId0].raa = laimax;
+        // return;
 
         // dynamic variable in time
         z = ubom.meteo.z;               // measurement height 
@@ -195,7 +202,7 @@ void main()
         leafwidth = canopy.leafwidth;
         z0m = 0.01;                     // Roughness lenght for momentum for the vegetation  
         zr = hcmax * 2.5;               // top of roughness sublayer, bottom of intertial sublayer
-        n = cd*laimax / (2 * kappa*kappa);
+        n = CD*laimax / (2 * kappa*kappa);
 
         if( hcmax <= 0.01)
         {
@@ -214,14 +221,15 @@ void main()
             // Point: Friction velocity   
             //--------------------------
             ustar = max(0.001, kappa * u /(log((z-d)/z0m) - pm_z));
-            surfLs[surf1DId].ustar = ustar;
+            //surfLs[surf1DId].ustar = ustar;
             // aerodynamic resistance
+            aeroConds[aeroId].ustar = ustar;
             raa = (1.0 / (kappa * ustar)*(log((z-d)/z0m)-ph_z + ph_zr));
             if(isnan(raa)) raa = 50;
             voxelRaas[bufferId0].raa = raa;
 
-// voxelRaas[bufferId0].raa = surf1DId;
-// return;
+        // voxelRaas[bufferId0].raa = surf1DId;
+        // return;
         }
         else
         {
@@ -231,10 +239,10 @@ void main()
             /////----------------------------------------------------------
             float kh,kh0,sq,g1,uh,uz0,rac;
             /// zom and h (m): roughness lenght for momentum and zero plane displacement
-            sq = sqrt(cd1 * laimax/2.0);
-            g1 = max(3.3, sqrt(csSoil + cd * laimax /2.0));
+            sq = sqrt(CD1 * laimax/2.0);
+            g1 = max(3.3, sqrt(CSSOIL + CD * laimax /2.0));
             d = hcmax*(1 - (1 - exp(-sq))/sq);
-            z0m = (hcmax - d) * exp(-kappa * g1 + psicor);
+            z0m = (hcmax - d) * exp(-kappa * g1 + PSICOR);
            // stability correction functions, friction velocity and Kh=Km=Kv
             pm_z = psim(z-d,L);
             ph_z = psih(z-d,L);
@@ -245,7 +253,8 @@ void main()
             phs_h = phstar(hcmax,zr,d,L);
             // friction wind speed
             ustar = max(0.001, kappa*u / (log((z - d) / z0m) - pm_z)); 
-            surfLs[surf1DId].ustar = ustar;
+            // surfLs[surf1DId].ustar = ustar;
+            aeroConds[aeroId].ustar = ustar;
             // initial and roughness layers
             if (z > zr)
             {
@@ -297,10 +306,10 @@ void main()
                 leafwidthtemp = canopy.leafwidth;
                 laitemp = canopy.density * hctemp;
                 // d and tom 
-                sqtemp = sqrt(cd1*laitemp);
-                g1temp = max(3.3, sqrt(csSoil + cd*laitemp / 2.0));
+                sqtemp = sqrt(CD1*laitemp);
+                g1temp = max(3.3, sqrt(CSSOIL + CD*laitemp / 2.0));
                 dtemp= max(hctemp*(1 - (1 - exp(-sqtemp)) / sqtemp),0.01);   //
-                z0mtemp = max((hctemp - dtemp)*exp(-kappa*g1temp + psicor),0.01); //
+                z0mtemp = max((hctemp - dtemp)*exp(-kappa*g1temp + PSICOR),0.01); //
                 y2 = dtemp + z0mtemp;
             } // if type
 

@@ -12,11 +12,11 @@ public:
     Command();
 
     bool create(std::shared_ptr<RaytracingIO> &raytracingio);
-    bool run(std::shared_ptr<RaytracingIO> &raytracingio);
 
-    void submit(std::shared_ptr<RaytracingIO> &raytracingio,
-                const std::optional<std::vector<VkSemaphore>> &inSemaphore,
-                const std::optional<VkSemaphore> &outSemaphore);
+    bool run(std::shared_ptr<RaytracingIO> &raytracingio);
+//    void submit(std::shared_ptr<RaytracingIO> &raytracingio,
+//                const std::optional<std::vector<VkSemaphore>> &inSemaphore,
+//                const std::optional<VkSemaphore> &outSemaphore);
 
     void submit(std::shared_ptr<RaytracingIO> &raytracingio,
                 const std::optional<VkSemaphore> &inSemaphore,
@@ -25,6 +25,8 @@ public:
     void recordCommandBuffer(const VkCommandBuffer& cmdBuf,std::shared_ptr<RaytracingIO> &raytracingio);
     void waitFence(std::shared_ptr<RaytracingIO> &raytracingio);
     void destroy(std::shared_ptr<RaytracingIO> &raytracingio);
+
+
 
 };
 

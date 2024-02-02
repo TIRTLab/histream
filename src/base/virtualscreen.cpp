@@ -24,4 +24,22 @@ bool VirtualScreen::bufferToBuffer(std::shared_ptr<RaytracingIO> & raytracingio,
     return true;
 }
 
+bool VirtualScreen::bufferToBuffer(std::shared_ptr<VoxellstIO> & modelio,
+                                   const nvvk::Buffer& bufferIn, VkDeviceSize size, const nvvk::Buffer& bufferOut)
+{
+    VkDevice &m_device = modelio->m_device;
+    int m_queueFamilyIndex = modelio->m_queueIndex;
+
+    nvvk::CommandPool genCmdBuf((vk::Device)m_device, m_queueFamilyIndex);
+    vk::CommandBuffer cmdBuff = genCmdBuf.createCommandBuffer();
+    //// Copy the image to the buffer
+    vk::BufferCopy copyRegion;
+    copyRegion.setSrcOffset(0);
+    copyRegion.setDstOffset(0);
+    copyRegion.setSize(size);
+    cmdBuff.copyBuffer(bufferIn.buffer, bufferOut.buffer, copyRegion);
+    genCmdBuf.submitAndWait(cmdBuff);
+
+    return true;
+}
 

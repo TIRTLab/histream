@@ -34,7 +34,7 @@ public:
     FluspectCoeff m_fluspectCoeff;
 
     std::shared_ptr<nvvk::Buffer> m_pAeroBuffer;    // Aero
-    std::vector<AeroCoeff> aerocoeffs;
+//    std::vector<AeroCoeff> aerocoeffs;
 
     LeafBio leafbio;
     SoilSet soilset;

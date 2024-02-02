@@ -20,7 +20,7 @@
 
 
 #define VOXEL_LST_BIND_ININDEX
-#define VOXELBUDGET
+#define VOXELLST 
 
 #include "../bindinglayout.h"
 #include "../parameters.h"
@@ -35,11 +35,11 @@ void main()
     //------------------------------------------------------------
     // Initialization for the position and SSBO index
     //------------------------------------------------------------
-    ivec3 voxelId = ivec3(gl_GlobalInvocationID.x, 0, gl_GlobalInvocationID.y);
+    ivec3 voxelPos = ivec3(gl_GlobalInvocationID.x, 0, gl_GlobalInvocationID.y);
     //voxelRes: voxel number in 3 dimentions
     ivec3 voxelRes = ivec3(setting.voxelSize);
-    int surf1DId = SurfFlatten(voxelId,voxelRes);
-    // Get nanoVDBLink: from voxelId to bufferId 
+    int surf1DId = SurfFlatten(voxelPos,voxelRes);
+    // Get nanoVDBLink: from voxelPos to bufferId
     NanoVDBLink nanoVDBLink = nanovdbInit();
     
 
@@ -52,7 +52,7 @@ void main()
     uint aeroId,aeroId0;          // aerodynamic property index of a voxel
     uint typeId,typeId0;          // voxel type: vegetation, soil...
     uint bufferId,bioId;
-    int bufferId0 = nanovdbGet(nanoVDBLink,voxelId);
+    int bufferId0 = nanovdbGet(nanoVDBLink,voxelPos);
     if(bufferId0 < 0) 
     {
         return;
@@ -61,17 +61,22 @@ void main()
     // input from CPU parameter
     //-----------------------------------------------
     instanceId0 = voxelLinks[bufferId0].instanceId;
-    VoxelInstanceLink instanceLink0 = instanceLinks[instanceId0];
-    spectralId = instanceLink0.spectralId;
-    canopyId = instanceLink0.canopyId;                                                       
-    bioId = instanceLink0.bioId;
-    typeId = instanceLink0.type;
+    aeroId0 = voxelLinks[bufferId0].aeroId;
+    // VoxelInstanceLink instanceLink0 = instanceLinks[instanceId0];
+    InstanceLink instancelink0 = instanceLinks[instanceId0];
+    MeshLink meshLink0 = meshLinks[instancelink0.meshId];
+    spectralId = meshLink0.spectralId;
+    canopyId = meshLink0.canopyId;                                                       
+    bioId = meshLink0.bioId;
+    typeId = meshLink0.type;
     if(typeId == TYPE_NULL) return;
     
     // toppest voxel height
-    float hvmax = surfLs[surf1DId].hvmax;
+    // float hvmax = surfLs[surf1DId].hvmax;
+    AeroCond aeroCond = aeroConds[aeroId];
+    float hvmax = aeroCond.hc_veg;
 
-    hvmax = 15;
+  //  hvmax = 15;
 
     
     float hcmax = 1.0 * hvmax * setting.scale;
@@ -93,21 +98,21 @@ void main()
     float Ssum = 0;
     for(int hi = 0;hi<=voxelMaxY;hi++)
     {
-        voxelId.y = hi;
-        bufferId = nanovdbGet(nanoVDBLink,voxelId);
+        voxelPos.y = hi;
+        bufferId = nanovdbGet(nanoVDBLink,voxelPos);
         if(bufferId<0) continue;
         Hsum = Hsum + voxelHeatFlux[bufferId].Hsunlit*voxelDirs[bufferId].solar + 
             (1-voxelDirs[bufferId].solar)*voxelHeatFlux[bufferId].Hshaded;
         Ssum = Ssum + 1;
     }
     float H = 1.0*Hsum/Ssum;
-    float L = -RHOA * CP * pow(surfLs[surf1DId].ustar, 3) * (ubom.meteo.Ta + 273.15)/(KAPPA * GEARTH * H);
+    float L = -RHOA * CP * pow(aeroCond.ustar, 3) * (ubom.meteo.Ta + 273.15)/(KAPPA * GEARTH * H);
     //-----------------------------------------------   
     // save back
     //-----------------------------------------------
     //L = 1;
     if(isnan(L)) L = -1;
-    atomicStore(surfLs[surf1DId].L, L, gl_ScopeDevice, gl_StorageSemanticsBuffer, gl_SemanticsRelaxed);
+    atomicStore(aeroConds[aeroId].L, L, gl_ScopeDevice, gl_StorageSemanticsBuffer, gl_SemanticsRelaxed);
  
 
 }

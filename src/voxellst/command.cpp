@@ -10,10 +10,12 @@ bool Command::create(std::shared_ptr<VoxellstIO> &modelio){
     // for the firest init
     VkFenceCreateInfo fci = {VK_STRUCTURE_TYPE_FENCE_CREATE_INFO};
     vkCreateFence(modelio->m_device, &fci, nullptr, &modelio->m_fence);
+//    vkWaitForFences(modelio->m_device, 1, &(modelio->m_fence), VK_TRUE, UINT64_MAX);
+    vkResetFences(modelio->m_device, 1,  &(modelio->m_fence));
 
     // Here 4 means number of pipelines + 1
-    modelio->m_semaphores.resize(2);
-    std::generate_n( modelio->m_semaphores.begin(), 2,
+    modelio->m_semaphores.resize(modelio->n_pipeline+1);
+    std::generate_n( modelio->m_semaphores.begin(), modelio->n_pipeline+1,
                      [&]
                      {
                          VkSemaphoreCreateInfo sci = {VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO};
@@ -25,7 +27,7 @@ bool Command::create(std::shared_ptr<VoxellstIO> &modelio){
     return false;
 }
 
-bool Command::run(std::shared_ptr<VoxellstIO> &modelio){
+bool Command::runEB(std::shared_ptr<VoxellstIO> &modelio){
 
     modelio->m_currentSemaphore = 1;
 
@@ -34,62 +36,87 @@ bool Command::run(std::shared_ptr<VoxellstIO> &modelio){
     auto & setting = modelio->setting;
 
 
-    auto & piplineLayout = modelio->m_pipelineLayout_rt;
-    auto & piplines = modelio->m_pipelines_rt;
-
     //--------------------------------------------------
 
     int stageInt = 0;
 
+    std::vector<VkSemaphore> beginSemaph;
+    beginSemaph.emplace_back(modelio->m_semaphores[0]);
 
-    submit(modelio, VoxellstStage::gap, voxelSize1D,nullptr, nullptr);
+    submit(modelio, VoxellstStage::gap, voxelSize1D, std::nullopt, std::nullopt);
     waitFence(modelio);
 
-    submit(modelio, VoxellstStage::directVNIR, voxelSize1D,nullptr, nullptr);
+    submit(modelio, VoxellstStage::directVNIR, voxelSize1D,std::nullopt, std::nullopt);
     waitFence(modelio);
 
-    submit(modelio, VoxellstStage::diffuseVNIR, voxelSize1D,nullptr, nullptr);
-    waitFence(modelio);
-
-    submit(modelio, VoxellstStage::directTIR, voxelSize1D,nullptr, nullptr);
-    waitFence(modelio);
-
-    submit(modelio, VoxellstStage::diffuseTIR, voxelSize1D,nullptr, nullptr);
-    waitFence(modelio);
-
-    //--------------------------------------------------
-
-
-    submit(modelio, VoxellstStage::aero, voxelSize1D,nullptr, nullptr);
-    waitFence(modelio);
-
-    //--------------------------------------------------
-
-    submit(modelio, VoxellstStage::bio, voxelSize1D,nullptr, nullptr);
+    submit(modelio, VoxellstStage::diffuseVNIR, voxelSize1D,std::nullopt, std::nullopt);
     waitFence(modelio);
 
 
-    //--------------------------------------------------
+    for(int kiter = 0;kiter < 1; kiter++) {
+
+        submit(modelio, VoxellstStage::directTIR, voxelSize1D, std::nullopt, std::nullopt);
+        waitFence(modelio);
+
+        submit(modelio, VoxellstStage::diffuseTIR, voxelSize1D, std::nullopt, std::nullopt);
+        waitFence(modelio);
+
+        //--------------------------------------------------
 
 
-    submit(modelio, VoxellstStage::evapo, voxelSize1D,nullptr, nullptr);
-    waitFence(modelio);
+        submit(modelio, VoxellstStage::aero, voxelSize1D, std::nullopt, std::nullopt);
+        waitFence(modelio);
 
-    //--------------------------------------------------
+        //--------------------------------------------------
 
-    submit(modelio, VoxellstStage::budget, voxelSize1D,nullptr, nullptr);
-    waitFence(modelio);
-
-
-    //--------------------------------------------------
+        submit(modelio, VoxellstStage::bio, voxelSize1D, std::nullopt, std::nullopt);
+        waitFence(modelio);
 
 
+        //--------------------------------------------------
+
+
+        submit(modelio, VoxellstStage::evapo, voxelSize1D, std::nullopt, std::nullopt);
+        waitFence(modelio);
+
+        //--------------------------------------------------
+
+        submit(modelio, VoxellstStage::budget, voxelSize1D, std::nullopt, std::nullopt);
+        waitFence(modelio);
+
+
+        //--------------------------------------------------
+
+    }
 
 
 
     return true;
 }
 
+
+bool Command::runRT(std::shared_ptr<VoxellstIO> &modelio){
+
+    modelio->m_currentSemaphore = 1;
+
+    glm::ivec3 voxelSize2D = glm::ivec3((modelio->setting.resolution.x + (GROUP_SIZEXY - 1)) / GROUP_SIZEXY,
+                                        (modelio->setting.resolution.y + (GROUP_SIZEXY - 1)) / GROUP_SIZEXY, 1);
+    auto & descSet = modelio->m_descSet;
+    auto & setting = modelio->setting;
+
+
+    //--------------------------------------------------
+
+//    nvmath::vec3i size = nvmath::vec3i((m_setting.size.x + (GROUP_SIZEXY - 1)) / GROUP_SIZEXY,
+//                                       (m_setting.size.y + (GROUP_SIZEXY - 1)) / GROUP_SIZEXY, 1);
+
+    submit(modelio, VoxellstStage::out, voxelSize2D, std::nullopt, std::nullopt);
+    waitFence(modelio);
+
+
+
+    return true;
+}
 
 //bool Command::run(std::shared_ptr<VoxellstIO> &modelio){
 //
@@ -166,7 +193,7 @@ bool Command::run(std::shared_ptr<VoxellstIO> &modelio){
 
 
 void Command::submit(std::shared_ptr<VoxellstIO> &modelio, VoxellstStage stage, glm::ivec3 dispatchSize,
-                     const std::optional<VkSemaphore> &inSemaphore, const std::optional<VkSemaphore> &outSemaphore)
+                     const std::optional<std::vector<VkSemaphore>> &inSemaphores, const std::optional<VkSemaphore> &outSemaphore)
 {
 
     auto & descSet = modelio->m_descSet;
@@ -179,33 +206,28 @@ void Command::submit(std::shared_ptr<VoxellstIO> &modelio, VoxellstStage stage, 
     // Preparing for the compute shader
     VkCommandBuffer cmdBuf = modelio->m_genCmdBuf.createCommandBuffer();
 
-    VkCommandBufferBeginInfo beginInfo{VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO};
-    beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-    vkBeginCommandBuffer(cmdBuf, &beginInfo);
+//    VkCommandBufferBeginInfo beginInfo{VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO};
+//    beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+//    beginInfo.pNext = nullptr;
+//    beginInfo.pInheritanceInfo = nullptr;
+//    vkBeginCommandBuffer(cmdBuf, &beginInfo);
 
     // Dispatching the shader only for the other;
     recordCommandBuffer(cmdBuf, descSet, pipelineLayout, pipeline, setting );
     vkCmdDispatch(cmdBuf, dispatchSize.x, dispatchSize.y, dispatchSize.z);
 
+    auto & semaphores = modelio->m_semaphores;
     // new semaphores
     std::array<VkPipelineStageFlags, 1> waitStages{VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT};
     VkSubmitInfo submitInfoCompute{VK_STRUCTURE_TYPE_SUBMIT_INFO};
-    submitInfoCompute.waitSemaphoreCount =  static_cast<uint32_t>(1);
-    submitInfoCompute.pWaitSemaphores =  inSemaphore.has_value() ? &inSemaphore.value() : & modelio->m_semaphores[m_currentSemaphore - 1];
-    submitInfoCompute.pWaitDstStageMask = waitStages.data();
     submitInfoCompute.commandBufferCount = 1;
     submitInfoCompute.pCommandBuffers = &cmdBuf;
-    submitInfoCompute.signalSemaphoreCount = 1;
-    submitInfoCompute.pSignalSemaphores = outSemaphore.has_value() ? &outSemaphore.value() : & modelio->m_semaphores[m_currentSemaphore];
+//    submitInfoCompute.waitSemaphoreCount =  static_cast<uint32_t>(1);
+//    submitInfoCompute.pWaitSemaphores =  inSemaphores.has_value() ? inSemaphores->data() : &semaphores[m_currentSemaphore-1];
+//    submitInfoCompute.pWaitDstStageMask = waitStages.data();
+//    submitInfoCompute.signalSemaphoreCount = 1;
+//    submitInfoCompute.pSignalSemaphores = outSemaphore.has_value() ? &outSemaphore.value() : & semaphores[m_currentSemaphore];
 
-
-
-    // old using only fense
-//    const VkPipelineStageFlags waitStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-//    VkSubmitInfo submitInfo{ VK_STRUCTURE_TYPE_SUBMIT_INFO };
-//    submitInfo.pWaitDstStageMask = &waitStageMask;
-//    submitInfo.pCommandBuffers = &cmdBuf;
-//    submitInfo.commandBufferCount = 1;
 
     vkEndCommandBuffer(cmdBuf);
     vkQueueSubmit( modelio->m_queue, 1, &submitInfoCompute,  modelio->m_fence);
@@ -213,57 +235,57 @@ void Command::submit(std::shared_ptr<VoxellstIO> &modelio, VoxellstStage stage, 
 }
 
 
-void Command::submit(std::shared_ptr<VoxellstIO> &modelio,glm::ivec3 dispatchSize,
-                     VkDescriptorSet descSet, VkPipelineLayout pipelineLayout,
-                     VkPipeline pipeline, VoxelLstSetting setting,
-                     const std::optional<VkSemaphore> &inSemaphore, const std::optional<VkSemaphore> &outSemaphore)
-{
-    auto & m_currentSemaphore = modelio->m_currentSemaphore;
-    // Preparing for the compute shader
-    VkCommandBuffer cmdBuf = modelio->m_genCmdBuf.createCommandBuffer();
+//void Command::submit(std::shared_ptr<VoxellstIO> &modelio,glm::ivec3 dispatchSize,
+//                     VkDescriptorSet descSet, VkPipelineLayout pipelineLayout,
+//                     VkPipeline pipeline, VoxelLstSetting setting,
+//                     const std::optional<VkSemaphore> &inSemaphore, const std::optional<VkSemaphore> &outSemaphore)
+//{
+//    auto & m_currentSemaphore = modelio->m_currentSemaphore;
+//    // Preparing for the compute shader
+//    VkCommandBuffer cmdBuf = modelio->m_genCmdBuf.createCommandBuffer();
+//
+////    VkCommandBufferBeginInfo beginInfo{VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO};
+////    beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+////    vkBeginCommandBuffer(cmdBuf, &beginInfo);
+//
+//    // Dispatching the shader only for the other;
+//    recordCommandBuffer(cmdBuf, descSet, pipelineLayout, pipeline, setting );
+//    vkCmdDispatch(cmdBuf, dispatchSize.x, dispatchSize.y, dispatchSize.z);
+//
+//    // new semaphores
+//    std::array<VkPipelineStageFlags, 1> waitStages{VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT};
+//    VkSubmitInfo submitInfoCompute{VK_STRUCTURE_TYPE_SUBMIT_INFO};
+//    submitInfoCompute.waitSemaphoreCount =  static_cast<uint32_t>(1);
+//    submitInfoCompute.pWaitSemaphores =  inSemaphore.has_value() ? &inSemaphore.value() : & modelio->m_semaphores[m_currentSemaphore - 1];
+//    submitInfoCompute.pWaitDstStageMask = waitStages.data();
+//    submitInfoCompute.commandBufferCount = 1;
+//    submitInfoCompute.pCommandBuffers = &cmdBuf;
+//    submitInfoCompute.signalSemaphoreCount = 1;
+//    submitInfoCompute.pSignalSemaphores = outSemaphore.has_value() ? &outSemaphore.value() : & modelio->m_semaphores[m_currentSemaphore];
+//
+//
+//
+//    // old using only fense
+////    const VkPipelineStageFlags waitStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+////    VkSubmitInfo submitInfo{ VK_STRUCTURE_TYPE_SUBMIT_INFO };
+////    submitInfo.pWaitDstStageMask = &waitStageMask;
+////    submitInfo.pCommandBuffers = &cmdBuf;
+////    submitInfo.commandBufferCount = 1;
+//
+//    vkEndCommandBuffer(cmdBuf);
+//    vkQueueSubmit( modelio->m_queue, 1, &submitInfoCompute,  modelio->m_fence);
+//    m_currentSemaphore++;
+//}
 
-    VkCommandBufferBeginInfo beginInfo{VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO};
-    beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-    vkBeginCommandBuffer(cmdBuf, &beginInfo);
-
-    // Dispatching the shader only for the other;
-    recordCommandBuffer(cmdBuf, descSet, pipelineLayout, pipeline, setting );
-    vkCmdDispatch(cmdBuf, dispatchSize.x, dispatchSize.y, dispatchSize.z);
-
-    // new semaphores
-    std::array<VkPipelineStageFlags, 1> waitStages{VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT};
-    VkSubmitInfo submitInfoCompute{VK_STRUCTURE_TYPE_SUBMIT_INFO};
-    submitInfoCompute.waitSemaphoreCount =  static_cast<uint32_t>(1);
-    submitInfoCompute.pWaitSemaphores =  inSemaphore.has_value() ? &inSemaphore.value() : & modelio->m_semaphores[m_currentSemaphore - 1];
-    submitInfoCompute.pWaitDstStageMask = waitStages.data();
-    submitInfoCompute.commandBufferCount = 1;
-    submitInfoCompute.pCommandBuffers = &cmdBuf;
-    submitInfoCompute.signalSemaphoreCount = 1;
-    submitInfoCompute.pSignalSemaphores = outSemaphore.has_value() ? &outSemaphore.value() : & modelio->m_semaphores[m_currentSemaphore];
-
-
-
-    // old using only fense
-//    const VkPipelineStageFlags waitStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-//    VkSubmitInfo submitInfo{ VK_STRUCTURE_TYPE_SUBMIT_INFO };
-//    submitInfo.pWaitDstStageMask = &waitStageMask;
-//    submitInfo.pCommandBuffers = &cmdBuf;
-//    submitInfo.commandBufferCount = 1;
-
-    vkEndCommandBuffer(cmdBuf);
-    vkQueueSubmit( modelio->m_queue, 1, &submitInfoCompute,  modelio->m_fence);
-    m_currentSemaphore++;
-}
-
-void Command::recordCommandBuffer(VkCommandBuffer cmdBuf, VkDescriptorSet descSet, VkPipelineLayout pipelineLayout,
-                     std::map<VoxelRadStage, VkPipeline> pipelines, VoxelRadStage stage, VoxelLstSetting setting)
-{
-    vkCmdBindPipeline(cmdBuf, VK_PIPELINE_BIND_POINT_COMPUTE, pipelines[stage]);
-    vkCmdBindDescriptorSets(cmdBuf, VK_PIPELINE_BIND_POINT_COMPUTE, pipelineLayout, 0,
-                            static_cast<uint32_t>(1), &descSet, 0, nullptr);
-    // Sending the push constant information
-    vkCmdPushConstants(cmdBuf, pipelineLayout, VK_SHADER_STAGE_COMPUTE_BIT, 0, sizeof(VoxelLstSetting), &setting);
-}
+//void Command::recordCommandBuffer(VkCommandBuffer cmdBuf, VkDescriptorSet descSet, VkPipelineLayout pipelineLayout,
+//                     std::map<VoxellstStage, VkPipeline> pipelines, VoxellstStage stage, VoxelLstSetting setting)
+//{
+//    vkCmdBindPipeline(cmdBuf, VK_PIPELINE_BIND_POINT_COMPUTE, pipelines[stage]);
+//    vkCmdBindDescriptorSets(cmdBuf, VK_PIPELINE_BIND_POINT_COMPUTE, pipelineLayout, 0,
+//                            static_cast<uint32_t>(1), &descSet, 0, nullptr);
+//    // Sending the push constant information
+//    vkCmdPushConstants(cmdBuf, pipelineLayout, VK_SHADER_STAGE_COMPUTE_BIT, 0, sizeof(VoxelLstSetting), &setting);
+//}
 
 void Command::recordCommandBuffer(VkCommandBuffer cmdBuf, VkDescriptorSet descSet, VkPipelineLayout pipelineLayout,
                                   VkPipeline pipeline,  VoxelLstSetting setting)

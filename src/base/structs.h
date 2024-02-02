@@ -224,11 +224,11 @@ struct LightXml {
  //   float directdiffuseratio{1.0};
 };
 
-struct AtomosphereXml
-{
-    std::string esunFileName;
-    std::string eskyFileName;
-};
+//struct AtomosphereXml
+//{
+//    std::string esunFileName;
+//    std::string eskyFileName;
+//};
 
 struct SettingXml
 {
@@ -248,27 +248,20 @@ struct SettingXml
 //    bool isImage{false};
 };
 
-struct AeroCond
-{
-    float hc_veg;
-    float hc_build;
-    float lai;
-    float cover;
-};
 
 enum AeroType
 {
-    defined,
-    scaneCal,  // one aerocond for the whole scene
+    one,  // one for all
+    image,  // one aerocond for the whole scene
     gridCal,   // different aerocond for each grid
 };
 
 struct AeroCondXml
 {
     AeroType aerotype;
-    std::string name;
-    AeroCond aerocond;
-
+    AeroCond aerocond; // one for all
+    std::string path;
+    float stepsize_atmosphere;
 };
 
 struct Background
@@ -353,7 +346,7 @@ struct SceneXml
     glm::vec3 sMin{ -5,0,-5 };
     glm::vec3 sMax{ 5,5,5 };
     float stepsize_surface;
-    float stepsize_atmosphere;
+
 
     //float stepSize;		       // DEM Sampling
     Background background;
@@ -498,23 +491,7 @@ struct  VoxelLstXml
 };
 
 
-struct Meteo
-{
-    float z;
-    float t;		// time node
-    float u;		// wind speed
-    float p;		// air pressure
-    float Rin;		// incoming shortwave radiation
-    float Rli;		// incoming longwave radiation
-    float Ta;		// air temperature
-    float sm;		// volumetric soil moisture content
-    float ea;		// atmospheric vapor pressure
-    float Ca;		// CO2 concentration in the air
-    float Oa;		// O2 concentration in the air
-    float Tsold;	//
-    float SatWater;
-    float dTime;
-};
+
 
 
 

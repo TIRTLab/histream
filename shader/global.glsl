@@ -46,7 +46,7 @@ const float InvPI = 0.318309886183790671538;
 #define DIFFUSE_ANGLE_NUM 32
 #define BANDNUM 2162
 
-
+#define NBAND 2002  // 2001 vnir+1 TIR 
 #define RHOA 1.2047      // specific mass of air
 #define CP   1004        // specific heat of dry air
 #define KAPPA 0.4        // Von Karman constant
@@ -60,7 +60,12 @@ const float InvPI = 0.318309886183790671538;
 #define C2K    273.15    // melting point of water
 #define KV 0.6396        // 
 #define R  8.31           // Molar gas constant
-
+#define LEAFG 0.5
+#define CD   0.3         // drag coefficient for the vegetation
+#define CR    0.35        // darg for the isolate tree
+#define CD1 20.6       //fitting coefficients
+#define PSICOR    0.2           // rOUGHNESS LAYER CORRECTION
+#define CSSOIL 0.01 // DARY COEFFICIENT FOR SOIL
 
 #define RAD_THRESHOLD 2    // radiance threshold
 #define TMIN_THRESHOLD 220  // -50 C

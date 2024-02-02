@@ -12,7 +12,7 @@ class GridIO {
 public:
     GridIO(){};
 
-    std::vector<SurfL> surfLs;
+
 };
 
 

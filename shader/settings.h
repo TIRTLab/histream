@@ -24,21 +24,23 @@ struct RayRTSetting
 	int debugging_mode;
 };
 
-struct VoxelRTSetting
+struct VoxellstSetting
 {
-	ivec2 imageSize;
+
 	int frame;
 	int maxIteration; 
-	int maxSample;
-	int maxBand;
+	int maxDepth;
 	int maxStep;
+	int n_sample;
+	int n_wave;
+	int n_jump;
 	float scale;
-	ivec3 voxelSize;
-	int band1;
-	int band2;
-	int band3;
+	ivec2 imageSize;
 	int isDisplay;
-	int isTemperature;
+	int empty_;
+	ivec3 voxelSize;
+	int dumpy;
+	int dumpy_;
 };
 
 

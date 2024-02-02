@@ -52,14 +52,14 @@ bool Voxel_raytracing(Ray ray, NanoVDBLink nanoVDBLink)
     float alpha_toSolar, alpha_voxel;
     LST = 0.0;
     vec3 ffnormal;
-    ivec3 voxelId;
+    ivec3 voxelPos;
     int bufferId;
     float scale = setting.scale;			// scale
-    uint instanceId, typeId;                // passed voxel Id through voxelLink and instanceLink.
+    uint instanceId, typeId,meshId;                // passed voxel Id through voxelLink and instanceLink.
     uint canopyId, thermalId, spectralId;   // passed voxel spectral, thermal, canopy ID.
 	float pl_toSolar, pl_toSensor;			// hotspot parameters.
     Canopy canopy;							// store canopy information
-  vec3 semiRange = setting.scale * setting.voxelSize/2.0; 
+    vec3 semiRange =  setting.voxelSize/2.0; 
     for(int kstep = 0;kstep<=setting.maxStep;kstep++)
     {
         alpha_voxel = 1.0;
@@ -75,25 +75,33 @@ bool Voxel_raytracing(Ray ray, NanoVDBLink nanoVDBLink)
             LST += 0;
             return true;
         }
+        // LST = 10;
 
         ///////////////////////////////////////////////////
 		/// Turbid or facet ground case (j -> sensor).
 		///////////////////////////////////////////////////
 		/// get hit information.
 		ShadeState sstate = GetShadeState(prd);
-		//voxelId = getPassedVoxelId(sstate.position, scale, normalize(ray.direction));
+		//voxelPos = getPassedVoxelId(sstate.position, scale, normalize(ray.direction));
         vec3 alignVoxelId;
-        voxelId = getVoxelIdSemi(sstate.position,semiRange,setting.scale,normalize(ray.direction),alignVoxelId);
-		bufferId = nanovdbGet(nanoVDBLink, voxelId);
+        voxelPos = getVoxelIdSemi(sstate.position,semiRange,setting.scale,normalize(ray.direction),alignVoxelId);
+		bufferId = nanovdbGet(nanoVDBLink, voxelPos);
+
+               
+        
 
         if(bufferId >= 0)
 		{
+                // LST = 50;
+                // break;
 			instanceId = voxelLinks[bufferId].instanceId;
+            meshId = instanceLinks[instanceId].meshId;
 
-			typeId = instanceLinks[instanceId].type;
-			canopyId = instanceLinks[instanceId].canopyId;
-			spectralId = instanceLinks[instanceId].spectralId;
-			thermalId = instanceLinks[instanceId].thermalId;
+			typeId = meshLinks[meshId].type;
+			canopyId = meshLinks[meshId].canopyId;
+			spectralId = meshLinks[meshId].spectralId;
+			thermalId = meshLinks[meshId].thermalId;
+
 			canopy = canopies[canopyId];
             uint spectralBase = spectralId * NUM_BAND;
 
@@ -104,6 +112,9 @@ bool Voxel_raytracing(Ray ray, NanoVDBLink nanoVDBLink)
             // LST = voxelRaas[bufferId].raa;
             // LST = voxelHeatFlux[bufferId].Gsunlit;
             // break;
+
+
+
 
 			if(typeId == TYPE_VEGETATION)
 			{
@@ -142,9 +153,9 @@ bool Voxel_raytracing(Ray ray, NanoVDBLink nanoVDBLink)
                                 
                 LST += radianceDirect; // debug
 				
-// LST = voxelNetRads[bufferId].diffuseTrad;
-// // LST = voxelDirs[bufferId].solar;
-// break;
+                // LST = voxelNetRads[bufferId].diffuseTrad;
+                // // LST = voxelDirs[bufferId].solar;
+                // break;
 
 				alpha_toSensor = alpha_toSensor * alpha_voxel;
 			}
@@ -154,9 +165,9 @@ bool Voxel_raytracing(Ray ray, NanoVDBLink nanoVDBLink)
 
 				// this is used for the hotspot effect
 				if(alpha_toSolar < 0.0001) pl_toSolar = 10000.0;
-				else pl_toSolar = -log(alpha_toSolar) / canopy.G / 1.0;
+				else pl_toSolar = -log(alpha_toSolar) / LEAFG / 1.0;
 				if(alpha_toSensor < 0.0001) pl_toSensor = 10000.0;
-				else pl_toSensor = -log(alpha_toSensor) / canopy.G / 1.0;
+				else pl_toSensor = -log(alpha_toSensor) / LEAFG / 1.0;
 				float hotspot = Hotspot_Kuusk(normalize(lightSet.direction), -normalize(ray.direction), pl_toSolar, pl_toSensor, 1.0, HSPOT);
 
                 if ((pl_toSensor > 999) || (pl_toSolar>999))
@@ -164,7 +175,8 @@ bool Voxel_raytracing(Ray ray, NanoVDBLink nanoVDBLink)
                     hotspot = 0.0;
                 }
 
-
+                // LST += 10;
+                // break;
 
                 float refl = spectralMaterials[spectralBase + NUM_VNIR].reflectance;
                 float trans = spectralMaterials[spectralBase + NUM_VNIR].transmittance;
@@ -181,14 +193,15 @@ bool Voxel_raytracing(Ray ray, NanoVDBLink nanoVDBLink)
                                         + Planck(wavelength, shadedTemperature) * (alpha_toSensor - hotspot);
                 radianceDirect = thermalRadiance * (1 - refl - trans);
                 
-                // LST = sunlitTemperature;
+                //LST = canopy.G;
                 LST += radianceDirect;
 
-// LST=voxelNetRads[bufferId].diffuseTrad;
+                // LST=voxelNetRads[bufferId].diffuseTrad;
 				break;
 			}
 		}
-
+        // LST = 55;
+        // break;
 		//// change ray origin position to hit position; and avoid self collide.
 		ray = Ray(sstate.position, ray.direction);
 		ffnormal = sstate.normal;
@@ -228,26 +241,32 @@ void SamplePixel(vec2 imageCoords,vec2 sizeImage,int smpl)
 	Ray ray = Ray(origin.xyz, directionv);
 
     Voxel_raytracing(ray, nanoVDBLink);
+   // LST = 1.0;
 }
 
 
 void main()
 {
     // image resolution
-	ivec2 imageRes    = ivec2(setting.size);
+	ivec2 imageRes    = ivec2(setting.imageSize);
     // image coordinate from 1-resolution
     ivec2 imageCoords = ivec2(gl_GlobalInvocationID.xy);  //SampleSizzled();
     
-    uint temp = uint(setting.size.x * gl_GlobalInvocationID.y + gl_GlobalInvocationID.x);
-    prd.seed = tea(temp, setting.frame * setting.maxSample);
+    uint temp = uint(setting.imageSize.x * gl_GlobalInvocationID.y + gl_GlobalInvocationID.x);
+    prd.seed = tea(temp, setting.frame * setting.n_sample);
     LSTSum = 0.0;
-    for(int smpl = 0; smpl< setting.maxSample; smpl++)
+
+    // int bufferId = int((imageCoords.y * imageRes.x + imageCoords.x ));
+    // LST = imageRes.y;
+    // atomicStore(outImage[bufferId], LST, gl_ScopeDevice, gl_StorageSemanticsBuffer, gl_SemanticsRelease);
+
+    for(int smpl = 0; smpl< setting.n_sample; smpl++)
     {
         SamplePixel(imageCoords, imageRes, smpl);
         LSTSum += LST;
     }
 
-    LST = LSTSum/setting.maxSample;
+    LST = LSTSum/setting.n_sample;
     
     int bufferId = int((imageCoords.y * imageRes.x + imageCoords.x ));
     atomicStore(outImage[bufferId], LST, gl_ScopeDevice, gl_StorageSemanticsBuffer, gl_SemanticsRelease);

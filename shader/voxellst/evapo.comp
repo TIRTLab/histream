@@ -19,7 +19,7 @@
 #extension GL_EXT_shader_atomic_float: require 
 
 #define VOXEL_LST_BIND_ININDEX
-#define VOXELEVAPO
+#define VOXELLST 1
 
 #include "../bindinglayout.h"
 #include "../parameters.h"
@@ -34,7 +34,7 @@ void main()
     //------------------------------------------------------------
     // Initialization for the position and SSBO index
     //------------------------------------------------------------
-    // get bufferId, voxelId, instanceId and typeId
+    // get bufferId, voxelPos, instanceId and typeId
     uint bufferId = uint(gl_GlobalInvocationID.x);
     //voxelRes: voxel number in 3 dimentions
     ivec3 voxelRes = ivec3(setting.voxelSize);
@@ -43,12 +43,15 @@ void main()
     // various parameters index
     //-------------------------
     uint instanceId = voxelLinks[bufferId].instanceId;
-    VoxelInstanceLink instanceLink = instanceLinks[instanceId];
+    // VoxelInstanceLink instanceLink = instanceLinks[instanceId];
+    InstanceLink instanceLink = instanceLinks[instanceId];
+    MeshLink meshLink = meshLinks[instanceLink.meshId];
     uint spectralId,canopyId,bioId,typeId;
-    spectralId = instanceLink.spectralId;
-    canopyId = instanceLink.canopyId;
-    bioId = instanceLink.bioId;
-    typeId = instanceLink.type;
+
+    spectralId = meshLink.spectralId;
+    canopyId = meshLink.canopyId;
+    bioId = meshLink.bioId;
+    typeId = meshLink.type;
     //-------------------------
     // various parameters
     //-------------------------
@@ -113,7 +116,8 @@ void main()
         H = (RHOA * CP) / raa * (Tc-273.15 - Ta);
 
         
-        LE = RHOA / (raa + rss) * lambda * (qi - qa);
+         LE = RHOA / (raa + rss) * lambda * (qi - qa);
+      //  LE = ubom.meteo.p;
 
         //-------------------------
         // update es and cs

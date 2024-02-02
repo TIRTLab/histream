@@ -132,24 +132,9 @@ bool Raytracing::run(std::shared_ptr<RaytracingIO> &raytracingio, std::shared_pt
 
     for(int kangle = 0; kangle < raytracingio->n_angle; kangle++)
     {
-
-        glm::vec4 angles = raytracingio->angles[kangle];
-        std::cout << "Angle Info:"
-                  << "    vza_" << std::to_string(angles.x) << "    vaa_" << std::to_string(angles.y)
-                  << "    sza_" << std::to_string(angles.z) << "    saa_" << std::to_string(angles.w) << std::endl;
-
-        float ratio = 1.0;
-        //ratio = 0.707;
-        SensorMatrix sensorMatrix = m_pGeometry->createSensor(raytracingio->sceneSize,raytracingio->sceneOrigin,
-                                                              angles.x, angles.y, ratio);
-        m_pGeometry->updateSensor(raytracingio, sensorMatrix);
-
-        LightSet lightSet = m_pGeometry->createLight(angles.z, angles.w,raytracingio->light.direct,
-                                                     raytracingio->light.diffuse,raytracingio->light.solarTemperature,
-                                                     raytracingio->light.skyTemperature);
-        m_pGeometry->updateLight(raytracingio,lightSet);
-
-        updateSetting(raytracingio);
+        raytracingio->kangle = kangle;
+        m_pGeometry->updateAngle(raytracingio,kangle);
+       // updateSetting(raytracingio);
 
         m_pCommand->run(raytracingio);
 

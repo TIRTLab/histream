@@ -60,7 +60,7 @@ void main()
    uint spectralId,canopyId,bioId,typeId;
    uint bufferId0 = uint(gl_GlobalInvocationID.x);
    uint instanceId0 = bufferVoxelLinks[bufferId0].instanceId;
-   ivec3 voxelId0 = bufferVoxelLinks[bufferId0].voxelId;
+   ivec3 voxelId0 = bufferVoxelLinks[bufferId0].voxelPos;
    float scale = setting.scale;
    vec3 voxelPos =  vec3((voxelId0.x+0.5)*scale-semiRange.x,
     (voxelId0.y+0.5)*scale,

@@ -23,7 +23,6 @@ int main(int argc, char **argv)
     engine.input(path);
     engine.create();
     engine.run();
-//    engine.init();
     engine.destroy();
 
 	return 1;

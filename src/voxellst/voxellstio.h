@@ -60,9 +60,9 @@ VoxellstIO(){
 
     // Scene infor
     glm::vec3 sceneSize;  // (5,5,0) with height = 0
-    glm::vec3 voxelSize;  // sceneSize / stepsize; (5,5,0) with height = 0
+    glm::ivec3 voxelSize;  // sceneSize / stepsize; (5,5,0) with height = 0
     glm::vec3 sceneOrigin;
-    float     stepSize;
+    //float     stepSize;
     glm::vec3 sMin;
     glm::vec3 sMax;
     int n_modelmesh = 0;
@@ -73,6 +73,7 @@ VoxellstIO(){
     //Meteo Info
 
     std::vector<Meteo> meteos;
+    Meteo meteo;
     MeteoMeta meta;
 
     //Geometry info
@@ -85,8 +86,13 @@ VoxellstIO(){
 
 
     // setting infor
+    int n_pipeline = 12;
     int n_wave;
     int n_angle;
+    int n_node;
+    int k_angle;
+    int k_node=0;
+
     glm::ivec2 resolution;
     int n_sample;
     int maxDepth;

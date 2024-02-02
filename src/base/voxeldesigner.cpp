@@ -798,21 +798,21 @@ PrimMesh VoxelDesigner::createTriBackground(float sceneLength, float sceneWidth,
         for (int j = 0; j < sceneWidth/stepSize; j++)
         {
             glm::vec3 points[4];
-            points[0].x = i * stepSize;
-            points[0].y = j * stepSize;
-            points[0].z = bgZ * stepSize;
+            points[0].x = i ;
+            points[0].y = j ;
+            points[0].z = bgZ ;
 
-            points[1].x = (i) * stepSize;
-            points[1].y = (j + 1) * stepSize;
-            points[1].z = bgZ * stepSize;
+            points[1].x = (i) ;
+            points[1].y = (j + 1) ;
+            points[1].z = bgZ ;
 
-            points[2].x = (i + 1) * stepSize;
-            points[2].y = (j + 1) * stepSize;
-            points[2].z = bgZ * stepSize;
+            points[2].x = (i + 1) ;
+            points[2].y = (j + 1) ;
+            points[2].z = bgZ ;
 
-            points[3].x = (i + 1) * stepSize;
-            points[3].y = (j) * stepSize;
-            points[3].z = bgZ * stepSize;
+            points[3].x = (i + 1) ;
+            points[3].y = (j) ;
+            points[3].z = bgZ ;
 
             int list[] = {0, 1, 2, 0, 2, 3};
             for (int k = 0;k < 6; k++)
@@ -825,7 +825,7 @@ PrimMesh VoxelDesigner::createTriBackground(float sceneLength, float sceneWidth,
 
             mesh.nVertices += 6;
             mesh.nIndices += 6;
-            mesh.centers.emplace_back(glm::vec3{i * stepSize, j * stepSize, bgZ * stepSize});
+            mesh.centers.emplace_back(glm::vec3{i , j , bgZ });
         }
     }
 

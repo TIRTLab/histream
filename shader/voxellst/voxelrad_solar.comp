@@ -51,13 +51,14 @@ bool TraversalDirection(vec3 lightDirection)
     //------------------------------------------------------------
     // Initialization for the position and SSBO index
     //------------------------------------------------------------
-    // get bufferId, voxelId, instanceId and typeId
+    // get bufferId, voxelPos, instanceId and typeId
     uint bufferId0 = uint(gl_GlobalInvocationID.x);
-    ivec3 voxelId0 = voxelLinks[bufferId0].voxelId;
-     uint instanceId0 = voxelLinks[bufferId0].instanceId;
-    uint typeId0 = instanceLinks[instanceId0].type;
+    ivec3 voxelId0 = voxelLinks[bufferId0].voxelPos;
+    uint instanceId0 = voxelLinks[bufferId0].instanceId;
+    uint meshId0 = instanceLinks[instanceId0].meshId;
+    uint typeId0 = meshLinks[meshId0].type;
 
-    // Get nanoVDBLink: from voxelId to bufferId 
+    // Get nanoVDBLink: from voxelPos to bufferId
     NanoVDBLink nanoVDBLink = nanovdbInit();
 
     // get center position of a voxel
@@ -71,8 +72,8 @@ bool TraversalDirection(vec3 lightDirection)
       voxelPos0.y = voxelPos0.y + scale/2.0;
     }
 
-    ivec3 voxelId;                      // current passed voxel
-    int bufferId;                       // passed voxel Id
+    ivec3 voxelPos;                      // current passed voxel
+    int bufferId,meshId;                       // passed voxel Id
     uint instanceId, canopyId, typeId;  //passed voxel Id through voxelLink and instanceLink.
     float alpha_toSolar = 1.0;
     float alpha_voxel = 1.0;
@@ -98,19 +99,20 @@ bool TraversalDirection(vec3 lightDirection)
 
         // get hit information, especially get ffnormal to avoid hit self.
         ShadeState sstate = GetShadeState(prd);
-        // voxelId = getPassedVoxelId(sstate.position, scale, normalize(lightDirection));
+        // voxelPos = getPassedVoxelId(sstate.position, scale, normalize(lightDirection));
         vec3 alignVoxelId;
-        voxelId = getVoxelIdSemi(sstate.position,semiRange,setting.scale,normalize(lightDirection),alignVoxelId);
+        voxelPos = getVoxelIdSemi(sstate.position,semiRange,setting.scale,normalize(lightDirection),alignVoxelId);
 		
 
-        bufferId = nanovdbGet(nanoVDBLink, voxelId);
+        bufferId = nanovdbGet(nanoVDBLink, voxelPos);
         
         // a valid voxel and get this voxel information.
         if(bufferId >= 0)
         {
             instanceId = voxelLinks[bufferId].instanceId;
-            typeId = instanceLinks[instanceId].type;
-            canopyId = instanceLinks[instanceId].canopyId;
+            meshId = instanceLinks[instanceId].meshId;
+            typeId = meshLinks[meshId].type;
+            canopyId = meshLinks[meshId].canopyId;
             // if soil, this voxel transmittance is 1.
             if(typeId == TYPE_SOIL)
             {
