@@ -41,6 +41,30 @@ using BufferT = nanovdb::HostBuffer;
 
 // all binding index in addBindings
 
+
+struct OptCoeff
+{
+//    float * nr_, *kdm_, *kab_, *kw_, *ks_, *phiI_, *phiII_;
+    std::vector<float> wl_;
+    std::vector<float> nr_;
+    std::vector<float> kab_;
+    std::vector<float> kca_;
+    std::vector<float> kdm_;
+    std::vector<float> ks_;
+    std::vector<float> kw_;
+    std::vector<float> phiI_;
+    std::vector<float> phiII_;
+    std::vector<float> kcaV_;
+    std::vector<float> kcaV2_;
+    std::vector<float> kcaZ_;
+    std::vector<float> kcant_;
+    std::vector<float> gsv1_;
+    std::vector<float> gsv2_;
+    std::vector<float> gsv3_;
+    std::vector<float> nw_;
+    std::vector<float> phi_;
+};
+
 enum class VoxelRadStage
 {
     gap,
@@ -331,10 +355,10 @@ struct PrimEntity
 //};
 
 struct Angle{
-    float sza;
-    float saa;
-    float vza;
-    float vaa;
+    float vza{0};
+    float vaa{0};
+    float sza{0};
+    float saa{0};
 };
 
 struct SceneXml

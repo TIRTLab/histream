@@ -98,9 +98,9 @@ void samplePixel(vec2 imageCoords,vec2 sizeImage,int smpl)
 
 void main()
 {
-    // image resolution
+    // image imageSize
 	vec2 imageRes    = settingxml.imageSize;
-    // image coordinate from 1-resolution
+    // image coordinate from 1-imageSize
     ivec2 imageCoords = ivec2(gl_GlobalInvocationID.xy);  //SampleSizzled();
 	int bufferId = int(sensorMatrix.waveNum * (imageCoords.y*imageRes.x + imageCoords.x));
     uint temp = uint(settingxml.imageSize.x * gl_GlobalInvocationID.y + gl_GlobalInvocationID.x);

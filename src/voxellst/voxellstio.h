@@ -48,7 +48,7 @@ VoxellstIO(){
     m_instanceio = std::make_shared<InstanceIO>();
     m_virtualio = std::make_shared<VirtualIO>();
     m_pAccelStruct = std::make_shared<AccelStruct>();  // method and resource, have to make
-    m_defined = std::make_shared<Defined>();
+    m_defined = std::make_shared<DefinedIO>();
     m_voxelio = std::make_shared<VoxelIO>();
 
 };
@@ -74,12 +74,12 @@ VoxellstIO(){
 
     std::vector<Meteo> meteos;
     Meteo meteo;
-    MeteoMeta meta;
+   // MeteoMeta meta;
 
     //Geometry info
     SensorMatrix sensor;   // original sensor become the angular sensor and spectral wavesets
     LightSet     light;
-    std::vector<glm::vec4> angles;
+    std::vector<Angle> angles;
     std::vector<float> waves;
     std::vector<WaveSet> wavesets;
     std::vector<AeroCond>  aeroconds;
@@ -106,7 +106,7 @@ VoxellstIO(){
     std::shared_ptr<InstanceIO> m_instanceio;
     std::shared_ptr<VirtualIO> m_virtualio;
     std::shared_ptr<VoxelIO> m_voxelio;
-    std::shared_ptr<Defined> m_defined;
+    std::shared_ptr<DefinedIO> m_defined;
 
     VoxelLstSetting setting;
 

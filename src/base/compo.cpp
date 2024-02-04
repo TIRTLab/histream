@@ -68,7 +68,7 @@ float Compo::calctav(float alfa,float nr)
     return tav;
 }
 
-void Compo::fluspect(FluspectCoeff fluspectCoeff,FluspectParam fluspectParam,std::vector<Spectral>& spectrals)
+void Compo::fluspect(OptCoeff fluspectCoeff, FluspectParam fluspectParam, std::vector<Spectral>& spectrals)
 {
     float Cab         = fluspectParam.Cab;
     float Cw          = fluspectParam.Cw;
@@ -250,18 +250,8 @@ bool Compo::createCompProperty(std::shared_ptr<FileIO> &fileio, std::shared_ptr<
 
     auto & meshio = modelio->m_meshio;
     auto & definedio = modelio->m_defined;
+    int num = 0;
 
-    definedio->definedDir = fileio->m_pVoxelLstXml->definedDir;
-    std::string predifineDir = definedio->definedDir+"/defined/";
-    std::string infileName = predifineDir + "optipar_fluspect.txt";
-    int num = 1;
-    Utils::readascfileinout(infileName,0,1,definedio->m_fluspectCoeff.nr_,num);
-    Utils::readascfileinout(infileName,0,2,definedio->m_fluspectCoeff.kdm_,num);
-    Utils::readascfileinout(infileName,0,3,definedio->m_fluspectCoeff.kab_,num);
-    Utils::readascfileinout(infileName,0,4,definedio->m_fluspectCoeff.kw_,num);
-    Utils::readascfileinout(infileName,0,5,definedio->m_fluspectCoeff.ks_,num);
-    Utils::readascfileinout(infileName,0,6,definedio->m_fluspectCoeff.phiI_,num);
-    Utils::readascfileinout(infileName,0,7,definedio->m_fluspectCoeff.phiII_,num);
 
 
     int id = 0;
@@ -342,6 +332,53 @@ bool Compo::createCompProperty(std::shared_ptr<FileIO> &fileio, std::shared_ptr<
 }
 
 
+
+void Compo::bsm(OptCoeff bsmCoeff,BSMParam bsm,std::vector<Spectral>& spectrals){
+
+    std::vector<float> &gsv1_ = bsmCoeff.gsv1_;
+    std::vector<float> &gsv2_ = bsmCoeff.gsv2_;
+    std::vector<float> &gsv3_ = bsmCoeff.gsv3_;
+    std::vector<float> &kw_ = bsmCoeff.kw_;
+    std::vector<float> &nw_ = bsmCoeff.nw_;
+
+
+    float B = bsm.BSMBrightness;
+    float lat = bsm.BSMlat;
+    float lon = bsm.BSMlon;
+    float SMC = bsm.SMC;
+    float SMCp = 0.25;
+    float film = 0.015;
+    float rd = 3.1415926/180.0;
+
+    float f1 = B * sin(lat*rd);
+    float f2 = B * cos(lat*rd)* sin(lon*rd);
+    float f3 = B * cos(lat*rd) * cos(lon*rd);
+
+    std::vector<float> rdry_,rwet_;
+    for(int k =0;k<gsv1_.size();k++){
+        rdry_.push_back(gsv1_[k]*f1+gsv2_[k]*f2+gsv3_[k]*f3);
+    }
+
+
+    for(int k =0;k<gsv1_.size();k++) {
+        float rdry = rdry_[k];
+        float tw = exp(-kw_[k] * film);
+        float rbac = 1 - (1-rdry_[k]) * (rdry_[k] * calctav(90,2.0/nw_[k]) / calctav(90,2.0) + 1-rdry_[k]);
+        float p = 1-calctav(90,nw_[k])/nw_[k]/nw_[k];
+        float Rw = 1-calctav(40,nw_[k]);
+        float   Radd   = (1-Rw) * (1-p) * rbac /(1 - p * rbac);
+        float     mu  = (SMC - 0.05)/ SMCp;
+        float fdry = exp(-mu);
+        float  fmul = (exp(tw * mu) - 1) * fdry;
+        float rwet = rdry * fdry + Rw * (1 - fdry) + Radd * fmul;
+     //   rwet_.push_back(rwet);
+         Spectral spectral{rwet,0};
+         spectrals.push_back(spectral);
+
+    }
+
+
+}
 
 
 

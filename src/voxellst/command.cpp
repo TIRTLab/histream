@@ -99,8 +99,8 @@ bool Command::runRT(std::shared_ptr<VoxellstIO> &modelio){
 
     modelio->m_currentSemaphore = 1;
 
-    glm::ivec3 voxelSize2D = glm::ivec3((modelio->setting.resolution.x + (GROUP_SIZEXY - 1)) / GROUP_SIZEXY,
-                                        (modelio->setting.resolution.y + (GROUP_SIZEXY - 1)) / GROUP_SIZEXY, 1);
+    glm::ivec3 voxelSize2D = glm::ivec3((modelio->setting.imageSize.x + (GROUP_SIZEXY - 1)) / GROUP_SIZEXY,
+                                        (modelio->setting.imageSize.y + (GROUP_SIZEXY - 1)) / GROUP_SIZEXY, 1);
     auto & descSet = modelio->m_descSet;
     auto & setting = modelio->setting;
 

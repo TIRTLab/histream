@@ -40,7 +40,7 @@ layout(local_size_x = GROUP_SIZEX) in;
 #define MAXBAND    25
 #define NUM_VNIR 2001 
 #define NUM_BAND 2002
-#define NUM_TIR 161
+
 float GammaR[DIFFUSE_ANGLE_NUM * DIFFUSE_ANGLE_NUM];
 float GammaT[DIFFUSE_ANGLE_NUM * DIFFUSE_ANGLE_NUM];
 // from solar direction to selected direction;
@@ -381,6 +381,10 @@ void main()
     uint spectralId = meshLinks[meshId].spectralId;
     uint spectralIdBase = spectralId * NBAND;
 
+    float Rin = ubom.meteo.Rin;               // measurement height 
+    float Rli = ubom.meteo.Rli;               // wind speed
+
+
     // get center position of a voxel
     float scale = setting.scale;
     vec3 semiRange = setting.scale * setting.voxelSize/2.0;
@@ -422,11 +426,13 @@ void main()
             if(kband_end > NUM_VNIR) kband_end = NUM_VNIR;
             kband_center = int((kband_end + kband_start)/2);
             float Esun = 0, Esky = 0, wavelengthwidth = 0;
+            float temp=0;
             for(int kbandj = kband_start; kbandj < kband_end; kbandj++)
             {
                 wavelengthwidth = waveSets[kbandj].wavelength - waveSets[kbandj-1].wavelength;
-                Esun = Esun + lightSet.Rin*waveSets[kbandj].direct*0.001;
-                Esky = Esky + lightSet.Rin*waveSets[kbandj].diffuse*0.001;
+                Esun = Esun + Rin*waveSets[kbandj].direct*0.001;
+                Esky = Esky + Rin*waveSets[kbandj].diffuse*0.001;
+                temp = temp +1;
             }
 
             for(int kiter=0;kiter< 1;kiter++)
@@ -466,12 +472,13 @@ void main()
 
             absorb = 1 - spectralMaterials[spectralIdBase + kband_center].transmittance -
                     spectralMaterials[spectralIdBase + kband_center].reflectance;
-            // rads = rads * absorb;
+            rads = rads * absorb;
     
             
 
             // radSum = 100;
-            atomicAdd(voxelNetRads[bufferId0].diffuseVrad, rads, gl_ScopeDevice,gl_StorageSemanticsBuffer,gl_SemanticsRelaxed);
+          
+            atomicAdd(voxelNetRads[bufferId0].diffuseVrad, temp, gl_ScopeDevice,gl_StorageSemanticsBuffer,gl_SemanticsRelaxed);
         }
 // atomicStore(voxelNetRads[bufferId0].directVrad, radSum, gl_ScopeDevice,gl_StorageSemanticsBuffer,gl_SemanticsRelaxed);
     }

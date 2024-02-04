@@ -420,7 +420,7 @@ void SamplePixel(int kSample, ivec2 imageCoords, ivec2 imageResolution)
 void main()
 {
 	uint64_t start = clockRealtimeEXT();  // Debug - Heatmap
-	ivec2 imageRes    = settingxml.resolution;
+	ivec2 imageRes    = settingxml.imageSize;
   ivec2 imageCoords = ivec2(gl_LaunchIDEXT.xy);
 	int bufferId = sensorMatrix.waveNum * (imageCoords.y * imageRes.x + imageCoords.x );
   prd.seed = initRandom(gl_LaunchSizeEXT.xy, gl_LaunchIDEXT.xy, settingxml.frame);

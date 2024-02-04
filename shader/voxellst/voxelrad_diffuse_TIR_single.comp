@@ -39,8 +39,8 @@ layout(local_size_x = GROUP_SIZEX) in;
 // #define DIFFUSE_ANGLE_NUM 32
 #define MAXBAND    25
 #define NUM_VNIR 2001 
-#define NUM_BAND 2162
-#define NUM_TIR 161
+#define NUM_BAND 2002
+
 float GammaR[DIFFUSE_ANGLE_NUM * DIFFUSE_ANGLE_NUM];
 float GammaT[DIFFUSE_ANGLE_NUM * DIFFUSE_ANGLE_NUM];
 // from solar direction to selected direction;
@@ -455,6 +455,9 @@ void main()
       voxelPos0.y = voxelPos0.y + scale/2.0;
     }
 
+    float Rin = ubom.meteo.Rin;               // measurement height 
+    float Rli = ubom.meteo.Rli;               // wind speed
+
     // reset the voxelRads in VNIR band
     // for(uint kband=NUM_VNIR;kband < NUM_BAND;kband++)
     //   for(uint iangle=0;iangle < DIFFUSE_ANGLE_NUM;iangle++)
@@ -480,7 +483,7 @@ void main()
 
     float wavelength = waveSets[kbandj].wavelength;
     float Esun = 0;
-    float Esky = lightSet.Rli;
+    float Esky = Rli;
 
         for(int kiter=0;kiter< 1;kiter++)
         {

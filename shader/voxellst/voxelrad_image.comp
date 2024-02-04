@@ -40,7 +40,7 @@ layout(local_size_x = GROUP_SIZEXY, local_size_y = GROUP_SIZEXY) in;
 // #define DIFFUSE_ANGLE_NUM 32
 #define MAXBAND    25
 #define NUM_VNIR 2001
-#define NUM_BAND 2162
+#define NUM_BAND 2002
 float wavelength = 10500;
 float LST;
 float LSTSum;
@@ -118,6 +118,9 @@ bool Voxel_raytracing(Ray ray, NanoVDBLink nanoVDBLink)
 
 			if(typeId == TYPE_VEGETATION)
 			{
+        // LST = 2;
+        // return false;
+
 				float pathLength = Vector2Distance(sstate.position - sstate.lastPosition);// * 0.2; //!!!!需要改回去！！！
 				alpha_voxel = exp(-canopies[canopyId].density * canopies[canopyId].G * pathLength);
 
@@ -152,7 +155,12 @@ bool Voxel_raytracing(Ray ray, NanoVDBLink nanoVDBLink)
                 radianceDirect = thermalRadiance * (1 - refl - trans) * (1 - alpha_voxel);
                                 
                 LST += radianceDirect; // debug
-				
+        
+				//LST = voxelDirs[bufferId].solar;
+                // uint instanceId = voxelLinks[bufferId].instanceId;
+                // uint meshId = instanceLinks[instanceId].meshId;
+                // LST = meshLinks[meshId].type;
+				//break;
                 // LST = voxelNetRads[bufferId].diffuseTrad;
                 // // LST = voxelDirs[bufferId].solar;
                 // break;
@@ -194,9 +202,12 @@ bool Voxel_raytracing(Ray ray, NanoVDBLink nanoVDBLink)
                 radianceDirect = thermalRadiance * (1 - refl - trans);
                 
                 //LST = canopy.G;
-                LST += radianceDirect;
-
-                // LST=voxelNetRads[bufferId].diffuseTrad;
+            LST += radianceDirect;
+                // LST = 1;
+             //   LST = voxelDirs[bufferId].solar;
+                //               uint instanceId = voxelLinks[bufferId].instanceId;
+                // uint meshId = instanceLinks[instanceId].meshId;
+                // LST = meshLinks[meshId].type;
 				break;
 			}
 		}

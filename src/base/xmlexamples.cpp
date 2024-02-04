@@ -77,8 +77,9 @@ void XmlExamples::createVoxellstxml(){
     m_pVoxelLstXml->settingxml.maxDepth = 32;
     m_pVoxelLstXml->settingxml.theGPU = 0;
 
+
     m_pVoxelLstXml->lightxml.name = "Solar";
-    m_pVoxelLstXml->lightxml.solarAngle = {25,0};
+    m_pVoxelLstXml->lightxml.solarAngle = {25,10};
     m_pVoxelLstXml->lightxml.direct = 0.9;
     m_pVoxelLstXml->lightxml.diffuse = 0.1;
     m_pVoxelLstXml->lightxml.skyTemperature = 250;
@@ -148,7 +149,7 @@ void XmlExamples::createVoxellstxml(){
                                 SoilSet{0,500,1180,1800,1.55,0.25,25,0.45}};
     m_pVoxelLstXml->propxmls ={propertyXml1,propertyXml2};
 
-    m_pVoxelLstXml->canopyxmls ={{"crown",{1,10,0.5,-0.35,-0.15,0.2,0.2}}};
+    m_pVoxelLstXml->canopyxmls ={{"crown",{1,1,1,1,0.5,-0.35,-0.15,0.2,0.2}}};
 
     m_pVoxelLstXml->aerocondxml = {AeroType::one,{10,10,3,0.36},"",1000};
 

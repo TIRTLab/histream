@@ -190,56 +190,57 @@ void Raytracing::output(std::shared_ptr<RaytracingIO> &raytracingio,std::shared_
     raytracingio->m_pAlloc->unmap(pixelBuffer);
     raytracingio->m_pAlloc->destroy(pixelBuffer);
 
-    glm::vec4 angles = raytracingio->angles[kangle];
+    Angle angle = raytracingio->angles[kangle];
     std::vector<float> waves = raytracingio->waves;
     glm::vec2 resolution = raytracingio->resolution;
 
+    fileio->writeENVIdata(raytracingio->projectDir,pData, width,height,band,angle);
 
-    std::ostringstream  oss_x;
-    oss_x << std::setw(3)<<std::setfill('0')<<angles.x;
-    std::ostringstream  oss_y;
-    oss_y << std::setw(3)<<std::setfill('0')<<angles.y;
-    std::ostringstream  oss_z;
-    oss_z << std::setw(3)<<std::setfill('0')<<angles.z;
-    std::ostringstream  oss_w;
-    oss_w << std::setw(3)<<std::setfill('0')<<angles.w;
-
-    std::string outPath = raytracingio->projectDir +"/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
-                             "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str()+".tif";
-
-    std::string proj = "";
-    double trans[6] ={0,0,0,0,0,0};
-    Utils::saveImage(outPath,fileio->outImage,width,height,band,proj,trans);
-
-
-    std::string tifName = raytracingio->projectDir + +"/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
-                                                     "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str()+".img";
-    std::string hdrName = raytracingio->projectDir + +"/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
-                          "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str()+".hdr";
-
-    std::ofstream outfilet1(tifName.c_str(), std::ios::binary);
-    outfilet1.write(reinterpret_cast<const char*>(pData), sizeof(float) * width * height * band);
-    outfilet1.close();
-
-    std::ofstream outfile(hdrName);
-    if (outfile.is_open())
-    {
-        outfile << "ENVI" << std::endl;
-        outfile << "description = {" << std::endl;
-        outfile << " File Imported into ENVI.} " << std::endl;
-        outfile << "samples = " << width << std::endl;
-        outfile << "lines   = " << height << std::endl;
-        outfile << "bands   =  " << band << std::endl;
-        outfile << "header offset = 0" << std::endl;
-        outfile << "file type = ENVI Standard" << std::endl;
-        outfile << "data type = 4" << std::endl;
-        outfile << "interleave = bip" << std::endl;
-        outfile << "sensor type = unknown" << std::endl;
-        outfile << "byte order = 0" << std::endl;
-        outfile << "wavelength units = Unknown" << std::endl;
-        outfile.close();
-    }
-    outfile.close();
+//    std::ostringstream  oss_x;
+//    oss_x << std::setw(3)<<std::setfill('0')<<angles.x;
+//    std::ostringstream  oss_y;
+//    oss_y << std::setw(3)<<std::setfill('0')<<angles.y;
+//    std::ostringstream  oss_z;
+//    oss_z << std::setw(3)<<std::setfill('0')<<angles.z;
+//    std::ostringstream  oss_w;
+//    oss_w << std::setw(3)<<std::setfill('0')<<angles.w;
+//
+//    std::string outPath = raytracingio->projectDir +"/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
+//                             "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str()+".tif";
+//
+//    std::string proj = "";
+//    double trans[6] ={0,0,0,0,0,0};
+//    Utils::saveImage(outPath,fileio->outImage,width,height,band,proj,trans);
+//
+//
+//    std::string tifName = raytracingio->projectDir + +"/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
+//                                                     "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str()+".img";
+//    std::string hdrName = raytracingio->projectDir + +"/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
+//                          "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str()+".hdr";
+//
+//    std::ofstream outfilet1(tifName.c_str(), std::ios::binary);
+//    outfilet1.write(reinterpret_cast<const char*>(pData), sizeof(float) * width * height * band);
+//    outfilet1.close();
+//
+//    std::ofstream outfile(hdrName);
+//    if (outfile.is_open())
+//    {
+//        outfile << "ENVI" << std::endl;
+//        outfile << "description = {" << std::endl;
+//        outfile << " File Imported into ENVI.} " << std::endl;
+//        outfile << "samples = " << width << std::endl;
+//        outfile << "lines   = " << height << std::endl;
+//        outfile << "bands   =  " << band << std::endl;
+//        outfile << "header offset = 0" << std::endl;
+//        outfile << "file type = ENVI Standard" << std::endl;
+//        outfile << "data type = 4" << std::endl;
+//        outfile << "interleave = bip" << std::endl;
+//        outfile << "sensor type = unknown" << std::endl;
+//        outfile << "byte order = 0" << std::endl;
+//        outfile << "wavelength units = Unknown" << std::endl;
+//        outfile.close();
+//    }
+//    outfile.close();
 
     //m_pFileOutput->writeTif(, pData, angles, waves, resolution);
 }

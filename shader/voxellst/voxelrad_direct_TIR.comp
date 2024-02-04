@@ -37,10 +37,10 @@ layout(local_size_x = GROUP_SIZEX) in;
 #define MAXBAND    25
 #define NUM_VNIR 2001 
 #define NUM_BAND 2002
-#define NUM_TIR 161
+
 float GammaR[DIFFUSE_ANGLE_NUM * DIFFUSE_ANGLE_NUM];
 float GammaT[DIFFUSE_ANGLE_NUM * DIFFUSE_ANGLE_NUM];
-float Radiance[NUM_TIR];
+
 
 
 void main()
@@ -62,6 +62,9 @@ void main()
 
     voxelNetRads[bufferId0].directTrad = 0;
 
+    float Rin = ubom.meteo.Rin;               // measurement height 
+    float Rli = ubom.meteo.Rli;               // wind speed
+
     //---------------------------------------------------
     // Iteration in TIR band
     //---------------------------------------------------
@@ -75,7 +78,7 @@ void main()
                 spectralMaterials[spectralIdBase + kband].reflectance;
         float band0 = waveSets[kband-1].wavelength;
         float bandwidth = waveSets[kband].wavelength - band0;
-        float rad = lightSet.Rli * waveSets[kband].direct * 0.001 * bandwidth * alpha_toSolar * absorb;
+        float rad = Rli * waveSets[kband].direct * 0.001 * bandwidth * alpha_toSolar * absorb;
 
         atomicAdd(voxelNetRads[bufferId0].directTrad,rad,
             gl_ScopeDevice,gl_StorageSemanticsBuffer,gl_SemanticsRelaxed);

@@ -77,14 +77,14 @@ struct alignas(32)  VoxelLstSetting
     int frame{0};
     int maxIteration{3};
     int maxDepth{16};
-    int maxStep{5};
+    int maxStep{25};
     int n_sample{16};
     int n_wave{5};
     int n_jump{10};
     float scale{1};
-    glm::ivec2 resolution{100, 100};
+    glm::ivec2 imageSize{100, 100};
     int isDisplay{0};
-    int semiRange{80};
+    int empty{80};
     glm::ivec3 voxelSize{50, 0, 50};
     int dumpy{0};
     int dumpyy{0};
@@ -94,9 +94,9 @@ struct alignas(32)  VoxelLstSetting
 // whole
 struct WaveSet
 {
-    float wavelength;
-    float direct;
-    float diffuse;
+    float wavelength{0};
+    float direct{0};
+    float diffuse{0};
 };
 
 struct Wave

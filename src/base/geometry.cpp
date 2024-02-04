@@ -34,7 +34,7 @@ bool Geometry::createGeometry(std::shared_ptr<FileIO> &fileio, std::shared_ptr<R
     {
         vza = sensorxml.viewAngles[i][0];
         vaa = sensorxml.viewAngles[i][1];
-        modelio->angles.emplace_back(glm::vec4{vza, vaa, sza, saa});
+        modelio->angles.emplace_back(Angle{vza, vaa, sza, saa});
     }
     //modelio->n_angle = sensorxml.viewAngles.size();
     //---------------------------------------------------------
@@ -45,10 +45,10 @@ bool Geometry::createGeometry(std::shared_ptr<FileIO> &fileio, std::shared_ptr<R
     //---------------------------------------------------------
     // LIGHT AND SENSOR INI with Angle 0 and Band 0
     //---------------------------------------------------------
-    vza = modelio->angles[0].x;
-    vaa = modelio->angles[0].y;
-    sza = modelio->angles[0].z;
-    saa = modelio->angles[0].w;
+    vza = modelio->angles[0].vza;
+    vaa = modelio->angles[0].vaa;
+    sza = modelio->angles[0].sza;
+    saa = modelio->angles[0].saa;
     modelio->sensor = createSensor(modelio->sceneSize,modelio->sceneOrigin, vza, vaa, 1.0);
     modelio->light = createLight(sza, saa, fileio->m_pRaytracingXml->lightxml.direct, fileio->m_pRaytracingXml->lightxml.diffuse,
                                       fileio->m_pRaytracingXml->lightxml.solarTemperature,
@@ -87,7 +87,7 @@ bool Geometry::createGeometry(std::shared_ptr<FileIO> &fileio, std::shared_ptr<V
     {
         vza = sensorxml.viewAngles[i][0];
         vaa = sensorxml.viewAngles[i][1];
-        modelio->angles.emplace_back(glm::vec4{vza, vaa, sza, saa});
+        modelio->angles.emplace_back(Angle{vza, vaa, sza, saa});
     }
     //modelio->n_angle = sensorxml.viewAngles.size();
     //---------------------------------------------------------
@@ -98,10 +98,10 @@ bool Geometry::createGeometry(std::shared_ptr<FileIO> &fileio, std::shared_ptr<V
     //---------------------------------------------------------
     // LIGHT AND SENSOR INI with Angle 0 and Band 0
     //---------------------------------------------------------
-    vza = modelio->angles[0].x;
-    vaa = modelio->angles[0].y;
-    sza = modelio->angles[0].z;
-    saa = modelio->angles[0].w;
+    vza = modelio->angles[0].vza;
+    vaa = modelio->angles[0].vaa;
+    sza = modelio->angles[0].sza;
+    saa = modelio->angles[0].saa;
     modelio->sensor = createSensor(modelio->sceneSize,modelio->sceneOrigin, vza, vaa, 1.0);
     modelio->light = createLight(sza, saa, fileio->m_pVoxelLstXml->lightxml.direct, fileio->m_pVoxelLstXml->lightxml.diffuse,
                                       fileio->m_pVoxelLstXml->lightxml.solarTemperature,
@@ -120,7 +120,8 @@ LightSet Geometry::createLight(float sza, float saa, float direct, float diffuse
     float rd = DEG2RAD;
     glm::vec3 origin = glm::vec3(0, 0, 0);
     glm::vec3 lightPos = glm::vec3(r * std::sin(sza * rd) * std::cos(saa * rd),
-                                           r * std::cos(sza * rd), r * std::sin(sza * rd) * std::sin(saa * rd));
+                                   r * std::cos(sza * rd),
+                                   r * std::sin(sza * rd) * std::sin(saa * rd));
 
     light.direction = lightPos;
     light.direct = direct;
@@ -242,7 +243,7 @@ void Geometry::updateLight(std::shared_ptr<VoxellstIO> &modelio, LightSet &light
 
 void Geometry::updateAngle(std::shared_ptr<VoxellstIO> &modelio, int kangle){
 
-    glm::vec4 angles = modelio->angles[kangle];
+    Angle &angle = modelio->angles[kangle];
 //    std::cout << "Angle Info:"
 //              << "    vza_" << std::to_string(angles.x) << "    vaa_" << std::to_string(angles.y)
 //              << "    sza_" << std::to_string(angles.z) << "    saa_" << std::to_string(angles.w) << std::endl;
@@ -250,10 +251,10 @@ void Geometry::updateAngle(std::shared_ptr<VoxellstIO> &modelio, int kangle){
     float ratio = 1.0;
     //ratio = 0.707;
     SensorMatrix sensorMatrix = createSensor(modelio->sceneSize,modelio->sceneOrigin,
-                                                          angles.x, angles.y, ratio);
+                                                          angle.vza, angle.vaa, ratio);
     updateSensor(modelio, sensorMatrix);
 
-    LightSet lightSet = createLight(angles.z, angles.w,modelio->light.direct,
+    LightSet lightSet = createLight(angle.sza, angle.saa,modelio->light.direct,
                                                  modelio->light.diffuse,modelio->light.solarTemperature,
                                                  modelio->light.skyTemperature);
     updateLight(modelio,lightSet);
@@ -263,7 +264,7 @@ void Geometry::updateAngle(std::shared_ptr<VoxellstIO> &modelio, int kangle){
 
 void Geometry::updateAngle(std::shared_ptr<RaytracingIO> &modelio, int kangle){
 
-    glm::vec4 angles = modelio->angles[kangle];
+    Angle &angle = modelio->angles[kangle];
 //    std::cout << "Angle Info:"
 //              << "    vza_" << std::to_string(angles.x) << "    vaa_" << std::to_string(angles.y)
 //              << "    sza_" << std::to_string(angles.z) << "    saa_" << std::to_string(angles.w) << std::endl;
@@ -271,10 +272,10 @@ void Geometry::updateAngle(std::shared_ptr<RaytracingIO> &modelio, int kangle){
     float ratio = 1.0;
     //ratio = 0.707;
     SensorMatrix sensorMatrix = createSensor(modelio->sceneSize,modelio->sceneOrigin,
-                                                          angles.x, angles.y, ratio);
+                                                          angle.vza, angle.vaa, ratio);
     updateSensor(modelio, sensorMatrix);
 
-    LightSet lightSet = createLight(angles.z, angles.w,modelio->light.direct,
+    LightSet lightSet = createLight(angle.sza, angle.saa,modelio->light.direct,
                                                  modelio->light.diffuse,modelio->light.solarTemperature,
                                                  modelio->light.skyTemperature);
     updateLight(modelio,lightSet);

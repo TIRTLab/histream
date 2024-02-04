@@ -20,8 +20,10 @@ public:
     bool createCompProperty(std::shared_ptr<FileIO> &fileio, std::shared_ptr<VoxellstIO> &voxellstio);
 
     float calctav(float alfa,float nr);
-    void fluspect(FluspectCoeff fluspectCoeff,FluspectParam fluspectParam,std::vector<Spectral>& spectrals);
+    void fluspect(OptCoeff fluspectCoeff, FluspectParam fluspectParam, std::vector<Spectral>& spectrals);
 
+
+    void bsm(OptCoeff bsmCoeff, BSMParam bsm, std::vector<Spectral> &spectral);
 
 };
 

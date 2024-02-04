@@ -40,8 +40,7 @@ layout(local_size_x = GROUP_SIZEX) in;
 // #define DIFFUSE_ANGLE_NUM 32
 #define MAXBAND    25
 #define NUM_VNIR 2001 
-#define NUM_BAND 2162
-#define NUM_TIR 161
+#define NUM_BAND 2002
 float GammaR[DIFFUSE_ANGLE_NUM * DIFFUSE_ANGLE_NUM];
 float GammaT[DIFFUSE_ANGLE_NUM * DIFFUSE_ANGLE_NUM];
 
@@ -60,6 +59,8 @@ bool TraversalDirection(vec3 lightDirection)
 
     // Get nanoVDBLink: from voxelPos to bufferId
     NanoVDBLink nanoVDBLink = nanovdbInit();
+float temp = 0;
+atomicAdd(voxelDirs[bufferId0].solar, temp, gl_ScopeDevice,gl_StorageSemanticsBuffer,gl_SemanticsRelaxed);
 
     // get center position of a voxel
     float scale = setting.scale;
@@ -79,7 +80,7 @@ bool TraversalDirection(vec3 lightDirection)
     float alpha_voxel = 1.0;
     
     // ray cast from the center position of a voxel along a specific direction
-    Ray ray = Ray(voxelPos0, normalize(lightDirection));
+    Ray ray = Ray(voxelPos0, lightDirection);
 
     // This is a process toward direction step by step
     int kstep = 0;
@@ -89,7 +90,7 @@ bool TraversalDirection(vec3 lightDirection)
         // the transmittance inside a voxel
         alpha_voxel = 1.0;
 
-        ClosestHit(ray);
+        ClosestHit(ray,0.01);
         // hit nothing and return false.
         if(prd.hitT == INFINITY)
         {
@@ -114,30 +115,40 @@ bool TraversalDirection(vec3 lightDirection)
             typeId = meshLinks[meshId].type;
             canopyId = meshLinks[meshId].canopyId;
             // if soil, this voxel transmittance is 1.
-            if(typeId == TYPE_SOIL)
+
+            if(abs(float(typeId - TYPE_SOIL))<0.1)
             {
-                if(kstep == 0)  alpha_voxel = 1;
+                if(kstep == 0)  {alpha_voxel = 1.0;}
                 else 
                 {
                     alpha_toSolar = 0.0;
                     break;
                 }
+              
             }
-            if(typeId == TYPE_VEGETATION)
+            if(abs(float(typeId - TYPE_VEGETATION))<0.1)
             {
                 float pathLength = Vector2Distance(sstate.position - sstate.lastPosition);
-                alpha_voxel = exp(-canopies[canopyId].density * canopies[canopyId].G * pathLength);
+                 alpha_voxel = exp(-canopies[canopyId].density * canopies[canopyId].G * pathLength);
+                //alpha_voxel = canopies[canopyId].G;
+                // alpha_voxel = pathLength;
+                //   atomicAdd(voxelDirs[bufferId0].solar, alpha_toSolar, gl_ScopeDevice,gl_StorageSemanticsBuffer,gl_SemanticsRelaxed);
+                // return true;
             }
-        }
-        alpha_toSolar = alpha_toSolar * alpha_voxel;
 
+        }
+        // alpha_toSolar = 1.55;
+        //  atomicAdd(voxelDirs[bufferId0].solar, alpha_toSolar, gl_ScopeDevice,gl_StorageSemanticsBuffer,gl_SemanticsRelaxed);
+        // return false;
+        alpha_toSolar = alpha_toSolar * alpha_voxel;
+       //  break;
         if(alpha_toSolar <= 0.01) break;
         // avoid hit self.
         ffnormal  = sstate.normal;
         ray.origin = OffsetRay(sstate.position, dot(ray.direction, ffnormal) > 0 ? ffnormal : -ffnormal);
     }
-
-    voxelDirs[bufferId0].solar = alpha_toSolar;
+  atomicAdd(voxelDirs[bufferId0].solar, alpha_toSolar, gl_ScopeDevice,gl_StorageSemanticsBuffer,gl_SemanticsRelaxed);
+   // voxelDirs[bufferId0].solar = alpha_toSolar;
 
     return true;
 
@@ -153,5 +164,6 @@ void main()
       uint bufferId0 = uint(gl_GlobalInvocationID.x);
       voxelDirs[bufferId0].solar = 0.0;
   }else
+  
   TraversalDirection(directions);
 }

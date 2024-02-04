@@ -34,7 +34,7 @@ layout(location = 0) rayPayloadEXT hitValue hitID;
 void main()
 {
     vec2 imageRes    = settingxml.imageSize;
-    // image coordinate from 1-resolution
+    // image coordinate from 1-imageSize
     ivec2 imageCoords = ivec2(gl_LaunchIDEXT.xy);
     uint bufferId = uint(sensorMatrix.waveNum * (imageCoords.y * imageRes.x + imageCoords.x));
 

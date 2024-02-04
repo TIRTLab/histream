@@ -15,6 +15,8 @@
 #include <numbers>
 #include <algorithm>
 #include "xmlexamples.h"
+#include "src/base/utils.h"
+#include "src/base/defined.h"
 
 class FileIO {
 
@@ -40,6 +42,13 @@ public:
     LightXml readLight(TiXmlNode *node, Mode mode=Mode::eRaytracing);
     SettingXml readSetting(TiXmlNode *node, Mode mode=Mode::eRaytracing);
     SceneXml readScene(TiXmlNode *node, Mode mode=Mode::eRaytracing);
+
+    void readDefined(std::shared_ptr<DefinedIO> & defineio);
+    void readMeteo(std::shared_ptr<DefinedIO> &defineio,int & n_node, std::vector<Meteo> &meteos, std::vector<WaveSet> &wavesets);
+
+    void writeENVIdata(std::string projectDir,float * pData, int width, int height, int band, Angle &angle, int kband = -1);
+
+
 
     XmlExamples xmlexamples;
 

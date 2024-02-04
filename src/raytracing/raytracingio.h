@@ -93,7 +93,7 @@ public:
     //Geometry info
     SensorMatrix sensor;   // original sensor become the angular sensor and spectral wavesets
     LightSet     light;
-    std::vector<glm::vec4> angles;
+    std::vector<Angle> angles;
     std::vector<float> waves;
 
     // Setting info

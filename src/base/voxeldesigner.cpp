@@ -392,33 +392,33 @@ PrimMesh VoxelDesigner::createTriEllipsoid(Shape shape, float stepSize)
                     glm::ivec3 voxel = glm::ivec3(i,j,k);
                     glm::vec3 point[7];
 
-                    point[0].x = voxel.x * stepSize;
-                    point[0].y = voxel.y * stepSize;
-                    point[0].z = voxel.z * stepSize;
+                    point[0].x = voxel.x ;
+                    point[0].y = voxel.y ;
+                    point[0].z = voxel.z ;
 
-                    point[1].x = voxel.x * stepSize;
-                    point[1].y = (voxel.y + 1) * stepSize;
-                    point[1].z = voxel.z * stepSize;
+                    point[1].x = voxel.x ;
+                    point[1].y = (voxel.y + 1) ;
+                    point[1].z = voxel.z ;
 
-                    point[2].x = (voxel.x + 1) * stepSize;
-                    point[2].y = (voxel.y + 1) * stepSize;
-                    point[2].z = voxel.z * stepSize;
+                    point[2].x = (voxel.x + 1) ;
+                    point[2].y = (voxel.y + 1) ;
+                    point[2].z = voxel.z ;
 
-                    point[3].x = (voxel.x + 1) * stepSize;
-                    point[3].y = voxel.y * stepSize;
-                    point[3].z = voxel.z * stepSize;
+                    point[3].x = (voxel.x + 1) ;
+                    point[3].y = voxel.y ;
+                    point[3].z = voxel.z ;
 
-                    point[4].x = voxel.x * stepSize;
-                    point[4].y = voxel.y * stepSize;
-                    point[4].z = (voxel.z + 1) * stepSize;
+                    point[4].x = voxel.x ;
+                    point[4].y = voxel.y ;
+                    point[4].z = (voxel.z + 1) ;
 
-                    point[5].x = voxel.x * stepSize;
-                    point[5].y = (voxel.y + 1) * stepSize;
-                    point[5].z = (voxel.z + 1) * stepSize;
+                    point[5].x = voxel.x ;
+                    point[5].y = (voxel.y + 1) ;
+                    point[5].z = (voxel.z + 1) ;
 
-                    point[6].x = (voxel.x + 1) * stepSize;
-                    point[6].y = voxel.y * stepSize;
-                    point[6].z = (voxel.z + 1) * stepSize;
+                    point[6].x = (voxel.x + 1) ;
+                    point[6].y = voxel.y ;
+                    point[6].z = (voxel.z + 1) ;
 
                     for (int vi = 0; vi < 7; vi++)
                     {
