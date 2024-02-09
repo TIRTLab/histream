@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="CMakePresetLoader">{
+  &quot;useNewFormat&quot;: true
+}</component>
+  <component name="CMakeReloadState">
+    <option name="reloaded" value="true" />
+  </component>
+  <component name="CMakeRunConfigurationManager">
+    <generated>
+      <config projectName="field" targetName="nvpro_core" />
+      <config projectName="field" targetName="field" />
+      <config projectName="field" targetName="fmt" />
+      <config projectName="field" targetName="glfw" />
+      <config projectName="field" targetName="update_mappings" />
+      <config projectName="field" targetName="imgui" />
+      <config projectName="field" targetName="implot" />
+    </generated>
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug-Visual Studio" ENABLED="true" CONFIG_NAME="Debug" TOOLCHAIN_NAME="Visual Studio" GENERATION_OPTIONS="-DCMAKE_TOOLCHAIN_FILE=D:\code\vcpkg\scripts\buildsystems\vcpkg.cmake" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="41383f7c-aa66-40f8-b6a4-0b675cfdc6d4" name="更改" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vs/VSWorkspaceState.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/bindingLayout.h" beforeDir="false" afterPath="$PROJECT_DIR$/shader/bindingLayout.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/parameters.h" beforeDir="false" afterPath="$PROJECT_DIR$/shader/parameters.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/settings.h" beforeDir="false" afterPath="$PROJECT_DIR$/shader/settings.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/shade_state.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/shader/shade_state.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/shadersCompile.py" beforeDir="false" afterPath="$PROJECT_DIR$/shader/shadersCompile.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/voxellst/voxelrad_diffuse_VNIR_single.comp" beforeDir="false" afterPath="$PROJECT_DIR$/shader/voxellst/voxelrad_diffuse_VNIR_single.comp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/voxellst/voxelrad_direct_VNIR.comp" beforeDir="false" afterPath="$PROJECT_DIR$/shader/voxellst/voxelrad_direct_VNIR.comp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/voxellst/voxelrad_image.comp" beforeDir="false" afterPath="$PROJECT_DIR$/shader/voxellst/voxelrad_image.comp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/engine.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/engine.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/fileio.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/fileio.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/fileio.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/fileio.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/geometry.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/geometry.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/structs.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/structs.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/structs_cg.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/structs_cg.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/xmlexamples.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/xmlexamples.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/raytracing/buffer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/raytracing/buffer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/raytracing/command.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/raytracing/command.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/raytracing/pipeline.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/raytracing/pipeline.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/raytracing/raytracing.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/raytracing/raytracing.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/raytracing/raytracingio.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/raytracing/raytracingio.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/voxellst/buffer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/voxellst/buffer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/voxellst/descriptor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/voxellst/descriptor.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/voxellst/descriptor.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/voxellst/descriptor.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/voxellst/voxellst.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/voxellst/voxellst.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/voxellst/voxellstio.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/voxellst/voxellstio.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../nvpro_core/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../../nvpro_core/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../nvpro_core/doxygen/doxyfile.dox" beforeDir="false" afterPath="$PROJECT_DIR$/../../nvpro_core/doxygen/doxyfile.dox" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../nvpro_core/fileformats/khr_df.h" beforeDir="false" afterPath="$PROJECT_DIR$/../../nvpro_core/fileformats/khr_df.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../nvpro_core/imgui/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../nvpro_core/imgui/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../nvpro_core/nvh/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../nvpro_core/nvh/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../nvpro_core/nvp/nvpfilesystem.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../nvpro_core/nvp/nvpfilesystem.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../nvpro_core/nvvk/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../nvpro_core/nvvk/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../nvpro_core/nvvk/context_vk.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../nvpro_core/nvvk/context_vk.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../nvpro_core/nvvk/extensions_vk.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../nvpro_core/nvvk/extensions_vk.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../nvpro_core/nvvkhl/shaders/hdr_integrate_brdf.comp" beforeDir="false" afterPath="$PROJECT_DIR$/../../nvpro_core/nvvkhl/shaders/hdr_integrate_brdf.comp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../nvpro_core/third_party/basis_universal/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../nvpro_core/third_party/basis_universal/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../nvpro_core/third_party/cgltf/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../nvpro_core/third_party/cgltf/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../nvpro_core/third_party/fmt/ChangeLog.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../nvpro_core/third_party/fmt/ChangeLog.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../nvpro_core/third_party/tinygltf/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../nvpro_core/third_party/tinygltf/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../nvpro_core/third_party/vma/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../nvpro_core/third_party/vma/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../nvpro_core/third_party/zlib/ChangeLog" beforeDir="false" afterPath="$PROJECT_DIR$/../../nvpro_core/third_party/zlib/ChangeLog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../nvpro_core/third_party/zlib/FAQ" beforeDir="false" afterPath="$PROJECT_DIR$/../../nvpro_core/third_party/zlib/FAQ" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../nvpro_core/third_party/zstd/CHANGELOG" beforeDir="false" afterPath="$PROJECT_DIR$/../../nvpro_core/third_party/zstd/CHANGELOG" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../nvpro_core/third_party/zstd/CONTRIBUTING.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../nvpro_core/third_party/zstd/CONTRIBUTING.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../nvpro_core/third_party/zstd/lib/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../nvpro_core/third_party/zstd/lib/README.md" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug-Visual Studio" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectApplicationVersion">
+    <option name="ide" value="CLion" />
+    <option name="majorVersion" value="2023" />
+    <option name="minorVersion" value="3.2" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="2c5TRcbmrHSGmoHwt41InREucI9" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "CMake 应用程序.field.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "D:/work/field/field/shader",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager" selected="CMake 应用程序.field">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="field" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="field" TARGET_NAME="field" CONFIG_NAME="Debug-Visual Studio" RUN_TARGET_PROJECT_NAME="field" RUN_TARGET_NAME="field">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="fmt" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="field" TARGET_NAME="fmt" CONFIG_NAME="Debug-Visual Studio">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="glfw" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="field" TARGET_NAME="glfw" CONFIG_NAME="Debug-Visual Studio">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="imgui" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="field" TARGET_NAME="imgui" CONFIG_NAME="Debug-Visual Studio">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="implot" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="field" TARGET_NAME="implot" CONFIG_NAME="Debug-Visual Studio">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="nvpro_core" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="field" TARGET_NAME="nvpro_core" CONFIG_NAME="Debug-Visual Studio">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="update_mappings" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="field" TARGET_NAME="update_mappings" CONFIG_NAME="Debug-Visual Studio">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="CMake 应用程序.field" />
+      <item itemvalue="CMake 应用程序.nvpro_core" />
+      <item itemvalue="CMake 应用程序.fmt" />
+      <item itemvalue="CMake 应用程序.imgui" />
+      <item itemvalue="CMake 应用程序.implot" />
+      <item itemvalue="CMake 应用程序.glfw" />
+      <item itemvalue="CMake 应用程序.update_mappings" />
+    </list>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-67fca87a943a-c986f194a52a-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-233.11799.259" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="默认任务">
+      <changelist id="41383f7c-aa66-40f8-b6a4-0b675cfdc6d4" name="更改" comment="" />
+      <created>1707400433019</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1707400433019</updated>
+      <workItem from="1707400434354" duration="1116000" />
+      <workItem from="1707401882167" duration="24000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VCPKGProject">
+    <isAutomaticCheckingOnLaunch value="false" />
+    <isAutomaticFoundErrors value="true" />
+    <isAutomaticReloadCMake value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/src/raytracing/pipeline.cpp</url>
+          <line>123</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

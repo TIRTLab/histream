@@ -258,9 +258,9 @@ void SamplePixel(vec2 imageCoords,vec2 sizeImage,int smpl)
 
 void main()
 {
-    // image resolution
+    // image imageSize
 	ivec2 imageRes    = ivec2(setting.imageSize);
-    // image coordinate from 1-resolution
+    // image coordinate from 1-imageSize
     ivec2 imageCoords = ivec2(gl_GlobalInvocationID.xy);  //SampleSizzled();
     
     uint temp = uint(setting.imageSize.x * gl_GlobalInvocationID.y + gl_GlobalInvocationID.x);

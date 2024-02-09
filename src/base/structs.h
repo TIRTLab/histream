@@ -433,7 +433,7 @@ struct MeteoMeta
 struct RaytracingXml
 {
     std::string projectDir;
-    std::string shaderDir;
+    std::string definedDir;
     // system setting
     SettingXml settingxml;
 

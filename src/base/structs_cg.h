@@ -59,7 +59,7 @@ struct alignas(16) RayRTSetting
     int n_sample{ 32 };//64
     int n_wave{ 3 };
 
-    glm::ivec2 resolution{ 1000, 1000 }; // ->Sensor.resolution
+    glm::ivec2 imageSize{1000, 1000 }; // ->Sensor.resolution
     //nvmath::vec2f sceneSize{ 100.0, 100.0 };
     int band1{ 1 };
     int band2{ 2 };
@@ -82,7 +82,7 @@ struct alignas(32)  VoxelLstSetting
     int n_wave{5};
     int n_jump{10};
     float scale{1};
-    glm::ivec2 imageSize{100, 100};
+    glm::ivec2 imageSize{100, 100};  // imageSize and VoxelSize do not put together
     int isDisplay{0};
     int empty{80};
     glm::ivec3 voxelSize{50, 0, 50};
@@ -92,7 +92,7 @@ struct alignas(32)  VoxelLstSetting
 
 
 // whole
-struct WaveSet
+struct AtomCond
 {
     float wavelength{0};
     float direct{0};

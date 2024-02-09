@@ -112,7 +112,7 @@ struct LightSet
 	float solarTemperature;
 };
 
-struct WaveSet
+struct AtomCond
 {
 	float wavelength;
 	float direct;

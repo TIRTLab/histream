@@ -34,7 +34,7 @@ bool Descriptor::createDescriptor(std::shared_ptr<VoxellstIO> &modelio){
     bindings.addBinding(VoxellstbindingInd::sensor, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1, flags);
     bindings.addBinding(VoxellstbindingInd::wave, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, flags);
     bindings.addBinding(VoxellstbindingInd::light, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1, flags);
-    bindings.addBinding(VoxellstbindingInd::waveset, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, flags);
+    bindings.addBinding(VoxellstbindingInd::atomcond, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, flags);
     bindings.addBinding(VoxellstbindingInd::dir, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, flags);
     bindings.addBinding(VoxellstbindingInd::rads, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, flags);
     bindings.addBinding(VoxellstbindingInd::netRad, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, flags);
@@ -115,8 +115,8 @@ bool Descriptor::createDescriptor(std::shared_ptr<VoxellstIO> &modelio){
     updates.emplace_back(bindings.makeWrite(m_descSet, VoxellstbindingInd::light, &dbiLight));
 
 
-    VkDescriptorBufferInfo dbiWaveSet{modelio->m_pBufferWaveset->buffer, 0, VK_WHOLE_SIZE};
-    updates.emplace_back(bindings.makeWrite(m_descSet, VoxellstbindingInd::waveset, &dbiWaveSet));
+    VkDescriptorBufferInfo dbiAtomcond{modelio->m_pBufferAtomcond->buffer, 0, VK_WHOLE_SIZE};
+    updates.emplace_back(bindings.makeWrite(m_descSet, VoxellstbindingInd::atomcond, &dbiAtomcond));
 
     VkDescriptorBufferInfo dbiDir{voxelio->m_pDirBuffer->buffer, 0, VK_WHOLE_SIZE};
     updates.emplace_back(bindings.makeWrite(m_descSet, VoxellstbindingInd::dir, &dbiDir));

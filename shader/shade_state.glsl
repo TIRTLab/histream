@@ -17,10 +17,10 @@ ShadeState GetShadeState(in PtPayload hstate)
   const uint primitiveId = hstate.primitiveID;          // Triangle ID
   const vec3 bary   = vec3(1.0 - hstate.baryCoord.x - hstate.baryCoord.y, hstate.baryCoord.x, hstate.baryCoord.y);
 
-  int modelId = instanceLinks[instanceId].modelId;
+  int meshId = instanceLinks[instanceId].meshId;
   // Primitive buffer addresses
-  Indices  indices  = Indices(modelLinks[modelId].indexAddress);
-  Vertices vertices = Vertices(modelLinks[modelId].vertexAddress);
+  Indices  indices  = Indices(meshLinks[meshId].indexAddress);
+  Vertices vertices = Vertices(meshLinks[meshId].vertexAddress);
 
   // Indices of this triangle primitive.
   uvec3 tri = indices.i[primitiveId];
@@ -60,9 +60,9 @@ ShadeState GetShadeState(in PtPayload hstate)
   // sstate.spectralId     = instanceLinks[instanceId].spectralId;
   // sstate.thermalId      = instanceLinks[instanceId].thermalId;
   // sstate.typeId         = instanceLinks[instanceId].typeId; 
-  sstate.spectralId     = modelLinks[modelId].spectralId;
-  sstate.thermalId      = modelLinks[modelId].thermalId;
-  sstate.typeId         = modelLinks[modelId].type; 
+  sstate.spectralId     = meshLinks[meshId].spectralId;
+  sstate.thermalId      = meshLinks[meshId].thermalId;
+  sstate.typeId         = meshLinks[meshId].type; 
   sstate.localNormal  = geom_normal;
   sstate.localTangent = geom_tangent;
   sstate.localBinormal = geom_binormal;

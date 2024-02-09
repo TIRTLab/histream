@@ -114,7 +114,7 @@ bool Buffer::createBuffer(std::shared_ptr<RaytracingIO> &raytracingio) {
     ///  Virtual Sceen properties
     ///--------------------------------------------------------------------
     VkCommandBuffer cmdBufStorage = cmdGen.createCommandBuffer();
-    int outputSize = raytracingio->resolution.x * raytracingio->resolution.y * raytracingio->n_wave;
+    int outputSize = raytracingio->imageSize.x * raytracingio->imageSize.y * raytracingio->n_wave;
     std::vector<float> outputImage(outputSize, 0.0);
     virtualio->m_pBufferStorage = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufStorage, outputImage, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT,VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
     cmdGen.submitAndWait(cmdBufStorage);

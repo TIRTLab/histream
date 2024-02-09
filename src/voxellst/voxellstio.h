@@ -81,7 +81,7 @@ VoxellstIO(){
     LightSet     light;
     std::vector<Angle> angles;
     std::vector<float> waves;
-    std::vector<WaveSet> wavesets;
+    std::vector<AtomCond> atomconds;
     std::vector<AeroCond>  aeroconds;
 
 
@@ -93,7 +93,7 @@ VoxellstIO(){
     int k_angle;
     int k_node=0;
 
-    glm::ivec2 resolution;
+    glm::ivec2 imageSize;
     int n_sample;
     int maxDepth;
     bool isTemperature;
@@ -111,7 +111,7 @@ VoxellstIO(){
     VoxelLstSetting setting;
 
     std::shared_ptr<nvvk::Buffer> m_pBufferWave;
-    std::shared_ptr<nvvk::Buffer> m_pBufferWaveset;
+    std::shared_ptr<nvvk::Buffer> m_pBufferAtomcond;
     std::shared_ptr<nvvk::Buffer> m_pBufferSensor;
     std::shared_ptr<nvvk::Buffer> m_pBufferLight;
     std::shared_ptr<nvvk::Buffer> m_pMeteoBuffer;   // Meteo

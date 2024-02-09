@@ -64,7 +64,7 @@ public:
 //    void destroy();
     //
     std::string projectDir;
-    std::string shaderDir;
+    std::string definedDir;
 
 
 
@@ -99,7 +99,7 @@ public:
     // Setting info
     int n_wave;
     int n_angle;
-    glm::ivec2 resolution;
+    glm::ivec2 imageSize;
     int n_sample;
     int maxDepth;
     bool isTemperature;

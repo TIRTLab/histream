@@ -104,7 +104,7 @@ bool Raytracing::uploadSetting(std::shared_ptr<FileIO> &fileio, std::shared_ptr<
     raytracingio->isDisplay = fileio->m_pRaytracingXml->sensorxml.isDisplay;
     raytracingio->isAlbedo = fileio->m_pRaytracingXml->sensorxml.isAlbedo;
     raytracingio->isImage = fileio->m_pRaytracingXml->sensorxml.isImage;
-    raytracingio->resolution = fileio->m_pRaytracingXml->sensorxml.resolution;
+    raytracingio->imageSize = fileio->m_pRaytracingXml->sensorxml.resolution;
     raytracingio->maxDepth = fileio->m_pRaytracingXml->settingxml.maxDepth;
     raytracingio->n_sample = fileio->m_pRaytracingXml->settingxml.n_sample;
 
@@ -116,7 +116,7 @@ bool Raytracing::updateSetting(std::shared_ptr<RaytracingIO> &raytracingio){
    // auto &opo = raytracingio->m_opo;
 
    // auto &sceneio = raytracingio->m_sceneio;
-    raytracingio->setting.resolution = raytracingio->resolution;
+    raytracingio->setting.imageSize = raytracingio->imageSize;
     raytracingio->setting.n_wave = raytracingio->n_wave;
     raytracingio->setting.isTemperature = raytracingio->isTemperature;
     raytracingio->setting.isDisplay = raytracingio->isDisplay;
@@ -158,10 +158,10 @@ bool Raytracing::run(std::shared_ptr<RaytracingIO> &raytracingio, std::shared_pt
 void Raytracing::output(std::shared_ptr<RaytracingIO> &raytracingio,std::shared_ptr<FileIO> &fileio,int kangle) {
 
     VkBufferUsageFlags usage{VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT};
-    int width = raytracingio->resolution.x;
-    int height = raytracingio->resolution.y;
-    int band = raytracingio->n_wave;
-    VkDeviceSize bufferSize = width * height * band * sizeof(float);
+    int width = raytracingio->imageSize.x;
+    int height = raytracingio->imageSize.y;
+    int n_wave = raytracingio->n_wave;
+    VkDeviceSize bufferSize = width * height * n_wave * sizeof(float);
     nvvk::Buffer pixelBuffer = raytracingio->m_pAlloc->createBuffer(bufferSize, usage,
                                                                     VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
 
@@ -171,78 +171,33 @@ void Raytracing::output(std::shared_ptr<RaytracingIO> &raytracingio,std::shared_
     void *data = raytracingio->m_pAlloc->map(pixelBuffer);
     float *pData = reinterpret_cast<float *>(data);
     fileio->outImage.clear();
-    for (int kband = 0; kband < band; kband++) {
-        uint32_t shift = kband*width*height;
+    float *walker = pData;
+    for (int kband = 0; kband < n_wave; kband++) {
         std::vector<float> outImage1;
-        outImage1.assign(pData+shift, pData+shift + width * height);
+        outImage1.assign(walker, walker + width * height);
+        walker += width * height;
         fileio->outImage.push_back(outImage1);
     }
 
-     float test0 = pData[0];
-//    float test1 = pData[1];
-//    float test2 = pData[2];
-//    float test3 = pData[3];
-//    float test4 = pData[4];
+//     float test0 = pData[0];
 //    float test5 = pData[5];
 //    float test6 = pData[6];
-    //std::cout << "value: " << test0 << std::endl;
+
 
     raytracingio->m_pAlloc->unmap(pixelBuffer);
     raytracingio->m_pAlloc->destroy(pixelBuffer);
 
     Angle angle = raytracingio->angles[kangle];
     std::vector<float> waves = raytracingio->waves;
-    glm::vec2 resolution = raytracingio->resolution;
+    glm::vec2 resolution = raytracingio->imageSize;
 
-    fileio->writeENVIdata(raytracingio->projectDir,pData, width,height,band,angle);
 
-//    std::ostringstream  oss_x;
-//    oss_x << std::setw(3)<<std::setfill('0')<<angles.x;
-//    std::ostringstream  oss_y;
-//    oss_y << std::setw(3)<<std::setfill('0')<<angles.y;
-//    std::ostringstream  oss_z;
-//    oss_z << std::setw(3)<<std::setfill('0')<<angles.z;
-//    std::ostringstream  oss_w;
-//    oss_w << std::setw(3)<<std::setfill('0')<<angles.w;
-//
-//    std::string outPath = raytracingio->projectDir +"/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
-//                             "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str()+".tif";
-//
 //    std::string proj = "";
 //    double trans[6] ={0,0,0,0,0,0};
-//    Utils::saveImage(outPath,fileio->outImage,width,height,band,proj,trans);
-//
-//
-//    std::string tifName = raytracingio->projectDir + +"/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
-//                                                     "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str()+".img";
-//    std::string hdrName = raytracingio->projectDir + +"/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
-//                          "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str()+".hdr";
-//
-//    std::ofstream outfilet1(tifName.c_str(), std::ios::binary);
-//    outfilet1.write(reinterpret_cast<const char*>(pData), sizeof(float) * width * height * band);
-//    outfilet1.close();
-//
-//    std::ofstream outfile(hdrName);
-//    if (outfile.is_open())
-//    {
-//        outfile << "ENVI" << std::endl;
-//        outfile << "description = {" << std::endl;
-//        outfile << " File Imported into ENVI.} " << std::endl;
-//        outfile << "samples = " << width << std::endl;
-//        outfile << "lines   = " << height << std::endl;
-//        outfile << "bands   =  " << band << std::endl;
-//        outfile << "header offset = 0" << std::endl;
-//        outfile << "file type = ENVI Standard" << std::endl;
-//        outfile << "data type = 4" << std::endl;
-//        outfile << "interleave = bip" << std::endl;
-//        outfile << "sensor type = unknown" << std::endl;
-//        outfile << "byte order = 0" << std::endl;
-//        outfile << "wavelength units = Unknown" << std::endl;
-//        outfile.close();
-//    }
-//    outfile.close();
+//    Utils::saveImage(outPath,outImage,width,height,band,proj,trans);
 
-    //m_pFileOutput->writeTif(, pData, angles, waves, resolution);
+    fileio->writeENVIdata(raytracingio->projectDir,pData, width,height,n_wave,angle);
+
 }
 
 bool Raytracing::destroy( std::shared_ptr<RaytracingIO> &raytracingio)

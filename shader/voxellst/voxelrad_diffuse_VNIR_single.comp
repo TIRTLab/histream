@@ -213,7 +213,7 @@ bool voxel_raytracing_diffuse(vec3 voxelPos0, uint bufferId0, NanoVDBLink nanoVD
             /////////////////////////////////////////////////////
 
               // THERMAL
-              wavelength = waveSets[kband].wavelength;
+              wavelength = atomConds[kband].wavelength;
               sunlitRadiance = Planck(wavelength,sunlitTemperature)*stepnum;
               shadedRadiance = Planck(wavelength,shadedTemperature)*stepnum;
               thermalRadiance = (1-alpha_toSolar)*shadedRadiance + alpha_toSolar*sunlitRadiance;
@@ -289,7 +289,7 @@ bool voxel_raytracing_diffuse(vec3 voxelPos0, uint bufferId0, NanoVDBLink nanoVD
         shadedTemperature = voxelTempes[bufferId].shaded;
         float radiance=0;
 
-          wavelength = waveSets[kband].wavelength;
+          wavelength = atomConds[kband].wavelength;
           sunlitRadiance = Planck(wavelength,sunlitTemperature)*stepnum;
           shadedRadiance = Planck(wavelength,shadedTemperature)*stepnum;
         //   sunlitRadiance = Stefen_Boltzmann(sunlitTemperature,1);

@@ -18,7 +18,7 @@
 
 layout(binding = B_SPECTRAL) buffer _bufferOPTICAL { SpectralMaterial spectralMaterials[]; }; // --
 layout(binding = B_THERMAL) buffer _bufferTHERMAL { ThermalMaterial thermalMaterials[]; };    // --
-layout(binding = B_ModelLINK) buffer _bufferMODELLINK { ModelLink modelLinks[]; }; 
+layout(binding = B_ModelLINK) buffer _bufferMODELLINK { MeshLink meshLinks[]; }; 
 layout(binding = B_INSTANCELINK) buffer _BufferInstanceLink {InstanceLink instanceLinks[];};      // --
 layout(binding = B_TLAS) uniform accelerationStructureEXT topLevelAS;
 layout(binding = B_SENSOR) uniform _SensorMatrix { SensorMatrix sensorMatrix; };              // ??
@@ -52,7 +52,7 @@ layout(push_constant) uniform _RtxState
 #define B_SENSOR 10
 #define B_WAVE 11
 #define B_LIGHT 12
-#define B_WAVESET 13
+#define B_ATOM 13
 #define B_DIR 14
 #define B_RADS 15
 #define B_NETRAD 16
@@ -87,7 +87,7 @@ layout(binding = B_SENSOR) uniform _CameraMatrix { SensorMatrix sensorMatrix; };
 //11-15
 layout(binding = B_WAVE) buffer _bufferWAVE { float wave[]; };
 layout(binding = B_LIGHT) uniform _LightSet { LightSet lightSet; };
-layout(binding = B_WAVESET) buffer _bufferWAVEset { WaveSet waveSets[]; };    
+layout(binding = B_ATOM) buffer _bufferWAVEset { AtomCond atomConds[]; };
 layout(binding = B_DIR) buffer _bufferDir { VoxelDir voxelDirs[]; };
 layout(binding = B_RADS) buffer _bufferRad { VoxelRad voxelRads[]; };
 //12 -20

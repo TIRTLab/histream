@@ -16,8 +16,8 @@ bool Geometry::createGeometry(std::shared_ptr<FileIO> &fileio, std::shared_ptr<R
     //--------------------------------------------------------
     //--- Resolution
     //-------------------------------------------------------
-    modelio->resolution = fileio->m_pRaytracingXml->sensorxml.resolution;
-    CameraManip.setWindowSize(modelio->resolution.x,modelio->resolution.y );
+    modelio->imageSize = fileio->m_pRaytracingXml->sensorxml.resolution;
+    CameraManip.setWindowSize(modelio->imageSize.x, modelio->imageSize.y );
     //---------------------------------------------------------
     // Angles
     //---------------------------------------------------------
@@ -69,8 +69,8 @@ bool Geometry::createGeometry(std::shared_ptr<FileIO> &fileio, std::shared_ptr<V
     //--------------------------------------------------------
     //--- Resolution
     //-------------------------------------------------------
-    modelio->resolution = fileio->m_pVoxelLstXml->sensorxml.resolution;
-    CameraManip.setWindowSize(modelio->resolution.x,modelio->resolution.y );
+    modelio->imageSize = fileio->m_pVoxelLstXml->sensorxml.resolution;
+    CameraManip.setWindowSize(modelio->imageSize.x, modelio->imageSize.y );
     //---------------------------------------------------------
     // Angles
     //---------------------------------------------------------

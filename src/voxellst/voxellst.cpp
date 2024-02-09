@@ -80,7 +80,7 @@ bool Voxellst::uploadSetting(std::shared_ptr<FileIO> &fileio, std::shared_ptr<Vo
     modelio->isDisplay = fileio->m_pVoxelLstXml->sensorxml.isDisplay;
     modelio->isAlbedo = fileio->m_pVoxelLstXml->sensorxml.isAlbedo;
     modelio->isImage = fileio->m_pVoxelLstXml->sensorxml.isImage;
-    modelio->resolution = fileio->m_pVoxelLstXml->sensorxml.resolution;
+    modelio->imageSize = fileio->m_pVoxelLstXml->sensorxml.resolution;
     modelio->maxDepth = fileio->m_pVoxelLstXml->settingxml.maxDepth;
     modelio->n_sample = fileio->m_pVoxelLstXml->settingxml.n_sample;
 
@@ -93,7 +93,7 @@ bool Voxellst::updateSetting(std::shared_ptr<VoxellstIO> &modelio){
 
     // auto &sceneio = modelio->m_sceneio;
 
-    modelio->setting.imageSize = modelio->resolution;
+    modelio->setting.imageSize = modelio->imageSize;
     modelio->setting.n_wave = modelio->n_wave;
    // modelio->setting.isTemperature = modelio->isTemperature;
     modelio->setting.isDisplay = modelio->isDisplay;
@@ -112,7 +112,7 @@ bool  Voxellst::uploadMeteo(std::shared_ptr<FileIO> &fileio, std::shared_ptr<Vox
 
    // Utils::readascfileinout(meteofile,0,1,)
 
-   fileio->readMeteo(modelio->m_defined,modelio->n_node,modelio->meteos,modelio->wavesets);
+   fileio->readMeteo(modelio->m_defined,modelio->n_node,modelio->meteos,modelio->atomconds);
    return true;
 }
 
@@ -207,10 +207,10 @@ void Voxellst::output(std::shared_ptr<VoxellstIO> &modelio, std::shared_ptr<File
 
 
     VkBufferUsageFlags usage{VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT};
-    int width = modelio->resolution.x;
-    int height = modelio->resolution.y;
-    int band = modelio->n_wave;
-    VkDeviceSize bufferSize = width * height * sizeof(float);
+    int width = modelio->imageSize.x;
+    int height = modelio->imageSize.y;
+    int n_wave = modelio->n_wave;
+    VkDeviceSize bufferSize = width * height *n_wave* sizeof(float);
     nvvk::Buffer pixelBuffer = modelio->m_pAlloc->createBuffer(bufferSize, usage,
                                                                VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
 
@@ -221,13 +221,8 @@ void Voxellst::output(std::shared_ptr<VoxellstIO> &modelio, std::shared_ptr<File
     float *pData = reinterpret_cast<float *>(data);
 
     float test0 = pData[0];
-//    float test1 = pData[1];
-//    float test2 = pData[2];
-//    float test3 = pData[3];
-//    float test4 = pData[4];
-//    float test5 = pData[5];
-     float test6 = pData[10000];
-     float test10 = pData[250000];
+//     float test6 = pData[10000];
+//     float test10 = pData[250000];
     //std::cout << "value: " << test0 << std::endl;
 
     modelio->m_pAlloc->unmap(pixelBuffer);
@@ -235,9 +230,9 @@ void Voxellst::output(std::shared_ptr<VoxellstIO> &modelio, std::shared_ptr<File
 
     Angle angle = modelio->angles[kangle];
     std::vector<float> waves = modelio->waves;
-    glm::vec2 resolution = modelio->resolution;
+    glm::vec2 resolution = modelio->imageSize;
 
-    fileio->writeENVIdata(modelio->projectDir,pData, width,height,band,angle,knode);
+    fileio->writeENVIdata(modelio->projectDir, pData, width, height, n_wave, angle, knode);
 
     // fileio
 
@@ -285,9 +280,6 @@ void Voxellst::outputVoxel(std::shared_ptr<VoxellstIO> &modelio, std::shared_ptr
 //    VoxelTempe test0 = pData[0];
 //    modelio->m_pAlloc->unmap(pixelBuffer);
 //    modelio->m_pAlloc->destroy(pixelBuffer);
-
-
-
 
 }
 

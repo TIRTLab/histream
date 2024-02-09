@@ -83,7 +83,7 @@ void main()
         atomicAdd(voxelNetRads[bufferId0].directVrad, alpha_toSolar, gl_ScopeDevice,gl_StorageSemanticsBuffer,gl_SemanticsRelaxed);
 
         // only for band from 400 nm to 700 nm 
-        if((waveSets[kband].wavelength>=400) && (waveSets[kband].wavelength<=700))
+        if((atomConds[kband].wavelength>=400) && (atomConds[kband].wavelength<=700))
         {
             float pnet = rad * waveSets[kband].wavelength * 1e-3 /(AHC);
             atomicAdd(voxelPnets[bufferId0].directPnet, pnet,

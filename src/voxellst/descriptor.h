@@ -25,7 +25,7 @@ public:
         sensor,
         wave,
         light,
-        waveset,
+        atomcond,
         dir,
         rads,
         netRad,

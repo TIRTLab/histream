@@ -402,9 +402,9 @@ void main()
 	uint64_t start = clockRealtimeEXT();  // Debug - Heatmap
 	ivec2 imageRes    = setting.imageSize;
   ivec2 imageCoords = ivec2(gl_LaunchIDEXT.xy);
-	int bufferId =  setting.n_wave * (imageCoords.y * imageRes.x + imageCoords.x );
+	
   prd.seed = initRandom(gl_LaunchSizeEXT.xy, gl_LaunchIDEXT.xy, setting.frame);
-
+  uint n_pixel = imageRes.x * imageRes.y;
 
 
 
@@ -448,7 +448,8 @@ void main()
 	for(int kBand = 0; kBand <  setting.n_wave; kBand++)
 	{
 		float value = Radiance[kBand];
-		atomicStore(outImage[bufferId + kBand], value, gl_ScopeDevice, gl_StorageSemanticsBuffer, gl_SemanticsRelease);
+    uint bufferId =  (n_pixel * kBand) + (imageCoords.y * imageRes.x + imageCoords.x );
+		atomicStore(outImage[bufferId], value, gl_ScopeDevice, gl_StorageSemanticsBuffer, gl_SemanticsRelease);
 	}
 
 // float a = imageCoords.x;

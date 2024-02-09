@@ -60,7 +60,7 @@ void Engine::input(std::string path){
         m_pRaytracing->setup(appSetting, m_pRaytracingio);
         m_pRaytracing->upload(m_pFileio, m_pRaytracingio);
 
-        m_pRaytracingio->shaderDir = m_pFileio->m_pRaytracingXml->shaderDir;
+        m_pRaytracingio->definedDir = m_pFileio->m_pRaytracingXml->definedDir;
         m_pRaytracingio->projectDir = m_pFileio->m_pRaytracingXml->projectDir;
     }else if(m_mode == Mode::eVoxelLST){
 

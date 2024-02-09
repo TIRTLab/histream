@@ -8,10 +8,10 @@
 
 bool FileIO::readXml(std::string filePath) {
 
-//    m_mode = Mode::eRaytracing;
-//    m_pRaytracingXml = std::move(xmlexamples.m_pRaytracingXml);
-    m_mode = Mode::eVoxelLST;
-    m_pVoxelLstXml = std::move(xmlexamples.m_pVoxelLstXml);
+    m_mode = Mode::eRaytracing;
+    m_pRaytracingXml = std::move(xmlexamples.m_pRaytracingXml);
+//    m_mode = Mode::eVoxelLST;
+//    m_pVoxelLstXml = std::move(xmlexamples.m_pVoxelLstXml);
 
     return false;
 
@@ -140,7 +140,7 @@ SceneXml FileIO::readScene(TiXmlNode *node, Mode mode){
 }
 
 void FileIO::readMeteo(std::shared_ptr<DefinedIO> &defineio,int & n_node,
-                       std::vector<Meteo> &meteos, std::vector<WaveSet> &wavesets) {
+                       std::vector<Meteo> &meteos, std::vector<AtomCond> &wavesets) {
 
 
     auto & meteofile = m_pVoxelLstXml->meteoxml.meteofile;
@@ -282,9 +282,7 @@ void FileIO::writeENVIdata(std::string projectDir, float *pData, int width, int 
     std::string outPath = projectDir + "/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
                           "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".tif";
 
-//    std::string proj = "";
-//    double trans[6] ={0,0,0,0,0,0};
-//    Utils::saveImage(outPath,fileio->outImage,width,height,band,proj,trans);
+
 
 
     std::string tifName = projectDir + +"/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
@@ -308,7 +306,7 @@ void FileIO::writeENVIdata(std::string projectDir, float *pData, int width, int 
         outfile << "header offset = 0" << std::endl;
         outfile << "file type = ENVI Standard" << std::endl;
         outfile << "data type = 4" << std::endl;
-        outfile << "interleave = bip" << std::endl;
+        outfile << "interleave = bsp" << std::endl;
         outfile << "sensor type = unknown" << std::endl;
         outfile << "byte order = 0" << std::endl;
         outfile << "wavelength units = Unknown" << std::endl;

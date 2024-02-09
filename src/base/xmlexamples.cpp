@@ -6,8 +6,8 @@
 void XmlExamples::createRaytracingxml(){
     m_pRaytracingXml=std::make_shared<RaytracingXml>();
 
-    m_pRaytracingXml->projectDir = "D:\\work\\field_obj_project\\";
-    m_pRaytracingXml->shaderDir = "D:\\work\\field\\shader\\RayTracing\\";
+    m_pRaytracingXml->projectDir = "D:\\work\\field\\field_data\\";
+    m_pRaytracingXml->definedDir = "D:\\work\\field\\field\\";
 
     m_pRaytracingXml->settingxml.n_sample=32;
     m_pRaytracingXml->settingxml.maxDepth = 32;
@@ -37,7 +37,7 @@ void XmlExamples::createRaytracingxml(){
     m_pRaytracingXml->scenexml.sMin={0,0,0};
     m_pRaytracingXml->scenexml.sMax={50,50,10};
     m_pRaytracingXml->scenexml.background = {"soil","K310","soilset"};
-    ObjEntity objEntity = ObjEntity{"objTree","D:\\work\\field_obj_project\\speed_tree.obj",
+    ObjEntity objEntity = ObjEntity{"objTree","D:\\work\\field\\field_data\\speed_tree.obj",
                            {"Leaf1","Trunk","Bough"},{"leaf","soil","leaf"},{"K300","K310","K300"},
                            false,{{10,10,0},{25,25,0},{40,40,0}},{1,1,1},{0,0,0}};
     PrimEntity primEntity;
@@ -70,8 +70,8 @@ void XmlExamples::createRaytracingxml(){
 void XmlExamples::createVoxellstxml(){
     m_pVoxelLstXml=std::make_shared<VoxelLstXml>();
 
-    m_pVoxelLstXml->projectDir = "D:\\work\\field_obj_project\\";
-    m_pVoxelLstXml->definedDir = "D:\\work\\field\\";
+    m_pVoxelLstXml->projectDir = "D:\\work\\field\\field_data\\";
+    m_pVoxelLstXml->definedDir = "D:\\work\\field\\field\\";
 
     m_pVoxelLstXml->settingxml.n_sample=32;
     m_pVoxelLstXml->settingxml.maxDepth = 32;

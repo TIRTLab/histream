@@ -163,10 +163,10 @@ bool Buffer::createBuffer(std::shared_ptr<VoxellstIO> &voxellstio){
     }
 
     // meteo and aero
-    if (voxellstio->wavesets.size() > 0)
+    if (voxellstio->atomconds.size() > 0)
     {
         VkCommandBuffer cmdBufWave = cmdGen.createCommandBuffer();
-        voxellstio->m_pBufferWaveset = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufWave, voxellstio->wavesets, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT));
+        voxellstio->m_pBufferAtomcond = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufWave, voxellstio->atomconds, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT));
         cmdGen.submitAndWait(cmdBufWave);
     }
 
@@ -288,7 +288,7 @@ bool Buffer::createBuffer(std::shared_ptr<VoxellstIO> &voxellstio){
     ///--------------------------------------------------------------------
     /// storage
     VkCommandBuffer cmdBufStorage = cmdGen.createCommandBuffer();
-    int outputSize = voxellstio->n_wave * voxellstio->resolution.x*voxellstio->resolution.y * sizeof(float);
+    int outputSize = voxellstio->n_wave * voxellstio->imageSize.x * voxellstio->imageSize.y * sizeof(float);
     std::vector<float> outputImage(outputSize, 0.0);
     virtualio->m_pBufferStorage = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufStorage, outputImage,
                                                                              VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
@@ -355,9 +355,9 @@ void Buffer::destroy(std::shared_ptr<VoxellstIO> &voxellstio){
         m_pAlloc->destroy((meshio->m_bufferMeshes[i].indexBuffer));
     }
 
-    if (voxellstio->wavesets.size() > 0)
+    if (voxellstio->atomconds.size() > 0)
     {
-        m_pAlloc->destroy(*(voxellstio->m_pBufferWaveset));
+        m_pAlloc->destroy(*(voxellstio->m_pBufferAtomcond));
     }
 
     m_pAlloc->destroy(*(voxelio->m_pDirBuffer));

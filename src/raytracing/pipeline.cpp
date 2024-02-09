@@ -120,11 +120,11 @@ bool Pipeline::createPipeline(std::shared_ptr<RaytracingIO> &raytracingio)
     VkPipelineShaderStageCreateInfo stage{ VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO };
     stage.pName = "main";
 
-    std::string baseDirectory = raytracingio->shaderDir;
-    std::string offlineRaytracingRgenShader = baseDirectory + "/offline.rgen.spv";
-    std::string rayTracingRchitShader = baseDirectory + "/closestHit.rchit.spv";
-    std::string rayTracingRmissShader = baseDirectory + "/rmiss.rmiss.spv";
-    std::string rayTracingShadowRmissShader = baseDirectory + "/shadow.rmiss.spv";
+    std::string baseDirectory = raytracingio->definedDir;
+    std::string offlineRaytracingRgenShader = baseDirectory + "/shader/raytracing/offline.rgen.spv";
+    std::string rayTracingRchitShader = baseDirectory + "/shader/raytracing/closestHit.rchit.spv";
+    std::string rayTracingRmissShader = baseDirectory + "/shader/raytracing/rmiss.rmiss.spv";
+    std::string rayTracingShadowRmissShader = baseDirectory + "/shader/raytracing/shadow.rmiss.spv";
 
     if (access(offlineRaytracingRgenShader.c_str(), 0) == -1)
     {

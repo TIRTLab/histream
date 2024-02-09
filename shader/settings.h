@@ -13,7 +13,7 @@ struct RayRTSetting
 	int maxDepth;
 	int n_sample;
 	int n_wave;
-	ivec2 resolution;  	// 1000*1000
+	ivec2 imageSize;  	// 1000*1000
 	// vec2 sceneSize;		// 100*100
 	int band1; 
 	int band2;

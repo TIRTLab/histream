@@ -121,8 +121,8 @@ void Command::recordCommandBuffer(const VkCommandBuffer& cmdBuf, std::shared_ptr
 //    auto & m_sceneio = raytracingio->m_sceneio;
     auto & m_sbtWrapper= raytracingio->m_sbtWrapper;
     VkExtent2D size;
-    size.width = raytracingio->resolution.x;
-    size.height = raytracingio->resolution.y;
+    size.width = raytracingio->imageSize.x;
+    size.height = raytracingio->imageSize.y;
 
     vkCmdBindPipeline(cmdBuf, VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR, m_pipeline);
     vkCmdBindDescriptorSets(cmdBuf, VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR, m_pipelineLayout, 0,
