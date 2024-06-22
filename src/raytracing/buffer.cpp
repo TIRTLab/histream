@@ -119,6 +119,9 @@ bool Buffer::createBuffer(std::shared_ptr<RaytracingIO> &raytracingio) {
     virtualio->m_pBufferStorage = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufStorage, outputImage, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT,VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
     cmdGen.submitAndWait(cmdBufStorage);
 
+
+
+
     m_pAlloc->finalizeAndReleaseStaging();
 
     return false;

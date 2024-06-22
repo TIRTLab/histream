@@ -50,15 +50,15 @@ bool traversalDirection(vec3 direction)
     // This is a original position and direction
     //////////////////////////////////////////////
     uint bufferId0 = uint(gl_GlobalInvocationID.x);     // 当前的体素处理单元index
-    ivec3 voxelId0 = voxelLinks[bufferId0].voxelPos;     // 当前体素处理单元的空间位置坐标（int类型）
+    ivec3 voxelId0 = voxelLinks[bufferId0].voxelId;     // 当前体素处理单元的空间位置坐标（int类型）
     uint instanceId0 = voxelLinks[bufferId0].instanceId;// 当前体素处理单元的instance index
     uint typeId0 = instanceLinks[instanceId0].type;     // 当前体素所属的地物类型
-    // Get nanoVDBLink: from voxelPos to bufferId
+    // Get nanoVDBLink: from voxelId to bufferId
     NanoVDBLink nanoVDBLink = nanovdbInit();            // 得到 nano VDB 存储的数据集，其内部存储voxelLinks的index，可以通过空间位置查询其所属位置的属性和地物类型
 
     float scale = settingxml.scale;
     vec3 semiRange = scale * settingxml.voxelSize/2.0;
-    ivec3 voxelPos,alignVoxelId;
+    ivec3 voxelId,alignVoxelId;
     float alpha_toSolar = 1.0,alpha_voxel = 1.0;
     int bufferId,alignBufferId;
     uint instanceId, alignInstanceId,canopyId,lastInstanceId,typeId;
@@ -97,17 +97,17 @@ bool traversalDirection(vec3 direction)
     // // get hit information
     // ShadeState sstate = GetShadeState(prd);
     vec3 hitPos = ray.origin + ray.direction * prd.hitT;
-    voxelPos = getVoxelId(hitPos, semiRange, settingxml.scale, normalize(direction));
+    voxelId = getVoxelId(hitPos, semiRange, settingxml.scale, normalize(direction));
 
 
   //   // voxel object
   //   if(sstate.typeId == TYPE_VEGETATION)
   //   {
-  //     // get voxelPos and alignVoxelId
-  //     voxelPos = getVoxelIdSemi(sstate.position, semiRange, settingxml.scale, normalize(direction), alignVoxelId);
+  //     // get voxelId and alignVoxelId
+  //     voxelId = getVoxelIdSemi(sstate.position, semiRange, settingxml.scale, normalize(direction), alignVoxelId);
   //     // get bufferId and alignBufferId;
   //     // if bufferId/alignBufferId = -1, this voxel is blank;
-  //     bufferId = nanovdbGet(nanoVDBLink,voxelPos);
+  //     bufferId = nanovdbGet(nanoVDBLink,voxelId);
   //     alignBufferId = nanovdbGet(nanoVDBLink,alignVoxelId);
       
   //     if(kstep == 0) {lastInstanceId = instanceId0; alignInstanceId = instanceId0;}
@@ -166,7 +166,7 @@ bool traversalDirection(vec3 direction)
 //   uint bufferId,spectralId,thermalId,alignBufferId,canopyId;
 //   vec2 gammart;
 //   uint instanceId,lastInstanceId,alignInstanceId,typeId,lastType;
-//   ivec3 voxelPos,voxelPos,alignVoxelId;
+//   ivec3 voxelId,voxelId,alignVoxelId;
 //   float pl_toSolar,pl_toVoxel,alpha_toSolar,alpha_toVoxel,alpha_voxel;
 //   float wavelength;
 //   InstanceLink instanceLink;
@@ -247,11 +247,11 @@ bool traversalDirection(vec3 direction)
 //       /////////////////////////////
 //       if(sstate.typeId == TYPE_VEGETATION)
 //       {
-//         // get voxelPos and alignVoxelId
-//         voxelPos = getVoxelIdSemi(sstate.position,semiRange,settingxml.scale,directioni,alignVoxelId);
+//         // get voxelId and alignVoxelId
+//         voxelId = getVoxelIdSemi(sstate.position,semiRange,settingxml.scale,directioni,alignVoxelId);
 //         // get bufferId and alignBufferId;
 //         // if bufferId/alignBufferId = -1, this voxel is blank;
-//         bufferId = nanovdbGet(nanoVDBLink,voxelPos);
+//         bufferId = nanovdbGet(nanoVDBLink,voxelId);
 //         alignBufferId = nanovdbGet(nanoVDBLink,alignVoxelId);
 //         if(kstep ==0) lastInstanceId = instanceId;
 //         if(bufferId >= 0)
@@ -398,12 +398,12 @@ void main()
     //------------------------------------------------------------
     // Initialization for the position and SSBO index
     //------------------------------------------------------------
-    // get bufferId, voxelPos, instanceId and typeId
+    // get bufferId, voxelId, instanceId and typeId
     uint bufferId0 = uint(gl_GlobalInvocationID.x);
-    ivec3 voxelId0 = voxelLinks[bufferId0].voxelPos;
+    ivec3 voxelId0 = voxelLinks[bufferId0].voxelId;
     uint instanceId0 = voxelLinks[bufferId0].instanceId;
     uint typeId0 = instanceLinks[instanceId0].type;
-    // Get nanoVDBLink: from voxelPos to bufferId
+    // Get nanoVDBLink: from voxelId to bufferId
     NanoVDBLink nanoVDBLink = nanovdbInit();
 
     // get center position of a voxel
@@ -468,8 +468,8 @@ void main()
 // // ClosestHit(ray);
 // //     float abc = prd.hitT;
 
-// // // ivec3 voxelPos = ivec3(25,-1,25);
-// // //     int loc = nanovdbGet(nanoVDBLink,voxelPos);
+// // // ivec3 voxelId = ivec3(25,-1,25);
+// // //     int loc = nanovdbGet(nanoVDBLink,voxelId);
 // // //     Aabb aabb = aabbs[loc];
 // // //     int instanceId = voxelLinks[loc].instanceId;
 // // //     abc = instanceId;

@@ -3,8 +3,7 @@ import os
 import glob
 import subprocess
 
-versionName = r'D:\code\bin_x64\Debug\shader\RayTracing_Hapke\\'
-versionName = r'D:\work\field\field\shader\raytracing\\'
+versionName = r'F:\work\field_aoyunlst\field\shader\voxeleb\\'
 # versionName = 'RayTracing_Lambert'
 # versionName = 'VoxelTracing'
 # versionName = 'VoxelTriTracing'

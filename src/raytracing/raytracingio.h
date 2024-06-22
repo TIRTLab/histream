@@ -87,8 +87,11 @@ public:
     int n_instance = 0;
     glm::vec3 sceneSize;
     glm::vec3 sceneOrigin;
-    glm::vec3 sMin;
-    glm::vec3 sMax;
+    glm::vec3 voxelSize;
+    glm::vec3 voxelOrigin;
+    float stepsize_surface;
+/*    glm::vec3 sMin;
+    glm::vec3 sMax;*/
 
     //Geometry info
     SensorMatrix sensor;   // original sensor become the angular sensor and spectral wavesets
@@ -97,6 +100,12 @@ public:
     std::vector<float> waves;
 
     // Setting info
+    std::string datestr="000000";
+    std::string timestr="000000";
+    bool istime;  // if true using timestr default "000000"
+
+
+
     int n_wave;
     int n_angle;
     glm::ivec2 imageSize;
@@ -106,6 +115,7 @@ public:
     bool isDisplay;
     bool isImage;
     bool isAlbedo;
+
 
     RayRTSetting setting;
     std::shared_ptr<nvvk::Buffer> m_pBufferWave;

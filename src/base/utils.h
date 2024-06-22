@@ -43,8 +43,8 @@ namespace Utils {
     template<typename _Tp>
     cv::Mat convertVector2Mat(std::vector<_Tp> v, int channels, int rows)
     {
-        cv::Mat mat = cv::Mat(v).clone();//将vector变成单列的mat，这里需要clone(),因为这里的赋值操作是浅拷贝
-        cv::Mat dest = mat.reshape(channels, rows);
+        cv::Mat mat = cv::Mat(v);//将vector变成单列的mat，这里需要clone(),因为这里的赋值操作是浅拷贝
+        cv::Mat dest = mat.reshape(channels, rows).clone();
         return dest;
     }
 
@@ -106,4 +106,12 @@ namespace Utils {
         ss << std::fixed << value;
         return ss.str();
     }
+
+
+    double calculateDeltaT(int year, int month);
+
+    bool isLeapYear(int year);
+
+    void calculateMonthAndDay(int kyear, int kdoy, int *kmonth, int *kday);
+
 }

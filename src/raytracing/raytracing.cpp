@@ -155,21 +155,23 @@ bool Raytracing::run(std::shared_ptr<RaytracingIO> &raytracingio, std::shared_pt
 
 
 
-void Raytracing::output(std::shared_ptr<RaytracingIO> &raytracingio,std::shared_ptr<FileIO> &fileio,int kangle) {
+void Raytracing::output(std::shared_ptr<RaytracingIO> &modelio, std::shared_ptr<FileIO> &fileio, int kangle) {
 
     VkBufferUsageFlags usage{VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT};
-    int width = raytracingio->imageSize.x;
-    int height = raytracingio->imageSize.y;
-    int n_wave = raytracingio->n_wave;
+    int width = modelio->imageSize.x;
+    int height = modelio->imageSize.y;
+    int n_wave = modelio->n_wave;
     VkDeviceSize bufferSize = width * height * n_wave * sizeof(float);
-    nvvk::Buffer pixelBuffer = raytracingio->m_pAlloc->createBuffer(bufferSize, usage,
-                                                                    VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
+    nvvk::Buffer pixelBuffer = modelio->m_pAlloc->createBuffer(bufferSize, usage,
+                                                               VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
 
-    m_pVirtual->bufferToBuffer(raytracingio, *(raytracingio->m_virtualio->m_pBufferStorage), bufferSize, pixelBuffer);
+    m_pVirtual->bufferToBuffer(modelio, *(modelio->m_virtualio->m_pBufferStorage), bufferSize, pixelBuffer);
 
     // write the buffer to disk
-    void *data = raytracingio->m_pAlloc->map(pixelBuffer);
+    void *data = modelio->m_pAlloc->map(pixelBuffer);
     float *pData = reinterpret_cast<float *>(data);
+
+
     fileio->outImage.clear();
     float *walker = pData;
     for (int kband = 0; kband < n_wave; kband++) {
@@ -184,21 +186,55 @@ void Raytracing::output(std::shared_ptr<RaytracingIO> &raytracingio,std::shared_
 //    float test6 = pData[6];
 
 
-    raytracingio->m_pAlloc->unmap(pixelBuffer);
-    raytracingio->m_pAlloc->destroy(pixelBuffer);
+    modelio->m_pAlloc->unmap(pixelBuffer);
+    modelio->m_pAlloc->destroy(pixelBuffer);
 
-    Angle angle = raytracingio->angles[kangle];
-    std::vector<float> waves = raytracingio->waves;
-    glm::vec2 resolution = raytracingio->imageSize;
+    Angle angle = modelio->angles[kangle];
+    std::vector<float> waves = modelio->waves;
+    glm::vec2 resolution = modelio->imageSize;
 
 
-//    std::string proj = "";
-//    double trans[6] ={0,0,0,0,0,0};
-//    Utils::saveImage(outPath,outImage,width,height,band,proj,trans);
+    Eigen::VectorXd cx;
+    Eigen::VectorXd cy;
+    m_pGeometry->orthcorrect(modelio,angle.vza,angle.vaa,cy,cx);
 
-    fileio->writeENVIdata(raytracingio->projectDir,pData, width,height,n_wave,angle);
+
+    float *pData_orth = new float[width*height*n_wave];
+    std::memset(pData_orth,0,width*height*n_wave*sizeof(float));
+    for(int i=0;i<width;i++)
+    {
+        for(int j=0;j<height;j++)
+        {
+            int old = j*width+i;
+            int ii,jj;
+            ii = int(i*cx[0]+j*cx[1]+i*j*cx[2]+cx[3]);
+            jj = int(i*cy[0]+j*cy[1]+i*j*cy[2]+cy[3]);
+            int orth = ii*height + jj;
+
+            if (orth <0) continue;
+            if(orth > height*width) continue;
+            for(int k=0;k<n_wave;k++)
+            {
+                int oldd = k*width*height + old;
+
+               int orthh =  k*width*height + orth;
+                if (pData[orthh]==0) continue;
+                pData_orth[oldd] = pData[orthh];
+            }
+        }
+    }
+
+    if(modelio->istime==false) {
+        fileio->writeENVIdata(modelio->projectDir, pData_orth, width, height, n_wave, angle);
+    }else{
+        fileio->writeENVIdata(modelio->projectDir, pData_orth, width, height, n_wave, angle,-1);
+    }
+
+    //delete [] pData;
+    delete [] pData_orth;
 
 }
+
 
 bool Raytracing::destroy( std::shared_ptr<RaytracingIO> &raytracingio)
 {

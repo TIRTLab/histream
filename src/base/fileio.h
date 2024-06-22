@@ -24,16 +24,16 @@ public:
     FileIO(){};
 
     bool readXml(std::string path);
-    //bool readRayTracingXML(std::string inputPath){ return true;};
 
-    void writeTif(std::string outDir,void *images,glm::vec4 angles, std::vector<float> bands, glm::vec2 resolution);
+    //bool readRayTracingXML(std::string inputPath){ return true;};
+    //void writeTif(std::string outDir,void *images,glm::vec4 angles, std::vector<float> bands, glm::vec2 resolution);
 
 
 
 public:
 
     std::shared_ptr<RaytracingXml> m_pRaytracingXml;
-    std::shared_ptr<VoxelLstXml>   m_pVoxelLstXml;
+    std::shared_ptr<VoxelEBXml>   m_pVoxelebXml;
 
 
     std::vector<SpectralXml> readSpectral(TiXmlNode *node, Mode mode=Mode::eRaytracing);
@@ -46,17 +46,18 @@ public:
     void readDefined(std::shared_ptr<DefinedIO> & defineio);
     void readMeteo(std::shared_ptr<DefinedIO> &defineio,int & n_node, std::vector<Meteo> &meteos, std::vector<AtomCond> &wavesets);
 
-    void writeENVIdata(std::string projectDir,float * pData, int width, int height, int band, Angle &angle, int kband = -1);
-
+    void writeENVIdata(std::string projectDir,float * pData, int width, int height, int band, Angle &angle, float t = -1);
 
 
     XmlExamples xmlexamples;
-
     Mode m_mode = Mode::eRaytracing;
 
 
     std::vector<float> outImage1;
     std::vector<std::vector<float>> outImage;
+    std::vector<std::vector<float>> outImage_orth;
+
+
 };
 
 

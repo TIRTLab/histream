@@ -232,7 +232,7 @@ PrimMesh VoxelDesigner::createTriCube(Shape shape, float stepSize)
 
                 voxelTriModel.nVertices += 6;
                 voxelTriModel.nIndices += 6;
-                voxelTriModel.centers.emplace_back(glm::vec3{i, j, k});
+                voxelTriModel.voxelIds.emplace_back(glm::vec3{i, j, k});
             }
         }
     }
@@ -350,16 +350,274 @@ PrimMesh VoxelDesigner::createTriCube(Shape shape, float stepSize)
 
 
     // 计算模型的x,y平面坐标下中心点位置
-    /*int centerPointX, centerPointY, centerPointZ;
-    centerPointX = int(shape.length / stepSize / 2.0);
-    centerPointY = int(shape.width / stepSize / 2.0);
-    centerPointZ = int(shape.height / stepSize / 2.0);
-    centerPointZ = 0;
-    voxelTriModel.modelCenterPoint = glm::ivec3(centerPointX, centerPointY, centerPointZ);*/
    voxelTriModel.meshcenter = glm::vec3(shape.length / 2.0, shape.width / 2.0, 0 / 2.0);
 
     return voxelTriModel;
 }
+
+PrimMesh VoxelDesigner::createTriCube_wall(Shape shape, float stepSize)
+{
+    PrimMesh voxelTriModel;
+    voxelTriModel.nVertices = 0;
+    voxelTriModel.nIndices = 0;
+    voxelTriModel.meshId = 0;
+
+    // 绘制每一层x,y平面
+    for (int k = 0; k < shape.height / stepSize-1; k++) //height,绘制每一层的面
+    {
+        for (int i = 0; i < shape.length / stepSize; i++)
+        {
+            for (int j = 0; j < shape.width / stepSize; j++)
+            {
+                glm::vec3 points[4];
+                points[0].x = i;
+                points[0].y = j;
+                points[0].z = k;
+
+                points[1].x = (i);
+                points[1].y = (j + 1);
+                points[1].z = k;
+
+                points[2].x = (i + 1);
+                points[2].y = (j + 1);
+                points[2].z = k;
+
+                points[3].x = (i + 1);
+                points[3].y = (j);
+                points[3].z = k;
+
+                int list[] = {0, 1, 2, 0, 2, 3};
+                for (int kk = 0; kk < 6; kk++)
+                {
+                    int listK = list[kk];
+                    VertexAttribute va{points[listK]};
+                    voxelTriModel.vertices.emplace_back(va);
+
+                    voxelTriModel.indices.emplace_back(voxelTriModel.nVertices + kk);
+                }
+
+                voxelTriModel.nVertices += 6;
+                voxelTriModel.nIndices += 6;
+            }
+        }
+    }
+
+    // 绘制每一层y,z平面
+    for (int k = 0; k < shape.height / stepSize-1; k++) //height,绘制每一层的面
+    {
+        for (int i = 0; i < shape.length / stepSize; i++)
+        {
+            for (int j = 0; j < shape.width / stepSize; j++)
+            {
+                glm::vec3 points[4];
+                points[0].x = i;
+                points[0].y = j;
+                points[0].z = k;
+
+                points[1].x = i;
+                points[1].y = (j + 1);
+                points[1].z = k;
+
+                points[2].x = i;
+                points[2].y = (j + 1);
+                points[2].z = (k + 1);
+
+                points[3].x = i;
+                points[3].y = j;
+                points[3].z = (k + 1);
+
+                int list[] = {0, 1, 2, 0, 2, 3};
+                for (int kk = 0; kk < 6; kk++)
+                {
+                    int listK = list[kk];
+                    VertexAttribute va{points[listK]};
+                    voxelTriModel.vertices.emplace_back(va);
+
+                    voxelTriModel.indices.emplace_back(voxelTriModel.nVertices + kk);
+                }
+
+                voxelTriModel.nVertices += 6;
+                voxelTriModel.nIndices += 6;
+            }
+        }
+    }
+
+    // 绘制每一层x,z平面
+    for (int k = 0; k < shape.height / stepSize-1; k++) //height,绘制每一层的面
+    {
+        for (int i = 0; i < shape.length / stepSize; i++)
+        {
+            for (int j = 0; j < shape.width / stepSize; j++)
+            {
+                glm::vec3 points[4];
+                points[0].x = i;
+                points[0].y = j;
+                points[0].z = k;
+
+                points[1].x = (i + 1);
+                points[1].y = j;
+                points[1].z = k;
+
+                points[2].x = (i + 1);
+                points[2].y = j;
+                points[2].z = (k + 1);
+
+                points[3].x = i;
+                points[3].y = j ;
+                points[3].z = (k + 1);
+
+                int list[] = {0, 1, 2, 0, 2, 3};
+                for (int kk = 0; kk < 6; kk++)
+                {
+                    int listK = list[kk];
+                    VertexAttribute va{points[listK]};
+                    voxelTriModel.vertices.emplace_back(va);
+
+                    voxelTriModel.indices.emplace_back(voxelTriModel.nVertices + kk);
+                }
+
+                voxelTriModel.nVertices += 6;
+                voxelTriModel.nIndices += 6;
+                voxelTriModel.voxelIds.emplace_back(glm::vec3{i, j, k});
+            }
+        }
+    }
+
+
+    // 绘制y,z最大面
+    for (int k = 0; k < shape.height / stepSize-1; k++) //height,绘制每一层的面
+    {
+        for (int j = 0; j < shape.width / stepSize; j++)
+        {
+            glm::vec3 points[4];
+            points[0].x = shape.length/stepSize;
+            points[0].y = j;
+            points[0].z = k;
+
+            points[1].x = shape.length/ stepSize;
+            points[1].y = (j + 1);
+            points[1].z = k;
+
+            points[2].x = shape.length/ stepSize;
+            points[2].y = (j + 1);
+            points[2].z = (k + 1);
+
+            points[3].x = shape.length/ stepSize;
+            points[3].y = j;
+            points[3].z = (k + 1);
+
+            int list[] = {0, 1, 2, 0, 2, 3};
+            for (int kk = 0; kk < 6; kk++)
+            {
+                int listK = list[kk];
+                VertexAttribute va{points[listK]};
+                voxelTriModel.vertices.emplace_back(va);
+
+                voxelTriModel.indices.emplace_back(voxelTriModel.nVertices + kk);
+            }
+
+            voxelTriModel.nVertices += 6;
+            voxelTriModel.nIndices += 6;
+        }
+    }
+
+    // 绘制x,z最大面
+    for (int k = 0; k < shape.height / stepSize-1; k++) //height,绘制每一层的面
+    {
+        for (int i = 0; i < shape.length / stepSize; i++)
+        {
+            glm::vec3 points[4];
+            points[0].x = i;
+            points[0].y = shape.width/ stepSize;
+            points[0].z = k;
+
+            points[1].x = (i + 1);
+            points[1].y = shape.width/ stepSize;
+            points[1].z = k;
+
+            points[2].x = (i + 1);
+            points[2].y = shape.width/ stepSize;
+            points[2].z = (k + 1);
+
+            points[3].x = i;
+            points[3].y = shape.width/ stepSize;
+            points[3].z = (k + 1);
+
+            int list[] = {0, 1, 2, 0, 2, 3};
+            for (int kk = 0; kk < 6; kk++)
+            {
+                int listK = list[kk];
+                VertexAttribute va{points[listK]};
+                voxelTriModel.vertices.emplace_back(va);
+
+                voxelTriModel.indices.emplace_back(voxelTriModel.nVertices + kk);
+            }
+
+            voxelTriModel.nVertices += 6;
+            voxelTriModel.nIndices += 6;
+        }
+    }
+
+
+    // 计算模型的x,y平面坐标下中心点位置
+    voxelTriModel.meshcenter = glm::vec3(shape.length / 2.0, shape.width / 2.0, 0 / 2.0);
+
+    return voxelTriModel;
+}
+
+PrimMesh VoxelDesigner::createTriCube_roof(Shape shape, float stepSize)
+{
+    PrimMesh voxelTriModel;
+    voxelTriModel.nVertices = 0;
+    voxelTriModel.nIndices = 0;
+    voxelTriModel.meshId = 0;
+
+
+    // 绘制顶面(x,y)
+    int k = shape.height/stepSize - 1;
+    for (int i = 0; i < shape.length / stepSize; i++)
+    {
+        for (int j = 0; j < shape.width / stepSize; j++)
+        {
+            glm::vec3 points[4];
+            points[0].x = i;
+            points[0].y = j ;
+            points[0].z = k+1;
+
+            points[1].x = (i);
+            points[1].y = (j + 1);
+            points[1].z = k+1;
+
+            points[2].x = (i + 1);
+            points[2].y = (j + 1);
+            points[2].z = k+1;
+
+            points[3].x = (i + 1);
+            points[3].y = (j);
+            points[3].z = k+1;
+
+            int list[] = {0, 1, 2, 0, 2, 3};
+            for (int kk = 0; kk < 6; kk++)
+            {
+                int listK = list[kk];
+                VertexAttribute va{points[listK]};
+                voxelTriModel.vertices.emplace_back(va);
+
+                voxelTriModel.indices.emplace_back(voxelTriModel.nVertices + kk);
+            }
+
+            voxelTriModel.nVertices += 6;
+            voxelTriModel.nIndices += 6;
+            voxelTriModel.voxelIds.emplace_back(glm::vec3{i, j, k});
+        }
+    }
+
+    // 计算模型的x,y平面坐标下中心点位置
+    voxelTriModel.meshcenter = glm::vec3(shape.length / 2.0, shape.width / 2.0, 0 / 2.0);
+
+    return voxelTriModel;
+}
+
 
 PrimMesh VoxelDesigner::createTriEllipsoid(Shape shape, float stepSize)
 {
@@ -390,7 +648,7 @@ PrimMesh VoxelDesigner::createTriEllipsoid(Shape shape, float stepSize)
                 if (dist <= 1.0)
                 {
                     glm::ivec3 voxel = glm::ivec3(i,j,k);
-                    glm::vec3 point[7];
+                    glm::vec3 point[8];
 
                     point[0].x = voxel.x ;
                     point[0].y = voxel.y ;
@@ -416,11 +674,15 @@ PrimMesh VoxelDesigner::createTriEllipsoid(Shape shape, float stepSize)
                     point[5].y = (voxel.y + 1) ;
                     point[5].z = (voxel.z + 1) ;
 
-                    point[6].x = (voxel.x + 1) ;
-                    point[6].y = voxel.y ;
+                    point[6].x = voxel.x +1;
+                    point[6].y = (voxel.y + 1) ;
                     point[6].z = (voxel.z + 1) ;
 
-                    for (int vi = 0; vi < 7; vi++)
+                    point[7].x = (voxel.x + 1) ;
+                    point[7].y = voxel.y;
+                    point[7].z = (voxel.z + 1) ;
+
+                    for (int vi = 0; vi < 6; vi++)
                     {
                         VertexAttribute va;
                         va.pos = point[vi];
@@ -451,10 +713,10 @@ PrimMesh VoxelDesigner::createTriEllipsoid(Shape shape, float stepSize)
                     voxelTriModel.indices.emplace_back(voxelTriModel.nVertices + 3);
                     voxelTriModel.indices.emplace_back(voxelTriModel.nVertices + 6);
 
-                    voxelTriModel.nVertices += 7;
+                    voxelTriModel.nVertices += 6;
                     voxelTriModel.nIndices += 6 * 3;
 
-                   voxelTriModel.centers.emplace_back(glm::vec3{i, j, k});
+                   voxelTriModel.voxelIds.emplace_back(glm::vec3{i, j, k});
                 }
 
                 // up face
@@ -466,21 +728,21 @@ PrimMesh VoxelDesigner::createTriEllipsoid(Shape shape, float stepSize)
                     glm::ivec3 voxel = glm::ivec3(i, j, k);
                     glm::vec3 point[4];
 
-                    point[0].x = voxel.x * stepSize;
-                    point[0].y = voxel.y * stepSize;
-                    point[0].z = (voxel.z + 1) * stepSize;
+                    point[0].x = voxel.x ;
+                    point[0].y = voxel.y ;
+                    point[0].z = (voxel.z + 1) ;
 
-                    point[1].x = voxel.x * stepSize;
-                    point[1].y = (voxel.y + 1) * stepSize;
-                    point[1].z = (voxel.z + 1) * stepSize;
+                    point[1].x = voxel.x ;
+                    point[1].y = (voxel.y + 1) ;
+                    point[1].z = (voxel.z + 1) ;
 
-                    point[2].x = (voxel.x + 1) * stepSize;
-                    point[2].y = (voxel.y + 1) * stepSize;
-                    point[2].z = (voxel.z + 1) * stepSize;
+                    point[2].x = (voxel.x + 1) ;
+                    point[2].y = (voxel.y + 1) ;
+                    point[2].z = (voxel.z + 1) ;
 
-                    point[3].x = (voxel.x + 1) * stepSize;
-                    point[3].y = voxel.y * stepSize;
-                    point[3].z = (voxel.z + 1) * stepSize;
+                    point[3].x = (voxel.x + 1) ;
+                    point[3].y = voxel.y ;
+                    point[3].z = (voxel.z + 1) ;
 
                     for (int vi = 0; vi < 4; vi++)
                     {
@@ -510,21 +772,21 @@ PrimMesh VoxelDesigner::createTriEllipsoid(Shape shape, float stepSize)
                     glm::ivec3 voxel = glm::ivec3(i, j, k);
                     glm::vec3 point[4];
 
-                    point[0].x = voxel.x * stepSize;
-                    point[0].y = (voxel.y + 1) * stepSize;
-                    point[0].z = voxel.z * stepSize;
+                    point[0].x = voxel.x ;
+                    point[0].y = (voxel.y + 1) ;
+                    point[0].z = voxel.z ;
 
-                    point[1].x = voxel.x * stepSize;
-                    point[1].y = (voxel.y + 1) * stepSize;
-                    point[1].z = (voxel.z + 1) * stepSize;
+                    point[1].x = voxel.x ;
+                    point[1].y = (voxel.y + 1) ;
+                    point[1].z = (voxel.z + 1) ;
 
-                    point[2].x = (voxel.x + 1) * stepSize;
-                    point[2].y = (voxel.y + 1) * stepSize;
-                    point[2].z = (voxel.z + 1) * stepSize;
+                    point[2].x = (voxel.x + 1) ;
+                    point[2].y = (voxel.y + 1) ;
+                    point[2].z = (voxel.z + 1) ;
 
-                    point[3].x = (voxel.x + 1) * stepSize;
-                    point[3].y = (voxel.y + 1) * stepSize;
-                    point[3].z = voxel.z * stepSize;
+                    point[3].x = (voxel.x + 1) ;
+                    point[3].y = (voxel.y + 1) ;
+                    point[3].z = voxel.z ;
 
                     for (int vi = 0; vi < 4; vi++)
                     {
@@ -554,21 +816,21 @@ PrimMesh VoxelDesigner::createTriEllipsoid(Shape shape, float stepSize)
                     glm::ivec3 voxel = glm::ivec3(i, j, k);
                     glm::vec3 point[4];
 
-                    point[0].x = (voxel.x + 1) * stepSize;
-                    point[0].y = voxel.y * stepSize;
-                    point[0].z = voxel.z * stepSize;
+                    point[0].x = (voxel.x + 1) ;
+                    point[0].y = voxel.y ;
+                    point[0].z = voxel.z ;
 
-                    point[1].x = (voxel.x + 1) * stepSize;
-                    point[1].y = (voxel.y + 1) * stepSize;
-                    point[1].z = voxel.z * stepSize;
+                    point[1].x = (voxel.x + 1) ;
+                    point[1].y = (voxel.y + 1) ;
+                    point[1].z = voxel.z ;
 
-                    point[2].x = (voxel.x + 1) * stepSize;
-                    point[2].y = (voxel.y + 1) * stepSize;
-                    point[2].z = (voxel.z + 1) * stepSize;
+                    point[2].x = (voxel.x + 1) ;
+                    point[2].y = (voxel.y + 1) ;
+                    point[2].z = (voxel.z + 1) ;
 
-                    point[3].x = (voxel.x + 1) * stepSize;
-                    point[3].y = voxel.y * stepSize;
-                    point[3].z = (voxel.z + 1) * stepSize;
+                    point[3].x = (voxel.x + 1) ;
+                    point[3].y = voxel.y ;
+                    point[3].z = (voxel.z + 1) ;
 
                     for (int vi = 0; vi < 4; vi++)
                     {
@@ -592,15 +854,8 @@ PrimMesh VoxelDesigner::createTriEllipsoid(Shape shape, float stepSize)
         }
     }
 
-    //// 计算模型的x,y平面坐标下中心点位置
-    //int centerPointX, centerPointY, centerPointZ;
-    //centerPointX = int(shape.length / 2.0);
-    //centerPointY = int(shape.width / 2.0);
-    //centerPointZ = int(shape.height / 2.0);
-    ////centerPointZ = 0;
-    //voxelTriModel.modelCenterPoint = glm::ivec3(centerPointX, centerPointY, centerPointZ);
 
-    voxelTriModel.meshcenter = glm::vec3(shape.length / 2.0, shape.width / 2.0, shape.height / 2.0);
+    voxelTriModel.meshcenter = glm::vec3(shape.length/stepSize / 2.0, shape.width / 2.0, shape.height / 2.0);
 
     return voxelTriModel;
 }
@@ -622,143 +877,10 @@ bool VoxelDesigner::isInPloy(nvmath::vec2i testPoint, std::vector<nvmath::vec2f>
         return true;
     }
 
-    //		AB X AP = (b.x - a.x, b.y - a.y) x (p.x - a.x, p.y - a.y) = (b.x - a.x) * (p.y - a.y) - (b.y - a.y) * (p.x - a.x);
-    //		BC X BP = (c.x - b.x, c.y - b.y) x (p.x - b.x, p.y - b.y) = (c.x - b.x) * (p.y - b.y) - (c.y - b.y) * (p.x - b.x);
     return false;
 }
 
 
-
-//Mesh VoxelDesigner::createTriCube_rotate(Shape shape, float stepSize, float rotateAngle)
-//{
-//  //  VoxelTriModel voxelTriModel;
-//    Mesh mesh;
-//    // 计算模型的x,y平面坐标下中心点位置,    会有空点
-//    /*int centerPointX, centerPointY, centerPointZ;
-//    centerPointX = int(shape.length / 2.0);
-//    centerPointY = int(shape.width  / 2.0);
-//    centerPointZ = int(shape.height / 2.0);*/
-//    float centerPointX, centerPointY, centerPointZ;
-//    centerPointX = (shape.length / 2.0);
-//    centerPointY = (shape.width / 2.0);
-//    centerPointZ = (shape.height / 2.0);
-//    centerPointZ = 0;
-//
-//    glm::vec3 modelCenterPoint = glm::vec3(centerPointX, centerPointY, centerPointZ);
-//    std::vector<glm::vec3> centerpoints;
-//
-//    float cosA = cos(rotateAngle * PI / 180);
-//    float sinA = sin(rotateAngle * PI / 180);
-//
-//    // 计算旋转后的中心点位置， 以模型中心点为旋转中心
-//    std::vector<glm::vec3> localCenterPoints;
-//    for (int i=0; i < shape.length/ stepSize; i++)
-//    {
-//        for (int j = 0; j < shape.width/stepSize; j++)
-//        {
-//            for (int k = 0; k < shape.height/stepSize; k++)
-//            {
-//                // 全部保留
-//                //localCenterPoints.push_back(glm::ivec3(i, j, k) - voxelTriModel.modelCenterPoint);
-//                if (i == 0 || i == shape.length/stepSize -1)
-//                {
-//                    localCenterPoints.push_back(glm::vec3(i, j, k) - modelCenterPoint);
-//                }
-//                if (j == 0 || j==shape.width/stepSize - 1)
-//                {
-//                    localCenterPoints.push_back(glm::vec3(i, j, k) - modelCenterPoint);
-//                }
-//                /*if (k==0||k==shape.height/stepSize - 1)
-//                {
-//                    localCenterPoints.push_back(glm::ivec3(i, j, k) - voxelTriModel.modelCenterPoint);
-//                }*/
-//            }
-//        }
-//    }
-//    for (auto &localCenterPoint : localCenterPoints)
-//    {
-//
-//        float x = cosA * localCenterPoint.x - sinA * localCenterPoint.y + modelCenterPoint.x;
-//        float y = sinA * localCenterPoint.x + cosA * localCenterPoint.y + modelCenterPoint.y;
-//        centerpoints.push_back(glm::vec3(round(x) * stepSize, round(y) * stepSize, localCenterPoint.z * stepSize));
-//    }
-//
-//    // 顶面和底面
-//    // 计算四个角点，然后得到其包含的四边形内部的点
-//    std::vector<nvmath::vec2f> poly;
-//    nvmath::vec2f point1 = {cosA * (0 - modelCenterPoint.x) - sinA * (0 -modelCenterPoint.y) + modelCenterPoint.x,
-//                            sinA * (0 - modelCenterPoint.x) + cosA * (0 - modelCenterPoint.y) + modelCenterPoint.y};
-//    nvmath::vec2f point2 = {cosA * (shape.length / stepSize - modelCenterPoint.x) - sinA * (0 - modelCenterPoint.y) + modelCenterPoint.x,
-//                            sinA * (shape.length / stepSize - modelCenterPoint.x) + cosA * (0 - modelCenterPoint.y) + modelCenterPoint.y};
-//    nvmath::vec2f point3 = {cosA * (0 - modelCenterPoint.x) - sinA * (shape.width / stepSize - modelCenterPoint.y) + modelCenterPoint.x,
-//                            sinA * (0 - modelCenterPoint.x) + cosA * (shape.width / stepSize - modelCenterPoint.y) + modelCenterPoint.y};
-//    nvmath::vec2f point4 = {cosA * (shape.length / stepSize - modelCenterPoint.x) - sinA * (shape.width / stepSize - modelCenterPoint.y) + modelCenterPoint.x,
-//                            sinA * (shape.length / stepSize - modelCenterPoint.x) + cosA * (shape.width / stepSize - modelCenterPoint.y) + modelCenterPoint.y};
-//    poly.push_back(point1);
-//    poly.push_back(point2);
-//    poly.push_back(point4);
-//    poly.push_back(point3);
-//    int max_X = std::max({point1.x, point2.x, point3.x, point4.x});
-//    int max_Y = std::max({point1.y, point2.y, point3.y, point4.y});
-//    int min_X = std::min({point1.x, point2.x, point3.x, point4.x});
-//    int min_Y = std::min({point1.y, point2.y, point3.y, point4.y});
-//    for (int i = min_X; i < max_X; i++)
-//    {
-//        for (int j = min_Y; j < max_Y; j++)
-//        {
-//            nvmath::vec2i test = {i, j};
-//            if (isInPloy(test, poly))
-//            {
-//                voxelTriModel.centerPoints.push_back(glm::vec3(i * stepSize, j * stepSize, 0 * stepSize));
-//                voxelTriModel.centerPoints.push_back(glm::vec3(i * stepSize, j * stepSize, (shape.height / stepSize - 1) * stepSize));
-//            }
-//        }
-//    }
-//
-//
-//
-//
-//    // 绘制每个面
-//    for (auto &centerPoint : voxelTriModel.centerPoints)
-//    {
-//        glm::vec3 points[8];
-//        points[0] = glm::vec3(centerPoint.x, centerPoint.y, centerPoint.z);
-//        points[1] = glm::vec3(centerPoint.x + stepSize, centerPoint.y, centerPoint.z);
-//        points[2] = glm::vec3(centerPoint.x + stepSize, centerPoint.y + stepSize, centerPoint.z);
-//        points[3] = glm::vec3(centerPoint.x, centerPoint.y + stepSize, centerPoint.z);
-//        points[4] = glm::vec3(centerPoint.x, centerPoint.y, centerPoint.z + stepSize);
-//        points[5] = glm::vec3(centerPoint.x + stepSize, centerPoint.y, centerPoint.z + stepSize);
-//        points[6] = glm::vec3(centerPoint.x + stepSize, centerPoint.y + stepSize, centerPoint.z + stepSize);
-//        points[7] = glm::vec3(centerPoint.x, centerPoint.y + stepSize, centerPoint.z);
-//
-//        int list[] = {0, 1, 4,
-//                      1, 4, 5,
-//                      0, 1, 2,
-//                      0, 2, 3,
-//                      4, 5, 6,
-//                      4, 6, 7,
-//                      2, 3, 6,
-//                      3, 6, 7,
-//                      0, 3, 4,
-//                      3, 4, 7,
-//                      1, 5, 6,
-//                      1, 2, 6};
-//
-//        for (int kk = 0; kk < 36; kk++)
-//        {
-//            int listK = list[kk];
-//            VertexAttribute va{points[listK]};
-//            voxelTriModel.vertices.emplace_back(va);
-//
-//            voxelTriModel.indices.emplace_back(voxelTriModel.nVertices + kk);
-//        }
-//
-//        voxelTriModel.nVertices += 36;
-//        voxelTriModel.nIndices += 36;
-//    }
-//
-//    return voxelTriModel;
-//}
 
 std::vector<glm::ivec3> VoxelDesigner::createBackground(float sceneLength, float sceneWidth, float stepSize)
 {
@@ -785,13 +907,18 @@ std::vector<glm::ivec3> VoxelDesigner::createBackground(float sceneLength, float
     return discreteCoord;
 }
 
+/// Create a triangle background
+/// \param sceneLength
+/// \param sceneWidth
+/// \param stepSize
+/// \return a mesh with XYZ coordinate;
 PrimMesh VoxelDesigner::createTriBackground(float sceneLength, float sceneWidth, float stepSize)
 {
     PrimMesh mesh;
     mesh.meshId = 0;
     mesh.nVertices = 0;
     mesh.nIndices = 0;
-    float bgZ = 0;
+    float bgZ = -1;
 
     for (int i = 0; i < sceneLength/stepSize; i++)
     {
@@ -825,16 +952,17 @@ PrimMesh VoxelDesigner::createTriBackground(float sceneLength, float sceneWidth,
 
             mesh.nVertices += 6;
             mesh.nIndices += 6;
-            mesh.centers.emplace_back(glm::vec3{i , j , bgZ });
+            mesh.voxelIds.emplace_back(glm::vec3{i , j , bgZ });
         }
     }
 
     return mesh;
 }
 
-PrimMesh VoxelDesigner::createTriEntity(ShapeType shapeType, Shape shape, float stepSize)
+PrimMesh VoxelDesigner::createTriEntity(Shape shape, float stepSize)
 {
     PrimMesh voxelTriModel;
+    ShapeType shapeType = shape.shapetype;
 
     if (shapeType == ShapeType::CUBE)
     {
@@ -862,7 +990,7 @@ PrimMesh VoxelDesigner::createTriEntity(ShapeType shapeType, Shape shape, float 
 //    return voxelTriModel;
 //}
 
-//VoxelTriModel VoxelDesigner::createTriBackgroundFromDEM(const std::string &filename, glm::vec3 sceneSize, _2D::BilinearInterpolator<double> &interp)
+//VoxelTriModel VoxelDesigner::createTriBackgroundFromDEM(const std::string &filename, glm::vec3 sceneSize_XYZ, _2D::BilinearInterpolator<double> &interp)
 //{
 //    VoxelTriModel voxelTriModel;
 //    std::string infile = filename;
@@ -885,7 +1013,7 @@ PrimMesh VoxelDesigner::createTriEntity(ShapeType shapeType, Shape shape, float 
 //    FLOAT *pafScanline = new FLOAT[nImgSizeX * nImgSizeY];
 //    poDataset->RasterIO(GF_Read, 0, 0, nImgSizeX, nImgSizeY, pafScanline, nImgSizeX, nImgSizeY, GDT_Float32, bandcount, 0, 0, 0, 0);
 //
-//    m_scale = sceneSize.x / nImgSizeX;
+//    m_scale = sceneSize_XYZ.x / nImgSizeX;
 //    float scale = m_scale;
 //
 //    std::vector<double> x, y, z;
@@ -911,19 +1039,19 @@ PrimMesh VoxelDesigner::createTriEntity(ShapeType shapeType, Shape shape, float 
 //    uint32_t nVertices = 0;
 //    uint32_t nIndices = 0;
 //    minElevation = z[0];
-//    for(int j=0; j < sceneSize.x; j=j+step)
+//    for(int j=0; j < sceneSize_XYZ.x; j=j+step)
 //    {
-//        for (int k=0; k<sceneSize.y; k=k+step)
+//        for (int k=0; k<sceneSize_XYZ.y; k=k+step)
 //        {
 //            float jj = j, kk= k;
 //            if (jj < scale / 2)
 //                jj = scale / 2.0;
 //            if (kk < scale / 2)
 //                kk = scale / 2.0;
-//            if (jj > sceneSize.x - scale / 2.0)
-//                jj = sceneSize.x - scale / 2.0 - 0.01;
-//            if (kk > sceneSize.y - scale / 2.0)
-//                kk = sceneSize.y - scale / 2.0 - 0.01;
+//            if (jj > sceneSize_XYZ.x - scale / 2.0)
+//                jj = sceneSize_XYZ.x - scale / 2.0 - 0.01;
+//            if (kk > sceneSize_XYZ.y - scale / 2.0)
+//                kk = sceneSize_XYZ.y - scale / 2.0 - 0.01;
 //            voxelTriModel.centerPoints.emplace_back(glm::vec3{j + 0.5, k + 0.5,
 //                                                                  int(interp(jj, kk))});
 //
@@ -1001,4 +1129,629 @@ PrimMesh VoxelDesigner::createTriEntity(ShapeType shapeType, Shape shape, float 
 //
 //    return voxelTriModel;
 //}
+
+PrimMesh VoxelDesigner::createTriEntitiesFromTif(std::string heightPath, float stepSize) {
+    PrimMesh voxelTriModel;
+    voxelTriModel.nVertices=0;
+    voxelTriModel.nIndices = 0;
+    voxelTriModel.meshId = 0;
+    //===================================================================
+    /*! height map
+     */
+    CPLSetConfigOption("gdal_filename_is_utf8", "no");
+    GDALAllRegister();
+
+    GDALDataset* heightDataset;
+    heightDataset = (GDALDataset*)GDALOpen(heightPath.c_str(), GA_ReadOnly);
+    if (heightDataset == NULL)
+    {
+        std::cout << "fail in open height files!" << std::endl;
+        return voxelTriModel;
+    }
+    int nImgSizeX = heightDataset->GetRasterXSize();
+    int nImgSizeY = heightDataset->GetRasterYSize();
+    int bandcount = heightDataset->GetRasterCount();
+    FLOAT* heightScanline = new FLOAT[nImgSizeX * nImgSizeY];
+    heightDataset->RasterIO(GF_Read, 0, 0, nImgSizeX, nImgSizeY, heightScanline, nImgSizeX, nImgSizeY, GDT_Float32, bandcount, 0, 0, 0, 0);
+
+
+    //===================================================================
+    /*! create every model through its height: get the center points
+     * (this center points is actually the minimum(left and down) point)
+     * for edge pixel: create the vertical voxels from the lowest height around to its height.
+     *              if the height of this pixel is the lowest, then establish its corresponding voxel height.
+     * for non-edge pixel: establish its corresponding voxel height.
+     * ENVI tif coordinate system:
+     *      .--------> x
+     *      |---------
+     *      |----.(i, j)  (j * nImgX + i)
+     *      |
+     *      y
+     *
+     * spatial relationship:
+     *      .------------------------------------------------> x
+     *      |----------------- .up (back)----------------------
+     *      |--- .left (left)| .cur (center) | .right (right)----
+     *      |----------------- .down (forward) ----------------
+     *      |-------------------------------------------------
+     *      y
+     */
+
+    FLOAT* minReHeightScanline = new FLOAT[nImgSizeX * nImgSizeY];
+
+    float minReHeight, rightReHeight, leftReHeight, upReHeight, downReHeight;
+    for (int i = 1; i < nImgSizeX - 1; i++)
+    {
+        for (int j = 1; j < nImgSizeY - 1; j++)
+        {
+            // all the height
+            float curReHeight = std::round(heightScanline[j * nImgSizeX + i] / stepSize);
+
+
+            leftReHeight = std::round(heightScanline[j * nImgSizeX + i - 1] / stepSize);
+            rightReHeight = std::round(heightScanline[j * nImgSizeX + i + 1] / stepSize);
+            upReHeight = std::round(heightScanline[(j - 1) * nImgSizeX + i] / stepSize);
+            downReHeight = std::round(heightScanline[(j + 1) * nImgSizeX + i] / stepSize);
+            // resized height
+            minReHeight = std::min({ curReHeight, leftReHeight, rightReHeight, upReHeight, downReHeight });
+
+            int faceId = 0;
+            if (downReHeight == minReHeight) faceId = 1;    // forward
+            if (upReHeight == minReHeight) faceId = 4;      // backward
+            if (leftReHeight == minReHeight) faceId = 3;    // left
+            if (rightReHeight == minReHeight) faceId = 2;   // right
+            if (curReHeight == minReHeight) faceId = 5;     // up
+
+            minReHeightScanline[j * nImgSizeX + i] = minReHeight;
+            //===================================================================
+            /*! save [voxelIds: left-down point] and [faceIds] values: NanoVDB attribution location
+             * {}
+             */
+            if (curReHeight == minReHeight)
+            {
+                if (curReHeight == 0) continue;
+
+                voxelTriModel.voxelIds.emplace_back(i, j, curReHeight - 1);
+                voxelTriModel.faceIds.emplace_back(faceId);
+
+                // isValids: 0 forward, 1 backward, 2 left, 3 right, 4 up
+                int5 curIsValids = { 0, 0, 0, 0, 1 };
+                voxelTriModel.isValids.emplace_back(curIsValids);
+            }
+            else
+            {
+                for (int heighti = 0; heighti < (curReHeight - minReHeight); heighti++)
+                {
+                    voxelTriModel.voxelIds.emplace_back(i, j, minReHeight + heighti);
+                    voxelTriModel.faceIds.emplace_back(faceId);
+
+                    // isValids: 0 forward, 1 backward, 2 left, 3 right, 4 up
+                    int5 curIsValids = { 0, 0, 0, 0, 0 };
+                    if (minReHeight + heighti > downReHeight) curIsValids.values[0] = 1;
+                    if (minReHeight + heighti > upReHeight) curIsValids.values[1] = 1;
+                    if (minReHeight + heighti > leftReHeight) curIsValids.values[2] = 1;
+                    if (minReHeight + heighti > rightReHeight) curIsValids.values[3] = 1;
+                    voxelTriModel.isValids.emplace_back(curIsValids);
+                }
+            }
+
+            //===================================================================
+            /*! save [vertices] and [indices] values: mesh
+             * because add voxel wastes the memory, so add each face
+             */
+            // because add voxel wastes the memory, so add each face
+            if (curReHeight == minReHeight)    // add up face
+            {
+                if (curReHeight == 0) continue;
+            }
+            // current pixel face
+            glm::vec3 points[4];
+            points[0] = { i, j, curReHeight };  // left and down point
+            points[1] = { i + 1, j, curReHeight };
+            points[2] = { i + 1, j + 1, curReHeight };
+            points[3] = { i, j + 1, curReHeight };
+            int list[] = { 0,1,2,0,2,3 };
+            for (int k = 0; k < 6; k++)
+            {
+                int listK = list[k];
+                VertexAttribute va{ points[listK] };
+                voxelTriModel.vertices.emplace_back(va);
+                voxelTriModel.indices.emplace_back(voxelTriModel.nVertices + k);
+            }
+            voxelTriModel.nVertices += 6;
+            voxelTriModel.nIndices += 6;
+
+            // left pixel
+            if (leftReHeight < curReHeight)
+            {
+                glm::vec3 points[4];
+                points[0] = { i, j + 1, leftReHeight };  // left and down point
+                points[1] = { i, j, leftReHeight };
+                points[2] = { i, j, curReHeight };
+                points[3] = { i, j + 1, curReHeight };
+
+                int list[] = { 0,1,2,0,2,3 };
+                for (int k = 0; k < 6; k++)
+                {
+                    int listK = list[k];
+                    VertexAttribute va{ points[listK] };
+                    voxelTriModel.vertices.emplace_back(va);
+                    voxelTriModel.indices.emplace_back(voxelTriModel.nVertices + k);
+                }
+
+                voxelTriModel.nVertices += 6;
+                voxelTriModel.nIndices += 6;
+            }
+
+            // right pixel
+            if (rightReHeight < curReHeight)
+            {
+                glm::vec3 points[4];
+                points[0] = { i + 1, j, rightReHeight };  // left and down point
+                points[1] = { i + 1, j + 1, rightReHeight };
+                points[2] = { i + 1, j + 1, curReHeight };
+                points[3] = { i + 1, j, curReHeight };
+
+                int list[] = { 0,1,2,0,2,3 };
+                for (int k = 0; k < 6; k++)
+                {
+                    int listK = list[k];
+                    VertexAttribute va{ points[listK] };
+                    voxelTriModel.vertices.emplace_back(va);
+                    voxelTriModel.indices.emplace_back(voxelTriModel.nVertices + k);
+                }
+
+                voxelTriModel.nVertices += 6;
+                voxelTriModel.nIndices += 6;
+            }
+
+            // up pixel
+            if (upReHeight < curReHeight)
+            {
+                glm::vec3 points[4];
+                points[0] = { i + 1, j, upReHeight };  // left and down point
+                points[1] = { i, j, upReHeight };
+                points[2] = { i, j, curReHeight };
+                points[3] = { i + 1, j, curReHeight };
+
+                int list[] = { 0,2,1,0,3,2 };
+                for (int k = 0; k < 6; k++)
+                {
+                    int listK = list[k];
+                    VertexAttribute va{ points[listK] };
+                    voxelTriModel.vertices.emplace_back(va);
+                    voxelTriModel.indices.emplace_back(voxelTriModel.nVertices + k);
+                }
+
+                voxelTriModel.nVertices += 6;
+                voxelTriModel.nIndices += 6;
+            }
+
+            // down face
+            if (downReHeight < curReHeight)
+            {
+                glm::vec3 points[4];
+                points[0] = { i + 1, j + 1, downReHeight };  // left and down point
+                points[1] = { i, j + 1, downReHeight };
+                points[2] = { i, j + 1, curReHeight };
+                points[3] = { i + 1, j + 1, curReHeight };
+
+                int list[] = { 0,1,2,0,2,3 };
+                for (int k = 0; k < 6; k++)
+                {
+                    int listK = list[k];
+                    VertexAttribute va{ points[listK] };
+                    voxelTriModel.vertices.emplace_back(va);
+                    voxelTriModel.indices.emplace_back(voxelTriModel.nVertices + k);
+                }
+
+                voxelTriModel.nVertices += 6;
+                voxelTriModel.nIndices += 6;
+            }
+        }
+    }
+
+    delete[] heightScanline;
+    //delete heightDataset;
+    GDALClose(heightDataset);
+    delete[] minReHeightScanline;
+
+    return voxelTriModel;
+}
+
+
+PrimMesh VoxelDesigner::createTriEntitiesFromTif_roof(std::string heightPath, glm::vec3 targetSize, float stepSize) {
+    PrimMesh voxelTriModel;
+    voxelTriModel.nVertices=0;
+    voxelTriModel.nIndices = 0;
+    voxelTriModel.meshId = 0;
+    //===================================================================
+    /*! height map
+     */
+//    CPLSetConfigOption("gdal_filename_is_utf8", "no");
+//    GDALAllRegister();
+//
+//    GDALDataset* heightDataset;
+//    heightDataset = (GDALDataset*)GDALOpen(heightPath.c_str(), GA_ReadOnly);
+//    if (heightDataset == NULL)
+//    {
+//        std::cout << "fail in open height files!" << std::endl;
+//        return voxelTriModel;
+//    }
+//    int nImgSizeX = heightDataset->GetRasterXSize();
+//    int nImgSizeY = heightDataset->GetRasterYSize();
+//    int bandcount = heightDataset->GetRasterCount();
+//    FLOAT* heightScanline = new FLOAT[nImgSizeX * nImgSizeY];
+//    heightDataset->RasterIO(GF_Read, 0, 0, nImgSizeX, nImgSizeY, heightScanline, nImgSizeX, nImgSizeY, GDT_Float32, bandcount, 0, 0, 0, 0);
+
+    std::vector<float> heightScanline0;
+    int width,height, nband;
+    Utils::readImageinout1(heightPath,heightScanline0,width,height,nband);
+    cv::Mat heightScanline0_cv = Utils::convertVector2Mat<float>(heightScanline0,1,height);
+    cv::Mat heightScanline_cv;
+
+    int nImgSizeX = targetSize.x;
+    int nImgSizeY = targetSize.z;
+    cv::resize(heightScanline0_cv,heightScanline_cv,cv::Size(nImgSizeX,nImgSizeY));
+    std::vector<float> heightScanline;
+    heightScanline = Utils::convertMat2Vector<float>(heightScanline_cv);
+    heightScanline0.clear();
+    heightScanline0_cv.release();
+    heightScanline_cv.release();
+
+    //===================================================================
+    /*! create every model through its height: get the center points
+     * (this center points is actually the minimum(left and down) point)
+     * for edge pixel: create the vertical voxels from the lowest height around to its height.
+     *              if the height of this pixel is the lowest, then establish its corresponding voxel height.
+     * for non-edge pixel: establish its corresponding voxel height.
+     * ENVI tif coordinate system:
+     *      .--------> x
+     *      |---------
+     *      |----.(i, j)  (j * nImgX + i)
+     *      |
+     *      y
+     *
+     * spatial relationship:
+     *      .------------------------------------------------> x
+     *      |----------------- .up (back)----------------------
+     *      |--- .left (left)| .cur (center) | .right (right)----
+     *      |----------------- .down (forward) ----------------
+     *      |-------------------------------------------------
+     *      y
+     */
+
+    FLOAT* minReHeightScanline = new FLOAT[nImgSizeX * nImgSizeY];
+
+    float minReHeight, rightReHeight, leftReHeight, upReHeight, downReHeight;
+    for (int i = 1; i < nImgSizeX - 1; i++)
+    {
+        for (int j = 1; j < nImgSizeY - 1; j++)
+        {
+            // all the height
+            float curReHeight = std::round(heightScanline[j * nImgSizeX + i] / stepSize);
+
+
+            leftReHeight = std::round(heightScanline[j * nImgSizeX + i - 1] / stepSize);
+            rightReHeight = std::round(heightScanline[j * nImgSizeX + i + 1] / stepSize);
+            upReHeight = std::round(heightScanline[(j - 1) * nImgSizeX + i] / stepSize);
+            downReHeight = std::round(heightScanline[(j + 1) * nImgSizeX + i] / stepSize);
+            // resized height
+            minReHeight = std::min({ curReHeight, leftReHeight, rightReHeight, upReHeight, downReHeight });
+
+            int faceId = 0;
+            if (downReHeight == minReHeight) faceId = 1;    // forward
+            if (upReHeight == minReHeight) faceId = 4;      // backward
+            if (leftReHeight == minReHeight) faceId = 3;    // left
+            if (rightReHeight == minReHeight) faceId = 2;   // right
+            if (curReHeight == minReHeight) faceId = 5;     // up
+
+            minReHeightScanline[j * nImgSizeX + i] = minReHeight;
+            //===================================================================
+            /*! save [voxelIds: left-down point] and [faceIds] values: NanoVDB attribution location
+             * {}
+             */
+            if (curReHeight == minReHeight)
+            {
+                if (curReHeight == 0) continue;
+
+                voxelTriModel.voxelIds.emplace_back(i, j, curReHeight - 1);
+                voxelTriModel.faceIds.emplace_back(faceId);
+
+                // isValids: 0 forward, 1 backward, 2 left, 3 right, 4 up
+                int5 curIsValids = { 0, 0, 0, 0, 1 };
+                voxelTriModel.isValids.emplace_back(curIsValids);
+            }
+            else
+            {
+                // only the roof voxel is added;
+                for (int heightt = curReHeight - 1; heightt < curReHeight; heightt++)
+                {
+                    voxelTriModel.voxelIds.emplace_back(i, j, heightt);
+                    voxelTriModel.faceIds.emplace_back(faceId);
+
+                    // isValids: 0 forward, 1 backward, 2 left, 3 right, 4 up
+                    int5 curIsValids = { 0, 0, 0, 0, 1 };
+                    if (heightt > downReHeight) curIsValids.values[0] = 1;
+                    if (heightt > upReHeight) curIsValids.values[1] = 1;
+                    if (heightt > leftReHeight) curIsValids.values[2] = 1;
+                    if (heightt > rightReHeight) curIsValids.values[3] = 1;
+                    voxelTriModel.isValids.emplace_back(curIsValids);
+                }
+            }
+
+            //===================================================================
+            /*! save [vertices] and [indices] values: mesh
+             * because add voxel wastes the memory, so add each face
+             */
+            // because add voxel wastes the memory, so add each face
+            if (curReHeight == minReHeight)    // add up face
+            {
+                if (curReHeight == 0) continue;
+            }
+            // current pixel face
+            glm::vec3 points[4];
+            points[0] = { i, j, curReHeight };  // left and down point
+            points[1] = { i + 1, j, curReHeight };
+            points[2] = { i + 1, j + 1, curReHeight };
+            points[3] = { i, j + 1, curReHeight };
+            int list[] = { 0,1,2,0,2,3 };
+            for (int k = 0; k < 6; k++)
+            {
+                int listK = list[k];
+                VertexAttribute va{ points[listK] };
+                voxelTriModel.vertices.emplace_back(va);
+                voxelTriModel.indices.emplace_back(voxelTriModel.nVertices + k);
+            }
+            voxelTriModel.nVertices += 6;
+            voxelTriModel.nIndices += 6;
+
+
+        }
+    }
+
+   // delete[] heightScanline;
+    //delete heightDataset;
+   // GDALClose(heightDataset);
+    heightScanline.clear();
+    delete[] minReHeightScanline;
+
+    return voxelTriModel;
+}
+
+PrimMesh VoxelDesigner::createTriEntitiesFromTif_wall(std::string heightPath, glm::vec3 targetSize, float stepSize) {
+    PrimMesh voxelTriModel;
+    voxelTriModel.nVertices=0;
+    voxelTriModel.nIndices = 0;
+    voxelTriModel.meshId = 0;
+    //===================================================================
+    /*! height map
+     */
+//    CPLSetConfigOption("gdal_filename_is_utf8", "no");
+//    GDALAllRegister();
+//
+//    GDALDataset* heightDataset;
+//    heightDataset = (GDALDataset*)GDALOpen(heightPath.c_str(), GA_ReadOnly);
+//    if (heightDataset == NULL)
+//    {
+//        std::cout << "fail in open height files!" << std::endl;
+//        return voxelTriModel;
+//    }
+//    int nImgSizeX = heightDataset->GetRasterXSize();
+//    int nImgSizeY = heightDataset->GetRasterYSize();
+//    int bandcount = heightDataset->GetRasterCount();
+//    FLOAT* heightScanline = new FLOAT[nImgSizeX * nImgSizeY];
+//    heightDataset->RasterIO(GF_Read, 0, 0, nImgSizeX, nImgSizeY, heightScanline, nImgSizeX, nImgSizeY, GDT_Float32, bandcount, 0, 0, 0, 0);
+
+
+     std::vector<float> heightScanline0;
+     int width,height, nband;
+     Utils::readImageinout1(heightPath,heightScanline0,width,height,nband);
+     cv::Mat heightScanline0_cv = Utils::convertVector2Mat<float>(heightScanline0,1,height);
+    cv::Mat heightScanline_cv;
+
+    int nImgSizeX = targetSize.x;
+    int nImgSizeY = targetSize.z;
+    cv::resize(heightScanline0_cv,heightScanline_cv,cv::Size(nImgSizeX,nImgSizeY));
+    std::vector<float> heightScanline;
+    heightScanline = Utils::convertMat2Vector<float>(heightScanline_cv);
+    heightScanline0.clear();
+    heightScanline0_cv.release();
+    heightScanline_cv.release();
+
+
+
+    //===================================================================
+    /*! create every model through its height: get the center points
+     * (this center points is actually the minimum(left and down) point)
+     * for edge pixel: create the vertical voxels from the lowest height around to its height.
+     *              if the height of this pixel is the lowest, then establish its corresponding voxel height.
+     * for non-edge pixel: establish its corresponding voxel height.
+     * ENVI tif coordinate system:
+     *      .--------> x
+     *      |---------
+     *      |----.(i, j)  (j * nImgX + i)
+     *      |
+     *      y
+     *
+     * spatial relationship:
+     *      .------------------------------------------------> x
+     *      |----------------- .up (back)----------------------
+     *      |--- .left (left)| .cur (center) | .right (right)----
+     *      |----------------- .down (forward) ----------------
+     *      |-------------------------------------------------
+     *      y
+     */
+
+    FLOAT* minReHeightScanline = new FLOAT[nImgSizeX * nImgSizeY];
+
+    float minReHeight, rightReHeight, leftReHeight, upReHeight, downReHeight;
+    for (int i = 1; i < nImgSizeX - 1; i++)
+    {
+        for (int j = 1; j < nImgSizeY - 1; j++)
+        {
+            // all the height
+            float curReHeight = std::round(heightScanline[j * nImgSizeX + i] / stepSize);
+
+            if(curReHeight>0)
+            {
+                int a = 10;
+            }
+
+            leftReHeight = std::round(heightScanline[j * nImgSizeX + i - 1] / stepSize);
+            rightReHeight = std::round(heightScanline[j * nImgSizeX + i + 1] / stepSize);
+            upReHeight = std::round(heightScanline[(j - 1) * nImgSizeX + i] / stepSize);
+            downReHeight = std::round(heightScanline[(j + 1) * nImgSizeX + i] / stepSize);
+            // resized height
+            minReHeight = std::min({ curReHeight, leftReHeight, rightReHeight, upReHeight, downReHeight });
+
+            int faceId = 0;
+            if (downReHeight == minReHeight) faceId = 1;    // forward
+            if (upReHeight == minReHeight) faceId = 4;      // backward
+            if (leftReHeight == minReHeight) faceId = 3;    // left
+            if (rightReHeight == minReHeight) faceId = 2;   // right
+            if (curReHeight == minReHeight) faceId = 5;     // up
+
+            minReHeightScanline[j * nImgSizeX + i] = minReHeight;
+            //===================================================================
+            /*! save [voxelIds: left-down point] and [faceIds] values: NanoVDB attribution location
+             * {}
+             */
+            if (curReHeight == minReHeight)
+            {
+                if (curReHeight == 0) continue;
+
+                voxelTriModel.voxelIds.emplace_back(i, j, curReHeight - 1);
+                voxelTriModel.faceIds.emplace_back(faceId);
+
+                // isValids: center 0, 0 forward, 1 backward, 2 left, 3 right, 4 up
+                int5 curIsValids = { 0, 0, 0, 0, 1 };
+                voxelTriModel.isValids.emplace_back(curIsValids);
+            }
+            else
+            {
+                for (int heighti = 0; heighti < (curReHeight - minReHeight); heighti++)
+                {
+                    voxelTriModel.voxelIds.emplace_back(i, j, minReHeight + heighti);
+                    voxelTriModel.faceIds.emplace_back(faceId);
+
+                    // isValids: 0 forward, 1 backward, 2 left, 3 right, 4 up
+                    int5 curIsValids = { 0, 0, 0, 0, 1 };
+                    if (minReHeight + heighti > downReHeight) curIsValids.values[0] = 1;
+                    if (minReHeight + heighti > upReHeight) curIsValids.values[1] = 1;
+                    if (minReHeight + heighti > leftReHeight) curIsValids.values[2] = 1;
+                    if (minReHeight + heighti > rightReHeight) curIsValids.values[3] = 1;
+                    voxelTriModel.isValids.emplace_back(curIsValids);
+                }
+            }
+
+            //===================================================================
+            /*! save [vertices] and [indices] values: mesh
+             * because add voxel wastes the memory, so add each face
+             */
+            // because add voxel wastes the memory, so add each face
+            if (curReHeight == minReHeight)    // add up face
+            {
+                if (curReHeight == 0) continue;
+            }
+
+
+            // left pixel
+            if (leftReHeight < curReHeight)
+            {
+                glm::vec3 points[4];
+                points[0] = { i, j + 1, leftReHeight };  // left and down point
+                points[1] = { i, j, leftReHeight };
+                points[2] = { i, j, curReHeight };
+                points[3] = { i, j + 1, curReHeight };
+
+                int list[] = { 0,1,2,0,2,3 };
+                for (int k = 0; k < 6; k++)
+                {
+                    int listK = list[k];
+                    VertexAttribute va{ points[listK] };
+                    voxelTriModel.vertices.emplace_back(va);
+                    voxelTriModel.indices.emplace_back(voxelTriModel.nVertices + k);
+                }
+
+                voxelTriModel.nVertices += 6;
+                voxelTriModel.nIndices += 6;
+            }
+
+            // right pixel
+            if (rightReHeight < curReHeight)
+            {
+                glm::vec3 points[4];
+                points[0] = { i + 1, j, rightReHeight };  // left and down point
+                points[1] = { i + 1, j + 1, rightReHeight };
+                points[2] = { i + 1, j + 1, curReHeight };
+                points[3] = { i + 1, j, curReHeight };
+
+                int list[] = { 0,1,2,0,2,3 };
+                for (int k = 0; k < 6; k++)
+                {
+                    int listK = list[k];
+                    VertexAttribute va{ points[listK] };
+                    voxelTriModel.vertices.emplace_back(va);
+                    voxelTriModel.indices.emplace_back(voxelTriModel.nVertices + k);
+                }
+
+                voxelTriModel.nVertices += 6;
+                voxelTriModel.nIndices += 6;
+            }
+
+            // up pixel
+            if (upReHeight < curReHeight)
+            {
+                glm::vec3 points[4];
+                points[0] = { i + 1, j, upReHeight };  // left and down point
+                points[1] = { i, j, upReHeight };
+                points[2] = { i, j, curReHeight };
+                points[3] = { i + 1, j, curReHeight };
+
+                int list[] = { 0,2,1,0,3,2 };
+                for (int k = 0; k < 6; k++)
+                {
+                    int listK = list[k];
+                    VertexAttribute va{ points[listK] };
+                    voxelTriModel.vertices.emplace_back(va);
+                    voxelTriModel.indices.emplace_back(voxelTriModel.nVertices + k);
+                }
+
+                voxelTriModel.nVertices += 6;
+                voxelTriModel.nIndices += 6;
+            }
+
+            // down face
+            if (downReHeight < curReHeight)
+            {
+                glm::vec3 points[4];
+                points[0] = { i + 1, j + 1, downReHeight };  // left and down point
+                points[1] = { i, j + 1, downReHeight };
+                points[2] = { i, j + 1, curReHeight };
+                points[3] = { i + 1, j + 1, curReHeight };
+
+                int list[] = { 0,1,2,0,2,3 };
+                for (int k = 0; k < 6; k++)
+                {
+                    int listK = list[k];
+                    VertexAttribute va{ points[listK] };
+                    voxelTriModel.vertices.emplace_back(va);
+                    voxelTriModel.indices.emplace_back(voxelTriModel.nVertices + k);
+                }
+
+                voxelTriModel.nVertices += 6;
+                voxelTriModel.nIndices += 6;
+            }
+        }
+    }
+
+    //delete[] heightScanline;
+    //delete heightDataset;
+   // GDALClose(heightDataset);
+    heightScanline.clear();
+    delete[] minReHeightScanline;
+
+    return voxelTriModel;
+}
 

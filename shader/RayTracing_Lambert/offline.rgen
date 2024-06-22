@@ -140,7 +140,7 @@ bool DirectLighting(vec3 position, vec3 woWorld, ShadeState sstate, int kDepth)
             Radiance[kBand] += Throughput[kBand] * Emission_diff(wavelength, thermalMaterials[sstate.thermalId].sunlitTemperature) 
             * (1 - spectralMaterials[matIndex0 + kBand].reflectance - spectralMaterials[matIndex0 + kBand].transmittance); 
           }
-          if(sstate.typeId == TYPE_SOIL)
+          if(sstate.typeId == TYPE_SOIL || sstate.typeId == TYPE_BUILDING)
           {
             Radiance[kBand] += 1;//sstate.position.y;
             // Radiance[kBand] += Throughput[kBand] * Emission_diff(wavelength, thermalMaterials[sstate.thermalId].sunlitTemperature)
@@ -154,7 +154,7 @@ bool DirectLighting(vec3 position, vec3 woWorld, ShadeState sstate, int kDepth)
             Radiance[kBand] += Throughput[kBand] * Emission_diff(wavelength, thermalMaterials[sstate.thermalId].shadedTemperature)
             * (1 - spectralMaterials[matIndex0 + kBand].reflectance - spectralMaterials[matIndex0 + kBand].transmittance);
           }
-          if(sstate.typeId == TYPE_SOIL)
+          if(sstate.typeId == TYPE_SOIL || sstate.typeId == TYPE_BUILDING)
           {
             Radiance[kBand] += Throughput[kBand] * Emission_diff(wavelength, thermalMaterials[sstate.thermalId].shadedTemperature)
             * Emissivity_Hapke(1, SSA, POROSITY);
@@ -281,7 +281,7 @@ bool InDirectLighting(vec3 position, vec3 woWorld, ShadeState sstate, int kDepth
       {
         bsdf = abs(bsdf0) * spectralMaterials[matIndex0 + kBand].reflectance;
       }
-      if(sstate.typeId == TYPE_SOIL)
+      if(sstate.typeId == TYPE_SOIL || sstate.typeId == TYPE_BUILDING)
       {
         bsdf = abs(bsdf0) * (1 - Emissivity_Hapke(1, SSA, POROSITY));
       }
@@ -312,7 +312,7 @@ bool InDirectLighting(vec3 position, vec3 woWorld, ShadeState sstate, int kDepth
     if((inSameSide == false) && (ifrefl == 1)) wiWorld = -wiWorld;
     if((inSameSide == true) && (ifrefl == 0)) wiWorld = -wiWorld;
   }
-  if(sstate.typeId == TYPE_SOIL)
+  if(sstate.typeId == TYPE_SOIL || sstate.typeId == TYPE_BUILDING)
   {
     if(inSameSide == false) wiWorld = -wiWorld;
   }

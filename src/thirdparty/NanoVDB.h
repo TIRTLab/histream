@@ -11,7 +11,7 @@
     \brief Implements a light-weight self-contained VDB data-structure in a
            single file! In other words, this is a significantly watered-down
            version of the OpenVDB implementation, with few dependencies - so
-           a one-stop-shop for a minimalistic VDB data structure that run on
+           a ONE-stop-shop for a minimalistic VDB data structure that run on
            most platforms!
 
     \note It is important to note that NanoVDB (by design) is a read-only
@@ -22,7 +22,7 @@
           an OpenVDB tree with getValue methods only. For best performance use
           the ReadAccessor::getValue method as opposed to the Tree::getValue
           method. Note that since a ReadAccessor caches previous access patterns
-          it is by design not thread-safe, so use one instantiation per thread
+          it is by design not thread-safe, so use ONE instantiation per thread
           (it is very light-weight). Also, it is not safe to copy accessors between
           the GPU and CPU! In fact, client code should only interface
           with the API of the Grid class (all other nodes of the NanoVDB data
@@ -108,7 +108,7 @@
 // This replaces a Coord key at the root level with a single uint64_t
 #define USE_SINGLE_ROOT_KEY
 
-// This replaces three levels of Coord keys in the ReadAccessor with one Coord
+// This replaces three levels of Coord keys in the ReadAccessor with ONE Coord
 //#define USE_SINGLE_ACCESSOR_KEY
 
 #define NANOVDB_FPN_BRANCHLESS
@@ -377,7 +377,7 @@ struct is_specialization<TemplateType<Args...>, TemplateType>
 
 // --------------------------> Value Map <------------------------------------
 
-/// @brief Maps one type (e.g. the build types above) to other (actual) types
+/// @brief Maps ONE type (e.g. the build types above) to other (actual) types
 template <typename T>
 struct BuildToValueMap
 {
@@ -1564,7 +1564,7 @@ struct BBox<Vec3T, true> : public BaseBBox<Vec3T>
 /// @brief Partial template specialization for integer coordinate types
 ///
 /// @note Both min and max are INCLUDED in the bbox so dim = max - min + 1. So,
-///       if min = max the bounding box contains exactly one point and dim = 1!
+///       if min = max the bounding box contains exactly ONE point and dim = 1!
 template<typename CoordT>
 struct BBox<CoordT, false> : public BaseBBox<CoordT>
 {
@@ -1662,7 +1662,7 @@ using BBoxR = BBox<Vec3R>;
 
 /// @brief Returns the index of the lowest, i.e. least significant, on bit in the specified 32 bit word
 ///
-/// @warning Assumes that at least one bit is set in the word, i.e. @a v != uint32_t(0)!
+/// @warning Assumes that at least ONE bit is set in the word, i.e. @a v != uint32_t(0)!
 NANOVDB_HOSTDEV_DISABLE_WARNING
 __hostdev__ static inline uint32_t FindLowestOn(uint32_t v)
 {
@@ -1691,7 +1691,7 @@ __hostdev__ static inline uint32_t FindLowestOn(uint32_t v)
 
 /// @brief Returns the index of the highest, i.e. most significant, on bit in the specified 32 bit word
 ///
-/// @warning Assumes that at least one bit is set in the word, i.e. @a v != uint32_t(0)!
+/// @warning Assumes that at least ONE bit is set in the word, i.e. @a v != uint32_t(0)!
 NANOVDB_HOSTDEV_DISABLE_WARNING
 __hostdev__ static inline uint32_t FindHighestOn(uint32_t v)
 {
@@ -1706,7 +1706,7 @@ __hostdev__ static inline uint32_t FindHighestOn(uint32_t v)
 #else
     static const unsigned char DeBruijn[32] = {
         0, 9, 1, 10, 13, 21, 2, 29, 11, 14, 16, 18, 22, 25, 3, 30, 8, 12, 20, 28, 15, 17, 24, 7, 19, 27, 23, 6, 26, 5, 4, 31};
-    v |= v >> 1; // first round down to one less than a power of 2
+    v |= v >> 1; // first round down to ONE less than a power of 2
     v |= v >> 2;
     v |= v >> 4;
     v |= v >> 8;
@@ -1717,7 +1717,7 @@ __hostdev__ static inline uint32_t FindHighestOn(uint32_t v)
 
 /// @brief Returns the index of the lowest, i.e. least significant, on bit in the specified 64 bit word
 ///
-/// @warning Assumes that at least one bit is set in the word, i.e. @a v != uint32_t(0)!
+/// @warning Assumes that at least ONE bit is set in the word, i.e. @a v != uint32_t(0)!
 NANOVDB_HOSTDEV_DISABLE_WARNING
 __hostdev__ static inline uint32_t FindLowestOn(uint64_t v)
 {
@@ -1750,7 +1750,7 @@ __hostdev__ static inline uint32_t FindLowestOn(uint64_t v)
 
 /// @brief Returns the index of the highest, i.e. most significant, on bit in the specified 64 bit word
 ///
-/// @warning Assumes that at least one bit is set in the word, i.e. @a v != uint32_t(0)!
+/// @warning Assumes that at least ONE bit is set in the word, i.e. @a v != uint32_t(0)!
 NANOVDB_HOSTDEV_DISABLE_WARNING
 __hostdev__ static inline uint32_t FindHighestOn(uint64_t v)
 {
@@ -2066,7 +2066,7 @@ void Map::set(const Mat4T& mat, const Mat4T& invMat, double taper)
 
 struct NANOVDB_ALIGN(NANOVDB_DATA_ALIGNMENT) GridBlindMetaData
 {
-    static const int      MaxNameSize = 256;// due to NULL termination the maximum length is one less!
+    static const int      MaxNameSize = 256;// due to NULL termination the maximum length is ONE less!
     int64_t               mByteOffset; // byte offset to the blind data, relative to the GridData.
     uint64_t              mElementCount; // number of elements, e.g. point count
     uint32_t              mFlags; // flags
@@ -2183,7 +2183,7 @@ struct NodeTrait<const GridOrTreeOrRootT, 3>
 /// @note No client code should (or can) interface with this struct so it can safely be ignored!
 struct NANOVDB_ALIGN(NANOVDB_DATA_ALIGNMENT) GridData
 {// sizeof(GridData) = 672B
-    static const int MaxNameSize = 256;// due to NULL termination the maximum length is one less
+    static const int MaxNameSize = 256;// due to NULL termination the maximum length is ONE less
     uint64_t         mMagic; // 8B magic to validate it is valid grid data.
     uint64_t         mChecksum; // 8B. Checksum of grid buffer.
     Version          mVersion;// 4B major, minor, and patch version numbers
@@ -3894,7 +3894,7 @@ inline void LeafNode<ValueT, CoordT, MaskT, LOG2DIM>::updateBBox()
     uint32_t Xmax = Xmin;
     for (int i = 1; i < 8; ++i) { // last loop over 8 64 words
         if (uint64_t w = DataType::mValueMask.template getWord<uint64_t>(i)) { // skip if word has no set bits
-            word64 |= w; // union 8 x 64 bits words into one 64 bit word
+            word64 |= w; // union 8 x 64 bits words into ONE 64 bit word
             if (Xmin == 8) {
                 Xmin = i; // only set once
             }
@@ -3999,7 +3999,7 @@ using BoolGrid   = Grid<BoolTree>;
 /// @warning Since this ReadAccessor internally caches raw pointers to the nodes of the tree
 ///          structure, it is not safe to copy between host and device, or even to share among
 ///          multiple threads on the same host or device. However, it is light-weight so simple
-///          instantiate one per thread (on the host and/or device).
+///          instantiate ONE per thread (on the host and/or device).
 ///
 /// @details Used to accelerated random access into a VDB tree. Provides on average
 ///          O(1) random access operations by means of inverse tree traversal,

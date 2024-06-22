@@ -130,8 +130,8 @@ inline std::uint_fast32_t crc32(IterT begin, IterT end)
     return crc.checksum();
 }
 
-/// @brief Class that encapsulates two CRC32 checksums, one for the Grid, Tree and Root node meta data
-///        and one for the remaining grid nodes.
+/// @brief Class that encapsulates two CRC32 checksums, ONE for the Grid, Tree and Root node meta data
+///        and ONE for the remaining grid nodes.
 class GridChecksum
 {
     union {uint32_t mCRC[2]; uint64_t mChecksum; };

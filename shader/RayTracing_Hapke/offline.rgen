@@ -142,7 +142,7 @@ bool DirectLighting(vec3 position, vec3 woWorld, ShadeState sstate, int kDepth)
             Radiance[kBand] += Throughput[kBand] * Emission_diff(wavelength, thermalMaterials[sstate.thermalId].sunlitTemperature) 
             * (1 - spectralMaterials[matIndex0 + kBand].reflectance - spectralMaterials[matIndex0 + kBand].transmittance); 
           }
-          if(sstate.typeId == TYPE_SOIL)
+          if(sstate.typeId == TYPE_SOIL || sstate.typeId == TYPE_BUILDING)
           {
             // Radiance[kBand] += sstate.position.y;
             Radiance[kBand] += Throughput[kBand] * Emission_diff(wavelength, thermalMaterials[sstate.thermalId].sunlitTemperature)
@@ -156,7 +156,7 @@ bool DirectLighting(vec3 position, vec3 woWorld, ShadeState sstate, int kDepth)
             Radiance[kBand] += Throughput[kBand] * Emission_diff(wavelength, thermalMaterials[sstate.thermalId].shadedTemperature)
             * (1 - spectralMaterials[matIndex0 + kBand].reflectance - spectralMaterials[matIndex0 + kBand].transmittance);
           }
-          if(sstate.typeId == TYPE_SOIL)
+          if(sstate.typeId == TYPE_SOIL || sstate.typeId == TYPE_BUILDING)
           {
             Radiance[kBand] += Throughput[kBand] * Emission_diff(wavelength, thermalMaterials[sstate.thermalId].shadedTemperature)
             * Emissivity_Hapke(CosThetaTangent(wo), SSA, POROSITY);
@@ -284,7 +284,7 @@ bool InDirectLighting(vec3 position, vec3 woWorld, ShadeState sstate, int kDepth
       {
         bsdf = abs(bsdf0) * spectralMaterials[matIndex0 + kBand].reflectance;
       }
-      if(sstate.typeId == TYPE_SOIL)
+      if(sstate.typeId == TYPE_SOIL || sstate.typeId == TYPE_BUILDING)
       {
         vec3 wo = World2Tangent(sstate.normal, sstate.tangent, sstate.binormal, woWorld);//(20,20,-40000)
         wo = normalize(wo);//(0,0,-1)

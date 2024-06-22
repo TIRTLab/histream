@@ -68,7 +68,7 @@ layout(push_constant) uniform _RtxState
 #define B_FLUX 26
 #define B_TLAST 27
 #define B_STATE 28
-
+#define B_LAD 29 
 
 
 // 1-5
@@ -106,6 +106,7 @@ layout(binding = B_AIR) buffer BUFFER4{VoxelAir voxelAirs[];};
 layout(binding = B_FLUX) buffer FLUX{VoxelHeatFlux voxelHeatFlux[];};
 layout(binding = B_TLAST) buffer BUFFER3{VoxelTlast voxelTlasts[];};
 layout(binding = B_STATE) buffer  _UBOSS{EBState ebState;};
+layout(binding = B_LAD) buffer  _LAD{float lads[];};
 
 layout(buffer_reference, scalar) buffer Vertices { VertexAttribute v[]; };
 layout(buffer_reference, scalar) buffer Indices { uvec3 i[]; };

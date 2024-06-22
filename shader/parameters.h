@@ -96,10 +96,6 @@ struct SensorMatrix
 	vec3 direction;
 };
 
-// struct SensorWaveInd
-// {
-// 	int value;
-// };
 
 struct LightSet
 {
@@ -139,37 +135,15 @@ struct InstanceLink
 	int meshId;
 };
 
-// instance link in voxel tracing
-// struct VoxelInstanceLink
-// {
-// 	int voxelIdOffset;
-
-//     int type;
-//     int spectralId;
-//     int thermalId;
-//     int canopyId;
-	
-// 	uint64_t vertexAddress;
-// 	uint64_t indexAddress;
-// };
-
-// voxel model link
-// struct VoxelModelLink
-// {
-//     int type;
-//     int spectralId;
-//     int thermalId;
-//     int canopyId;
-// };
 
 // voxel link
 struct VoxelLink
 {
-    ivec3 voxelPos;
+    ivec3 voxelId;
     int instanceId;
 	int aeroId;
-	int primId;
-	int empty;
+	int faceId;
+	int isValid;
 	int empty_;
 };
 
@@ -229,11 +203,13 @@ struct VoxelRss
 
 struct AeroCond
 {
+	int type;
 	float L;
 	float ustar;
     float hc_veg;
     float hc_build;
     float lai;
+	float leafwidth;
     float cover;
 };
 
@@ -288,10 +264,11 @@ struct SoilSet
     float cs;			// volumetric heat capacity of the soil
     float rhos;
     float lambdas;
+	float Tsoil;  // aeverage temperature 25
     float SMC;			// volumetric soil moisture content 0.25
 //    float csSoil;
   //  float rbs;      // boundary prop
-    float Tsoil;  // aeverage temperature 25
+
     float SatWater;
 
     //BSMParam bsm;
@@ -311,8 +288,6 @@ struct Meteo
 	float ea;
 	float Ca;
 	float Oa;
-	// float Tsold;
-	// float SatWater;
 	float dtime;
 };
 

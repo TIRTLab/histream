@@ -246,7 +246,7 @@ void Compo::fluspect(OptCoeff fluspectCoeff, FluspectParam fluspectParam, std::v
 }
 
 
-bool Compo::createCompProperty(std::shared_ptr<FileIO> &fileio, std::shared_ptr<VoxellstIO> &modelio) {
+bool Compo::createCompProperty(std::shared_ptr<FileIO> &fileio, std::shared_ptr<VoxelebIO> &modelio) {
 
     auto & meshio = modelio->m_meshio;
     auto & definedio = modelio->m_defined;
@@ -255,13 +255,9 @@ bool Compo::createCompProperty(std::shared_ptr<FileIO> &fileio, std::shared_ptr<
 
 
     int id = 0;
-    for(auto &spectralxml: fileio->m_pVoxelLstXml->spectralxmls ){
-//        if(spectralxml.type == spectralType::CUSTOM){
-//            for(int i=0;i<spectralxml.reflectances.size();i++)
-//                meshio->spectrals.push_back(Spectral{spectralxml.reflectances[i],spectralxml.transmittance[i]});
-//        }
+    for(auto &spectralxml: fileio->m_pVoxelebXml->spectralxmls ){
 
-        if(spectralxml.type == spectralType::LEAFBIO){
+        if(spectralxml.type == spectralType::PROSPECT){
 
             // spectral
             for(int i=0;i<spectralxml.reflectances.size();i++)
@@ -273,7 +269,23 @@ bool Compo::createCompProperty(std::shared_ptr<FileIO> &fileio, std::shared_ptr<
             fluspect(definedio->m_fluspectCoeff,meshio->fp,spectral_);
             spectral_.push_back(Spectral{spectralxml.refl_tir,spectralxml.tau_tir});
             meshio->fixedSpectrals.insert(meshio->fixedSpectrals.end(),spectral_.begin(),spectral_.end());
-//            meshio->spectrals.push_back(Spectral{spectralxml.reflectances[i],spectralxml.transmittance[i]});
+
+        }
+
+        if(spectralxml.type == spectralType::BSM){
+
+            // spectral
+            for(int i=0;i<spectralxml.reflectances.size();i++)
+                meshio->spectrals.push_back(Spectral{spectralxml.reflectances[i],spectralxml.transmittance[i]});
+
+            // fixedSpectral
+            meshio->fp = spectralxml.fp;
+            std::vector<Spectral> spectral_;
+            //fluspect(definedio->m_fluspectCoeff,meshio->fp,spectral_);
+            bsm(definedio->m_fluspectCoeff,spectralxml.bsm,spectral_);
+            spectral_.push_back(Spectral{spectralxml.refl_tir,spectralxml.tau_tir});
+            meshio->fixedSpectrals.insert(meshio->fixedSpectrals.end(),spectral_.begin(),spectral_.end());
+
         }
 
         if(spectralxml.type == spectralType::OTHER){
@@ -293,9 +305,7 @@ bool Compo::createCompProperty(std::shared_ptr<FileIO> &fileio, std::shared_ptr<
                 meshio->fixedSpectrals.push_back(spectral);
             }
             meshio->fixedSpectrals.push_back(Spectral{spectralxml.refl_tir,spectralxml.tau_tir});
-         //   meshio->fp = spectralxml.fp;
-            //fluspect(definedio->m_fluspectCoeff,meshio->fp,meshio->spectrals);
-//            meshio->spectrals.push_back(Spectral{spectralxml.reflectances[i],spectralxml.transmittance[i]});
+
         }
 
         meshio->spectralNames.insert({spectralxml.spectralName,id});
@@ -303,7 +313,7 @@ bool Compo::createCompProperty(std::shared_ptr<FileIO> &fileio, std::shared_ptr<
     }
 
     id = 0;
-    for(auto &canopyxml: fileio->m_pVoxelLstXml->canopyxmls){
+    for(auto &canopyxml: fileio->m_pVoxelebXml->canopyxmls){
 
 ;
         meshio->canopies.push_back(canopyxml.canopy);
@@ -312,7 +322,7 @@ bool Compo::createCompProperty(std::shared_ptr<FileIO> &fileio, std::shared_ptr<
     }
 
     int id1 = 0,id2 = 0;
-    for(auto &propxml: fileio->m_pVoxelLstXml->propxmls){
+    for(auto &propxml: fileio->m_pVoxelebXml->propxmls){
 
         if(propxml.type == Type::VEGETATION) {
             meshio->leafbios.push_back(propxml.leafbio);

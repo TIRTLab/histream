@@ -60,7 +60,7 @@ struct alignas(16) RayRTSetting
     int n_wave{ 3 };
 
     glm::ivec2 imageSize{1000, 1000 }; // ->Sensor.resolution
-    //nvmath::vec2f sceneSize{ 100.0, 100.0 };
+    //nvmath::vec2f sceneSize_XYZ{ 100.0, 100.0 };
     int band1{ 1 };
     int band2{ 2 };
     int band3{ 3 };
@@ -77,21 +77,21 @@ struct alignas(32)  VoxelLstSetting
     int frame{0};
     int maxIteration{3};
     int maxDepth{16};
-    int maxStep{25};
+    int maxStep{10};
     int n_sample{16};
     int n_wave{5};
     int n_jump{10};
     float scale{1};
     glm::ivec2 imageSize{100, 100};  // imageSize and VoxelSize do not put together
     int isDisplay{0};
-    int empty{80};
+    int isface{80};
     glm::ivec3 voxelSize{50, 0, 50};
-    int dumpy{0};
+    int islad{0};
     int dumpyy{0};
 };
 
 
-// whole
+// atmospheric radiative transfer linked to modtrain
 struct AtomCond
 {
     float wavelength{0};
@@ -99,22 +99,30 @@ struct AtomCond
     float diffuse{0};
 };
 
-struct Wave
+// aerodynamic condition for resistance
+struct AeroCond
 {
-    float wavelength;
+    int type;  // 0 for vegtation, 1 for buildup
+    float L;       // this is used for updating
+    float ustar;   // this is used for updating
+    float hc_veg;  // effective height
+    float hc_build; // effective height
+    float lai; // this is only used for the aeroy
+    float leafwidth;
+    float cover; // ???
 };
 
 struct Canopy
 {
-    float lai;
-    float density;
-    float height;
-    float width;
-    float G;
-    float LIDFa;
-    float LIDFb;
-    float hspot; // for the hotspot
-    float leafwidth; // for the aerodynamic boundary
+    float lai;  // this is used for the aerodynamic resistance inside a system
+    float density; // gap property
+    float height;  // this is used for the aerodynamic resistance inside a system
+    float width;  // ???
+    float G;      // gap property
+    float LIDFa;  // For dynamic G
+    float LIDFb;  // For dynamic G
+    float hspot;      // for the hotspot
+    float leafwidth; // for the aerodynamic resistance
 };
 
 
@@ -130,6 +138,18 @@ struct  Instance
     glm::mat4 world2objectMatrix;
 };
 
+struct VertexAttribute
+{
+    glm::vec3 pos;
+    glm::vec3 nrm;
+    glm::vec3 color;
+    glm::vec2 texCoord;
+};
+
+///-----------------------------------------------------
+/// Mesh seems like a geometry in a geometric optical model
+///-----------------------------------------------------
+
 struct MeshBuffer
 {
     uint32_t nbIndices{ 0 };
@@ -144,9 +164,8 @@ struct MeshLink
     int spectralId;
     int thermalId;
     int canopyId;
-    // int leafbioId;
-    // int soilsetId;
     int bioId;
+
     uint64_t vertexAddress;
     uint64_t indexAddress;
 };
@@ -154,47 +173,13 @@ struct MeshLink
 // voxel link
 struct VoxelLink
 {
-    glm::ivec3 voxelPos{0,0,0};
+    glm::ivec3 voxelId{0, 0, 0};
     int instanceId{0};
-   // int meshId{0};
-    int aeroId{0};
-    int primId{0};
-    int empty{0};
+    int aeroId{0}; // this is used for a whole image or a aero divided image;
+    int faceId{0}; //
+    int isValid{0}; // is 0 go pass
     int empty_{0};// which faces ? 0 center 1, up, 2 bottom, 3 left, 4 right, 5, forward, 6 backward
     // now only 0 and 1 was used for the veg and soil, respectively;
-};
-
-
-//namespace VOXELLST {
-//// voxel model link
-//    struct MeshLink {
-//        int type;
-//        int spectralId;
-//        int thermalId;
-//        int canopyId;
-//        int leafbioId;
-//        int soilsetId;
-//        uint64_t vertexAddress;
-//        uint64_t indexAddress;
-//    };
-//
-//    struct InstanceLink{
-//        int voxelIdOffset;
-//        int type;
-//        int spectralId;
-//        int thermalId;
-//        int canopyId;
-//        int bioId;
-//        int aeroId;
-//    };
-//}
-
-struct VertexAttribute
-{
-    glm::vec3 pos;
-    glm::vec3 nrm;
-    glm::vec3 color;
-    glm::vec2 texCoord;
 };
 
 
@@ -237,15 +222,7 @@ struct VoxelRaa
     float raa;  // aerodynamic resistance
 };
 
-struct AeroCond
-{
-    float L;
-    float ustar;
-    float hc_veg;
-    float hc_build;
-    float lai;
-    float cover;
-};
+
 
 
 // surface resistance
@@ -287,10 +264,6 @@ struct EBState
 };
 
 
-
-
-
-
 struct LeafBio
 {
     float Vcmax;		// maximum carboxylation capacity (at optimum temperature)
@@ -303,11 +276,9 @@ struct LeafBio
     float Tyear;
     float beta;
     float kNPQs;		// rate constant of sustained thermal dissipation
-    float qLs;			// fraction of functional reaction centers
+    float qLs;			// fraction of functional reaction voxelIds
     float stressfactor;
     int Tcor;
-
-    //FluspectParam fp;
 };
 
 struct SoilSet
@@ -315,15 +286,22 @@ struct SoilSet
     int method;
     float rss;			// soil resistance for evaporation
     float cs;			// volumetric heat capacity of the soil
-    float rhos;
-    float lambdas;
-    float SMC;			// volumetric soil moisture content 0.25
-//    float csSoil;
-  //  float rbs;      // boundary prop
-    float Tsoil;  // aeverage temperature 25
+    float rhos;         // specific mass of the soil
+    float lambdas;       //  heat conductivity of the soil
+    float Tsoil;        // aeverage temperature 25
+    float smc;			// volumetric soil moisture content 0.25
     float SatWater;
-
     //BSMParam bsm;
+};
+
+struct BuildUp
+{
+    int method;
+    float rss;
+    float cs;          // 1180
+    float rhos;       // 1900 -2600
+    float lambdas;    // 1.0 -1.7
+    float Tin;
 };
 
 struct Meteo
@@ -339,86 +317,9 @@ struct Meteo
     float ea;		// atmospheric vapor pressure
     float Ca;		// CO2 concentration in the air
     float Oa;		// O2 concentration in the air
-   // float Tsold;	//
-   // float SatWater;
-    float dTime;
+    float dTime {600};
 };
 
-//struct alignas(16) VoxelRTSetting
-//{
-//    glm::vec2 size{100, 100};
-//    int frame{0};
-//    int maxIteration{1};
-//    int maxSample{5};
-//    int maxBand{5};
-//    int maxStep{50};
-//    float scale{1};
-//    glm::vec3 voxelSize{100, 10, 100};
-//    int band1{0};
-//    int band2{0};
-//    int band3{0};
-//    int isDisplay{0};
-//    int isTemperature{0};
-//};
 
-
-//struct alignas(16) AeroSetting
-//{
-//    glm::vec2 size;
-//    float scale;
-//    float empty;
-//    glm::vec3 voxelSize;
-//};
-//
-//struct alignas(16) BioSetting
-//{
-//    glm::vec3 voxelSize;
-//    float scale;
-//};
-//
-//struct alignas(16) ETSetting
-//{
-//    glm::vec2 size;
-//    float scale;
-//    float empty;
-//    glm::vec3 voxelSize;
-//};
-//
-//struct alignas(16) EBSetting
-//{
-//    int maxIteration{50};
-//    float minTempe{250};
-//    float maxTempe{350};
-//    float wc{0.2};
-//    int theIteration{3};
-//    float scale{1.0};
-//    float empty;
-//    float empty1;
-//    glm::vec3 voxelSize{10, 10, 10};
-//};
-
-// surface L
-//struct alignas(16) SurfL
-//{
-//    float L;
-//    float ustar; //  wind speed  / friction velocity
-//    float hvmax;
-//    float laimax;
-//};
-
-//struct AeroCoeff
-//{
-//    float zo;
-//    float d;
-//    float Cd;		// drag coefficient for the vegetation
-//    float rbc;		//
-//    float CR;		// drag coefficient for a isolated tree
-//    float CD1;		// fitting parameter
-//    float Psicor;	// roughness layer correction
-//    float CSSOIL;	// drag coefficient for soil
-//    float rbs;		// for boundary soil resistance
-//    float rwc;		// for Aerodynamic resistance Within Canopy
-//   // float rbc;
-//};
 
 #endif //FIELD_STRUCTS_CG_H

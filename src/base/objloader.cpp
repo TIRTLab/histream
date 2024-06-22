@@ -374,7 +374,7 @@ void ObjLoader::creatBackgroundFromDEM(const std::string& filename, nvmath::vec3
     m_objmesh.indices = m_indices;
 }
 
-//void ObjLoader::createBackgroundFromDEM(const std::string& filename, nvmath::vec3f sceneSize, _2D::ThinPlateSplineInterpolator<double>& interp)
+//void ObjLoader::createBackgroundFromDEM(const std::string& filename, nvmath::vec3f sceneSize_XYZ, _2D::ThinPlateSplineInterpolator<double>& interp)
 //{
 //    clearCurrentInfo();
 //
@@ -403,7 +403,7 @@ void ObjLoader::creatBackgroundFromDEM(const std::string& filename, nvmath::vec3
 //    FLOAT* pafScanline = new FLOAT[nImgSizeX * nImgSizeY];
 //    poDataset->RasterIO(GF_Read, 0, 0, nImgSizeX, nImgSizeY, pafScanline, nImgSizeX, nImgSizeY, GDT_Float32, bandcount, 0, 0, 0, 0);
 //
-//    scale = sceneSize.x / nImgSizeX;
+//    scale = sceneSize_XYZ.x / nImgSizeX;
 //
 //    std::vector<double> x, y, z;
 //    for (int i = 0; i < nImgSizeX; i++)
@@ -484,7 +484,7 @@ void ObjLoader::creatBackgroundFromDEM(const std::string& filename, nvmath::vec3
 //    m_objmesh.indices = m_indices;
 //}
 //
-//void ObjLoader:: createBackgroundFromDEM(const std::string& filename, nvmath::vec3f sceneSize, _2D::BilinearInterpolator<double>& interp)
+//void ObjLoader:: createBackgroundFromDEM(const std::string& filename, nvmath::vec3f sceneSize_XYZ, _2D::BilinearInterpolator<double>& interp)
 //{
 //    clearCurrentInfo();
 //
@@ -510,7 +510,7 @@ void ObjLoader::creatBackgroundFromDEM(const std::string& filename, nvmath::vec3
 //    FLOAT* pafScanline = new FLOAT[nImgSizeX * nImgSizeY];
 //    poDataset->RasterIO(GF_Read, 0, 0, nImgSizeX, nImgSizeY, pafScanline, nImgSizeX, nImgSizeY, GDT_Float32, bandcount, 0, 0, 0, 0);
 //
-//    m_scale = sceneSize.x / nImgSizeX;
+//    m_scale = sceneSize_XYZ.x / nImgSizeX;
 //    float scale = m_scale;
 //
 //    std::vector<double> x, y, z;
@@ -519,7 +519,7 @@ void ObjLoader::creatBackgroundFromDEM(const std::string& filename, nvmath::vec3
 //    {
 //        for (int j = 0; j < nImgSizeY; j++)
 //        {
-//            //x.emplace_back(sceneSize.x - (i * scale + scale / 2.0)); // pixel center location
+//            //x.emplace_back(sceneSize_XYZ.x - (i * scale + scale / 2.0)); // pixel center location
 //            //y.emplace_back(j * scale + scale / 2.0);
 //            //z.emplace_back(pafScanline[i * nImgSizeY + j]);
 //            x.emplace_back((i * scale + scale / 2.0)); // pixel center location
@@ -530,7 +530,7 @@ void ObjLoader::creatBackgroundFromDEM(const std::string& filename, nvmath::vec3
 //
 //    /*for (int i = 0; i < nImgSizeX; i++)
 //    {
-//        x[i] = sceneSize.x - x[i];
+//        x[i] = sceneSize_XYZ.x - x[i];
 //    }*/
 //
 //    interp.setData(x, y, z);
@@ -553,8 +553,8 @@ void ObjLoader::creatBackgroundFromDEM(const std::string& filename, nvmath::vec3
 //            jj2 = (j + step) * scale;*/
 //
 //            // 将 x 轴对换，与envi保持一致性
-//            jj1 = sceneSize.x - j * scale;
-//            jj2 = sceneSize.x - (j + step) * scale;
+//            jj1 = sceneSize_XYZ.x - j * scale;
+//            jj2 = sceneSize_XYZ.x - (j + step) * scale;
 //            kk1 = k * scale;
 //            kk2 = (k + step) * scale;
 //
@@ -572,10 +572,10 @@ void ObjLoader::creatBackgroundFromDEM(const std::string& filename, nvmath::vec3
 //            nvmath::vec3f point3 = { (j + step) * scale, interp(jj2, kk2), (k + step) * scale };
 //            nvmath::vec3f point4 = { (j + step) * scale, interp(jj2, kk1), k * scale };
 //
-//            point1 = point1 - nvmath::vec3f({ sceneSize.x / 2.0, 0, sceneSize.y / 2.0 });
-//            point2 = point2 - nvmath::vec3f({ sceneSize.x / 2.0, 0, sceneSize.y / 2.0 });
-//            point3 = point3 - nvmath::vec3f({ sceneSize.x / 2.0, 0, sceneSize.y / 2.0 });
-//            point4 = point4 - nvmath::vec3f({ sceneSize.x / 2.0, 0, sceneSize.y / 2.0 });
+//            point1 = point1 - nvmath::vec3f({ sceneSize_XYZ.x / 2.0, 0, sceneSize_XYZ.y / 2.0 });
+//            point2 = point2 - nvmath::vec3f({ sceneSize_XYZ.x / 2.0, 0, sceneSize_XYZ.y / 2.0 });
+//            point3 = point3 - nvmath::vec3f({ sceneSize_XYZ.x / 2.0, 0, sceneSize_XYZ.y / 2.0 });
+//            point4 = point4 - nvmath::vec3f({ sceneSize_XYZ.x / 2.0, 0, sceneSize_XYZ.y / 2.0 });
 //
 //            if (minElevation > point1.y) minElevation = point1.y;
 //            if (minElevation > point2.y) minElevation = point2.y;
@@ -609,7 +609,7 @@ void ObjLoader::creatBackgroundFromDEM(const std::string& filename, nvmath::vec3
 //    m_objmesh.indices = m_indices;
 //}
 //
-//void ObjLoader::createBackgroundFromResizedDEM(const std::string &filename, nvmath::vec3f sceneSize, _2D::BilinearInterpolator<double> &interp)
+//void ObjLoader::createBackgroundFromResizedDEM(const std::string &filename, nvmath::vec3f sceneSize_XYZ, _2D::BilinearInterpolator<double> &interp)
 //{
 //    clearCurrentInfo();
 //
@@ -635,7 +635,7 @@ void ObjLoader::creatBackgroundFromDEM(const std::string& filename, nvmath::vec3
 //    FLOAT *pafScanline = new FLOAT[nImgSizeX * nImgSizeY];
 //    poDataset->RasterIO(GF_Read, 0, 0, nImgSizeX, nImgSizeY, pafScanline, nImgSizeX, nImgSizeY, GDT_Float32, bandcount, 0, 0, 0, 0);
 //
-//    m_scale = sceneSize.x / nImgSizeX;
+//    m_scale = sceneSize_XYZ.x / nImgSizeX;
 //    float scale = m_scale;
 //
 //    std::vector<double> x, y, z;
@@ -661,15 +661,15 @@ void ObjLoader::creatBackgroundFromDEM(const std::string& filename, nvmath::vec3
 //    uint32_t nIndices = 0;
 //    minElevation = z[0];
 //
-//    for (float j = 0.0; j < sceneSize.x; j = j + step)
+//    for (float j = 0.0; j < sceneSize_XYZ.x; j = j + step)
 //    {
-//        for (float k = 0.0; k < sceneSize.y; k = k + step)
+//        for (float k = 0.0; k < sceneSize_XYZ.y; k = k + step)
 //        {
 //            float jj1, kk1, jj2, kk2;
 //
 //            // 将 x 轴对换，与envi保持一致性
-//            jj1 = sceneSize.x - j;
-//            jj2 = sceneSize.x - (j + step);
+//            jj1 = sceneSize_XYZ.x - j;
+//            jj2 = sceneSize_XYZ.x - (j + step);
 //            kk1 = k;
 //            kk2 = (k + step);
 //
@@ -681,14 +681,14 @@ void ObjLoader::creatBackgroundFromDEM(const std::string& filename, nvmath::vec3
 //                kk1 = step / 2.0;
 //            if (kk2 < step / 2.0)
 //                kk2 = step / 2.0;
-//            if (jj1 > sceneSize.x - step / 2.0)
-//                jj1 = sceneSize.x - step / 2.0 - 0.01;
-//            if (jj2 > sceneSize.x - step / 2.0)
-//                jj2 = sceneSize.x - step / 2.0 - 0.01;
-//            if (kk1 > sceneSize.y - step / 2.0)
-//                kk1 = sceneSize.y - step / 2.0 - 0.01;
-//            if (kk2 > sceneSize.y - step / 2.0)
-//                kk2 = sceneSize.y - step / 2.0 - 0.01;*/
+//            if (jj1 > sceneSize_XYZ.x - step / 2.0)
+//                jj1 = sceneSize_XYZ.x - step / 2.0 - 0.01;
+//            if (jj2 > sceneSize_XYZ.x - step / 2.0)
+//                jj2 = sceneSize_XYZ.x - step / 2.0 - 0.01;
+//            if (kk1 > sceneSize_XYZ.y - step / 2.0)
+//                kk1 = sceneSize_XYZ.y - step / 2.0 - 0.01;
+//            if (kk2 > sceneSize_XYZ.y - step / 2.0)
+//                kk2 = sceneSize_XYZ.y - step / 2.0 - 0.01;*/
 //
 //            float correctValue = 0.02;
 //            if (jj1 < m_scale/2.0)
@@ -699,24 +699,24 @@ void ObjLoader::creatBackgroundFromDEM(const std::string& filename, nvmath::vec3
 //                kk1 = m_scale / 2.0 + correctValue;
 //            if (kk2 < m_scale / 2.0)
 //                kk2 = m_scale / 2.0 + correctValue;
-//            if (jj1 > sceneSize.x - m_scale / 2.0)
-//                jj1 = sceneSize.x - m_scale / 2.0 - correctValue;
-//            if (jj2 > sceneSize.x - m_scale / 2.0)
-//                jj2 = sceneSize.x - m_scale / 2.0 - correctValue;
-//            if (kk1 > sceneSize.y - m_scale / 2.0)
-//                kk1 = sceneSize.y - m_scale / 2.0 - correctValue;
-//            if (kk2 > sceneSize.y - m_scale / 2.0)
-//                kk2 = sceneSize.y - m_scale / 2.0 - correctValue;
+//            if (jj1 > sceneSize_XYZ.x - m_scale / 2.0)
+//                jj1 = sceneSize_XYZ.x - m_scale / 2.0 - correctValue;
+//            if (jj2 > sceneSize_XYZ.x - m_scale / 2.0)
+//                jj2 = sceneSize_XYZ.x - m_scale / 2.0 - correctValue;
+//            if (kk1 > sceneSize_XYZ.y - m_scale / 2.0)
+//                kk1 = sceneSize_XYZ.y - m_scale / 2.0 - correctValue;
+//            if (kk2 > sceneSize_XYZ.y - m_scale / 2.0)
+//                kk2 = sceneSize_XYZ.y - m_scale / 2.0 - correctValue;
 //
 //            nvmath::vec3f point1 = {j, interp(jj1, kk1), k};
 //            nvmath::vec3f point2 = {j, interp(jj1, kk2), (k + step)};
 //            nvmath::vec3f point3 = {(j + step), interp(jj2, kk2), (k + step)};
 //            nvmath::vec3f point4 = {(j + step), interp(jj2, kk1), k};
 //
-//            point1 = point1 - nvmath::vec3f({sceneSize.x / 2.0, 0, sceneSize.y / 2.0});
-//            point2 = point2 - nvmath::vec3f({sceneSize.x / 2.0, 0, sceneSize.y / 2.0});
-//            point3 = point3 - nvmath::vec3f({sceneSize.x / 2.0, 0, sceneSize.y / 2.0});
-//            point4 = point4 - nvmath::vec3f({sceneSize.x / 2.0, 0, sceneSize.y / 2.0});
+//            point1 = point1 - nvmath::vec3f({sceneSize_XYZ.x / 2.0, 0, sceneSize_XYZ.y / 2.0});
+//            point2 = point2 - nvmath::vec3f({sceneSize_XYZ.x / 2.0, 0, sceneSize_XYZ.y / 2.0});
+//            point3 = point3 - nvmath::vec3f({sceneSize_XYZ.x / 2.0, 0, sceneSize_XYZ.y / 2.0});
+//            point4 = point4 - nvmath::vec3f({sceneSize_XYZ.x / 2.0, 0, sceneSize_XYZ.y / 2.0});
 //
 //            if (minElevation > point1.y)
 //                minElevation = point1.y;

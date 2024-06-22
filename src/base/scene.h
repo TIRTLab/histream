@@ -10,7 +10,7 @@
 #include "structs.h"
 #include "src/base/objloader.h"
 #include "src/raytracing/raytracingio.h"
-#include "src/voxellst/voxellstio.h"
+#include "src/voxeleb/voxelebio.h"
 #include "src/thirdparty/NanoVDB.h"
 #include "src/thirdparty/nanoutil/GridBuilder.h"
 #include "src/thirdparty/nanoutil/Primitives.h"
@@ -22,11 +22,16 @@ class Scene {
 public:
     Scene(){};
 
+    bool createPrimObj_Crown(PrimEntity & pe,nanovdb::GridBuilder<int32_t> &nanoBuilder,std::shared_ptr<VoxelebIO> &modelio);
+    bool createPrimObj_Crowns(PrimEntity & pe,nanovdb::GridBuilder<int32_t> &nanoBuilder,std::shared_ptr<VoxelebIO> &modelio);
+    bool createPrimObj_Building(PrimEntity & pe,nanovdb::GridBuilder<int32_t> &nanoBuilder,std::shared_ptr<VoxelebIO> &modelio);
+    bool createPrimObj_Background(Background & background,nanovdb::GridBuilder<int32_t> &nanoBuilder, std::shared_ptr<VoxelebIO> &modelio);
     bool createObjScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<RaytracingIO> &raytracingio);
-   //bool createPrimScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<RaytracingIO> &raytracingio);
-   PrimMesh XYZ2XZY(PrimMesh model);
+    bool createPrimObjScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<VoxelebIO> &voxellstio);
+
+   PrimMesh XYZ2XZY(PrimMesh model,int mark=0);
    ObjMesh XYZ2XZY(ObjMesh model);
-   bool createPrimScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<VoxellstIO> &voxellstio);
+
 };
 
 

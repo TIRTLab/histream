@@ -539,7 +539,7 @@ void GridStats<GridT, StatsT>::process( GridT &grid )
         data.mWorldBBox = BBox<Vec3R>();
         data.setBBoxOn(false);
     } else {
-        // Note that below max is offset by one since CoordBBox.max is inclusive
+        // Note that below max is offset by ONE since CoordBBox.max is inclusive
         // while bbox<Vec3R>.max is exclusive. However, min is inclusive in both
         // CoordBBox and BBox<Vec3R>. This also guarantees that a grid with a single
         // active voxel, does not have an empty world bbox! E.g. if a grid with a

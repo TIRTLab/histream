@@ -37,9 +37,9 @@ struct VoxellstSetting
 	float scale;
 	ivec2 imageSize;
 	int isDisplay;
-	int empty_;
-	ivec3 voxelSize;
-	int dumpy;
+	int isface;
+	ivec3 voxelSize; // xzy
+	int islad;
 	int dumpy_;
 };
 
@@ -87,9 +87,6 @@ struct ShadeState
 	vec3 localTangent;
 	vec3 localBinormal;
 };
-
-
-
 
 
 

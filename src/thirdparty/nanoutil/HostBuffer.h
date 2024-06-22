@@ -163,7 +163,7 @@ public:
 
     /// @brief Return a buffer with @c bufferSize bytes managed by
     ///        the specified memory @c pool. If none is provided, i.e.
-    ///        @c pool == nullptr or @c pool->poolSize() == 0, one is
+    ///        @c pool == nullptr or @c pool->poolSize() == 0, ONE is
     ///        created with size @c bufferSize, i.e. a full buffer is returned.
     ///
     /// @throw If the specified @c pool has insufficient memory for

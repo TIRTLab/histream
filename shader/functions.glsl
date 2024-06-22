@@ -229,6 +229,11 @@ float Stefen_Boltzmann(float T,float emis)
     return T/100*T/100*T/100*T/100*emis*5.6704;
 }
 
+float Inv_Stefen_Boltzmann(float rad, float emis)
+{
+    return pow(rad / emis /5.6704 , 0.25) * 100;
+}
+
 //-------------------------------------------------------------------------------------------------
 //  Return the tangent and binormal from the incoming normal
 //-------------------------------------------------------------------------------------------------
@@ -272,15 +277,36 @@ ivec3 getVoxelIdSemi(vec3 position,vec3 semiRange, float scale,vec3 direction, o
 {
     float minTemp = 0.05;
 
-    int xf = int((position.x+semiRange.x+direction.x*minTemp*scale)/scale);
-    int yf = int((position.y+direction.y*minTemp*scale)/scale);
-    int zf = int((position.z+semiRange.z+direction.z*minTemp*scale)/scale); 
+    // int xf = int((position.x+semiRange.x+direction.x*minTemp*scale)/scale);
+    // int yf = int((position.y+direction.y*minTemp*scale)/scale);
+    // int zf = int((position.z+semiRange.z+direction.z*minTemp*scale)/scale); 
+    // if (position.y+direction.y*minTemp*scale<0) yf = -1;
+    // int xb = int((position.x+semiRange.x-direction.x*minTemp *scale)/scale);
+    // int yb = int((position.y-direction.y*minTemp*scale)/scale);
+    // int zb = int((position.z+semiRange.z-direction.z*minTemp*scale)/scale); 
+    int xf = int(floor(position.x+semiRange.x+direction.x*minTemp));
+    int yf = int(floor(position.y+direction.y*minTemp));
+    int zf = int(floor(position.z+semiRange.z+direction.z*minTemp));
+    if (position.y+direction.y*minTemp<0) yf = -1;
+    int xb = int(floor(position.x+semiRange.x-direction.x*minTemp));
+    int yb = int(floor(position.y-direction.y*minTemp));
+    int zb = int(floor(position.z+semiRange.z-direction.z*minTemp));
+    ivec3 voxelId = ivec3(xb,yb,zb);
+    alignVoxelId = ivec3(xf,yf,zf);
+    
+    return voxelId;
+}
 
+ivec3 getVoxelIdSemi(vec3 position,vec3 semiRange,vec3 direction, out ivec3 alignVoxelId)
+{
+     float minTemp = 0.05;
 
-    int xb = int((position.x+semiRange.x-direction.x*minTemp *scale)/scale);
-    int yb = int((position.y-direction.y*minTemp*scale)/scale);
-    int zb = int((position.z+semiRange.z-direction.z*minTemp*scale)/scale); 
-
+    int xf = int(floor(position.x+semiRange.x+direction.x*minTemp));
+    int yf = int(floor(position.y+direction.y*minTemp));
+    int zf = int(floor(position.z+semiRange.z+direction.z*minTemp));
+    int xb = int(floor(position.x+semiRange.x-direction.x*minTemp));
+    int yb = int(floor(position.y-direction.y*minTemp));
+    int zb = int(floor(position.z+semiRange.z-direction.z*minTemp));
     ivec3 voxelId = ivec3(xb,yb,zb);
     alignVoxelId = ivec3(xf,yf,zf);
     
@@ -295,6 +321,45 @@ ivec3 getVoxelIdSimple(vec3 position,vec3 semiRange, float scale)
     int z = int((position.z+semiRange.z)/scale);
     ivec3 voxelId = ivec3(x,y,z);
     return voxelId;
+}
+
+///----------------------------------------
+// To check the relationship between posistion and semiRange+VoxelId
+///---------------------------------------
+
+int getFaceIdSimple(vec3 position,vec3 semiRange,ivec3 voxelId)
+{
+    vec3 voxelPos = vec3(voxelId.x - semiRange.x, voxelId.y,voxelId.z - semiRange.z);
+    if(abs(position.y - voxelPos.y-1)<0.1) return 4;
+    if(abs(position.z - voxelPos.z-1)<0.01) return 0;
+    else if(abs(position.z - voxelPos.z)<0.01) return 1;
+    else if(abs(position.x - voxelPos.x)<0.01) return 2;
+    else if(abs(position.x - voxelPos.x-1)<0.01) return 3;
+    return 7;
+}
+
+int getFacetIdPos(int faceid0, inout vec3 voxelPos0)
+{
+        if (faceid0 == 1){
+        voxelPos0 = vec3(voxelPos0.x + 0.5, voxelPos0.y + 0.5, voxelPos0.z +1.0);
+        }
+        else if (faceid0 == 2){
+        voxelPos0 = vec3(voxelPos0.x + 0.5, voxelPos0.y + 0.5, voxelPos0.z);
+        }
+        else if (faceid0 == 3){
+        voxelPos0 = vec3(voxelPos0.x, voxelPos0.y + 0.5, voxelPos0.z + 0.5);
+        }
+        else if (faceid0 == 4){
+        voxelPos0 = vec3(voxelPos0.x + 1.0, voxelPos0.y + 0.5, voxelPos0.z + 0.5);
+        }
+        else if (faceid0 == 5){
+        voxelPos0 = vec3(voxelPos0.x + 0.5, voxelPos0.y+1, voxelPos0.z + 0.5);
+        }
+        else if (faceid0 == 0){
+            voxelPos0 = vec3(voxelPos0.x + 0.5, voxelPos0.y+0.5, voxelPos0.z + 0.5);
+        }
+
+        return 1;
 }
 
 
@@ -378,6 +443,11 @@ float cross0(vec3 A, vec3 B){
     return A.x*B.x+A.y*B.y+A.z*B.z;
 }
 
+/////--------------------------------------------
+//-- A Fast, Invertible Canopy Reflectance Model, Andres Kuusk, RSE, 1995
+// Gamma.x for reflectance
+// Gamma.y for transmittance
+///----------------------------------------------
 vec2 scattering_phase_function_direct_XZY(vec3 directioni,vec3 directionj)
 {
     vec2 Gamma;
@@ -391,12 +461,31 @@ vec2 scattering_phase_function_direct_XZY(vec3 directioni,vec3 directionj)
     //scattering angle 
     float a = acos(cosa);
     float sina = sin(a);
-    // Gamma.x = abs(sina + (PI - a)*cosa)/(3*PI);
-    // Gamma.y = abs(sina + a*cosa)/(3*PI);
+    Gamma.x = (sina + (PI - a)*cosa)/(3*PI);
+    Gamma.y = (sina + a*cosa)/(3*PI);
+    return Gamma;
+}
+/////--------------------------------------------
+//-- leaf scattering phase function
+///----------------------------------------------
+vec2 scattering_phase_function_direct_XZY_paper(vec3 directioni,vec3 directionj)
+{
+    vec2 Gamma;
+    float thetai = acos(directioni.y);
+    float thetaj = acos(directionj.y);
+    float alphai = 0,alphaj = 0;
+    alphai = atan2(directioni.z,directioni.x);
+    alphaj = atan2(directionj.z,directionj.x);
+    //入射方向与出射方向的夹角余弦值; Cosine value of scattering angle between incident direction and exit direction
+    float cosa = directioni.y * directionj.y + sin(thetai) * sin(thetaj)*cos(alphai-alphaj);
+    //scattering angle 
+    float a = acos(cosa);
+    float sina = sin(a);
     Gamma.x = (sina - a * cosa) / 3 * PI;
     Gamma.y = cosa / 3;
     return Gamma;
 }
+
 
 float Hotspot_Kuusk(vec3 directioni,vec3 directionj, float pl_from, float pl_to, float density, float hs)
 {
@@ -421,5 +510,126 @@ float Hotspot_Kuusk(vec3 directioni,vec3 directionj, float pl_from, float pl_to,
 
     return hotspot;
 }
+
+
+
+bool checkSameDirection(vec3 directioni, vec3 directionj)
+{
+    bool a = false;
+    
+    if (abs(directioni.x - directionj.x) < EPSION_2)
+    {
+        if (abs(directioni.y - directionj.y) < EPSION_2)
+        {
+            if (abs(directioni.z - directionj.z) < EPSION_2)
+            {
+                a = true;
+                return a;
+            }
+        }
+    }
+    return a;
+}
+
+
+float calReCor(float lai)
+{
+    float reCor = 0.88 * (1 - exp(-0.7 * pow(lai, 0.75)));
+    return reCor;
+}
+
+
+void Soilheatflux(in float Tprofile[TLASTNUM],in float Mprofile[TLASTNUM], float Tsi, inout float G, inout float T[TLASTNUM], float dtime)
+{
+	/*
+	;      integer::bdry    != 1, given temperature as lower B.C.
+		;                        != 2, given heat flux as lower B.C.
+		;      integer nlvl         !number of computational levels
+		;      integer nnod         !number of computational node
+		;      real    dtime      !computational time step(s)
+		;      real    zlvl(nlvl) !Computational levels
+		;      real    znod(nnod) !Computational level for soil moisture
+		;      real    Tsoil(nnod)  !soil temperature(K)
+		;      real    Wsoil(nnod) !Soil moisture(m3 / m3)
+		;      real    lamda(nlvl) !Volumetric heat capacity(J / m3.K)
+		;      real    csdry(nnod)  !heat capacity of dry soil
+		;      real    Tsfc         !Soil surface temperature
+		;      real    lbc          !Soil lower B.C.
+		;                           !bdry = 1, bottom temperature
+		;                           !bdry = 2, bottom heat flux
+		*/
+	//这个是土壤的深度；
+    float depth[]={0,0.02,0.04,0.10,0.20,0.40,0.60,1};
+    float wsat = 0.45;  //土壤的饱和含水量
+    float csdry = (0.076+0.748*(1-wsat)*2.65)*1.0E6;
+    float lambda=0.8;
+    int nnod=8;
+    float Tsfc=Tsi; //表面温度；
+    float lbc=Tprofile[nnod-1];//最低处的边界温度；
+    float Tsoil[8];  //上一时刻，土壤的温度廓线；
+    for(int i=0;i<8;i++) Tsoil[i]=Tprofile[i];
+
+    float TA[8],TB[8],TC[8],TD[8],TP[8],TQ[8];
+    for(int i=0;i<8;i++)
+    {
+		TP[i]=lambda;  //热传导系数；
+		TQ[i] = 4.195*Mprofile[i]*1.0E6+csdry; //热容情况；
+    }
+    for(int k=0;k<nnod;k++)
+    {
+        if(k==0)
+        {
+            TA[k] = 1.0;
+            TB[k] = 0;
+            TC[k] = 0;
+            TD[k] = Tsfc;
+        }
+        else if(k >=1 && k < nnod-1)
+        {
+			//这里有个0.5,文章里边有，但是程序里边没有；
+            TB[k] = TP[k]*dtime/(depth[k+1]-depth[k]);
+            TC[k] = TP[k-1]*dtime/(depth[k]-depth[k-1]);
+            TA[k] =  TQ[k]*(depth[k+1]-depth[k-1])+TB[k]+TC[k];
+            TD[k] =  TQ[k]*(depth[k+1]-depth[k-1])*Tsoil[k];
+			//TA[k] = 0.5*TQ[k] * (depth[k + 1] - depth[k - 1]) + TB[k] + TC[k];
+			//TD[k] = 0.5*TQ[k] * (depth[k + 1] - depth[k - 1])*Tsoil[k];
+        }
+        else
+        {
+            TA[k] = 1;
+            TB[k] = 0.0;
+            TC[k] = 0.0;
+            TD[k] = lbc;
+        }
+    }
+
+    float P[8],Q[8],tema=0;
+    P[0] = TB[0]/TA[0];
+    Q[0] = TD[0]/TA[0];
+    for(int i=1;i<=nnod-1;i++)
+    {
+        tema = TA[i] - TC[i]*P[i-1];
+        P[i] = TB[i] /tema;
+        Q[i] = (TD[i]+TC[i]*Q[i-1])/tema;
+    }
+    T[nnod-1] = Q[nnod-1];
+    for(int i=nnod-2;i>=0;i--)
+    {
+        T[i] = P[i]*T[i+1]+Q[i];
+    }
+
+    //calculate the soil heat flux
+    float TG=0;
+	//计算温度通量；
+    for(int lyr=0;lyr<=nnod-2;lyr++)
+    {
+        TG=TG+(TQ[lyr]*T[lyr]-TQ[lyr]*Tsoil[lyr])*(depth[lyr+1]-depth[lyr])/dtime;
+    }
+
+    (G)=TG;
+}
+
+
+
 
 #endif 

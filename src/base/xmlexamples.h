@@ -20,13 +20,17 @@ class XmlExamples{
 public:
     XmlExamples(){
         createRaytracingxml();
-        createVoxellstxml();
+        createVoxelebxml();
+     //   createEcolstxml();
     }
     std::shared_ptr<RaytracingXml> m_pRaytracingXml;
-    std::shared_ptr<VoxelLstXml>   m_pVoxelLstXml;
+    std::shared_ptr<VoxelEBXml>   m_pVoxelebXml;
+    //std::shared_ptr<Huailai::VoxelEBXml> m_pHuailaiXml;
 
     void createRaytracingxml();
-    void createVoxellstxml();
+    void createVoxelebxml();
+
+    //void createEcolstxml();
 };
 
 

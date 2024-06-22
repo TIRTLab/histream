@@ -9,8 +9,13 @@
 
 class SurfIO {
 
+public:
     SurfIO(){};
 //    std::vector<SurfL> surfLs;
+
+    std::vector<float> lads;
+    std::shared_ptr<nvvk::Buffer>  m_pBufferLad;
+
 };
 
 

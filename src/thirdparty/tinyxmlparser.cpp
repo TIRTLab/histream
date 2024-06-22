@@ -295,7 +295,7 @@ void TiXmlParsingData::Stamp(const char* now, TiXmlEncoding encoding)
 					step = 1;		// Error case from bad encoding, but handle gracefully.
 				p += step;
 
-				// Just advance one column, of course.
+				// Just advance ONE column, of course.
 				++col;
 			}
 			else
@@ -528,7 +528,7 @@ const char* TiXmlBase::GetEntity(const char* p, char* value, int* length, TiXmlE
 	}
 
 	// So it wasn't an entity, its unrecognized, or something like that.
-	*value = *p;	// Don't put back the last one, since we return it!
+	*value = *p;	// Don't put back the last ONE, since we return it!
 	//*length = 1;	// Leave unrecognized entities - this doesn't really work.
 					// Just writes strange XML.
 	return p + 1;
@@ -1110,7 +1110,7 @@ const char* TiXmlElement::Parse(const char* p, TiXmlParsingData* data, TiXmlEnco
 			// Read the value -- which can include other
 			// elements -- read the end tag, and return.
 			++p;
-			p = ReadValue(p, data, encoding);		// Note this is an Element method, and will set the error if one happens.
+			p = ReadValue(p, data, encoding);		// Note this is an Element method, and will set the error if ONE happens.
 			if (!p || !*p) {
 				// We were looking for the end tag, but found nothing.
 				// Fix for [ 1663758 ] Failure to report error on bad XML
@@ -1455,7 +1455,7 @@ const char* TiXmlAttribute::Parse(const char* p, TiXmlParsingData* data, TiXmlEn
 			if (*p == SINGLE_QUOTE || *p == DOUBLE_QUOTE) {
 				// [ 1451649 ] Attribute values with trailing quotes not handled correctly
 				// We did not have an opening quote but seem to have a 
-				// closing one. Give up and throw an error.
+				// closing ONE. Give up and throw an error.
 				if (document) document->SetError(TIXML_ERROR_READING_ATTRIBUTES, p, data, encoding);
 				return 0;
 			}

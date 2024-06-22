@@ -10,8 +10,8 @@ bool FileIO::readXml(std::string filePath) {
 
     m_mode = Mode::eRaytracing;
     m_pRaytracingXml = std::move(xmlexamples.m_pRaytracingXml);
-//    m_mode = Mode::eVoxelLST;
-//    m_pVoxelLstXml = std::move(xmlexamples.m_pVoxelLstXml);
+//    m_mode = Mode::eVoxelET;
+//    m_pVoxelebXml = std::move(xmlexamples.m_pVoxelebXml);
 
     return false;
 
@@ -39,9 +39,9 @@ bool FileIO::readXml(std::string filePath) {
         m_pRaytracingXml->settingxml = readSetting(RootElement->FirstChild("Setting"));
 
 
-    }else if(modeInd == Mode::eVoxelLST){
-        m_mode = Mode::eVoxelLST;
-        m_pVoxelLstXml = std::make_shared<VoxelLstXml>();
+    }else if(modeInd == Mode::eVoxelET){
+        m_mode = Mode::eVoxelET;
+        m_pVoxelebXml = std::make_shared<VoxelEBXml>();
 
     }
     //readSetting(settingNode);
@@ -53,45 +53,6 @@ bool FileIO::readXml(std::string filePath) {
 
 }
 
-void FileIO::readDefined(std::shared_ptr<DefinedIO> & definedio) {
-
-    std::string optfile = "D:\\work\\field\\field\\defined\\optipar.txt";
-
-    definedio->definedDir = m_pVoxelLstXml->definedDir;
-    std::string predifineDir = definedio->definedDir+"/defined/";
-    std::string infileName = predifineDir + "optipar.txt";
-    int num = 1;
-    Utils::readascfileinout(infileName,0,0,definedio->m_fluspectCoeff.wl_,num);
-    Utils::readascfileinout(infileName,0,1,definedio->m_fluspectCoeff.nr_,num);
-    Utils::readascfileinout(infileName,0,2,definedio->m_fluspectCoeff.kab_,num);
-    Utils::readascfileinout(infileName,0,3,definedio->m_fluspectCoeff.kca_,num);
-    Utils::readascfileinout(infileName,0,4,definedio->m_fluspectCoeff.ks_,num);
-    Utils::readascfileinout(infileName,0,5,definedio->m_fluspectCoeff.kw_,num);
-    Utils::readascfileinout(infileName,0,6,definedio->m_fluspectCoeff.kdm_,num);
-    Utils::readascfileinout(infileName,0,7,definedio->m_fluspectCoeff.phiI_,num);
-    Utils::readascfileinout(infileName,0,8,definedio->m_fluspectCoeff.phiII_,num);
-    Utils::readascfileinout(infileName,0,9,definedio->m_fluspectCoeff.kcaV_,num);
-    Utils::readascfileinout(infileName,0,10,definedio->m_fluspectCoeff.kcaZ_,num);
-    Utils::readascfileinout(infileName,0,11,definedio->m_fluspectCoeff.kcant_,num);
-    Utils::readascfileinout(infileName,0,12,definedio->m_fluspectCoeff.kcaV2_,num);
-    Utils::readascfileinout(infileName,0,13,definedio->m_fluspectCoeff.phi_,num);
-    Utils::readascfileinout(infileName,0,14,definedio->m_fluspectCoeff.gsv1_,num);
-    Utils::readascfileinout(infileName,0,15,definedio->m_fluspectCoeff.gsv2_,num);
-    Utils::readascfileinout(infileName,0,16,definedio->m_fluspectCoeff.gsv3_,num);
-    Utils::readascfileinout(infileName,0,17,definedio->m_fluspectCoeff.nw_,num);
-   // return false;
-}
-
-//bool FileIO::writeTif(std::string outDir, void *images, glm::vec4 angles, std::vector<float> bands,
-//                      glm::vec2 resolution) {
-//
-//
-//    int saveImage(std::string outfilepath, std::vector<float> &c,
-//                  int width, int height,int band, std::string proj, double trans[6]);
-//
-//
-//return false;
-//}
 
 
 std::vector<SpectralXml> FileIO::readSpectral(TiXmlNode *node, Mode mode) {
@@ -139,11 +100,41 @@ SceneXml FileIO::readScene(TiXmlNode *node, Mode mode){
 
 }
 
+
+void FileIO::readDefined(std::shared_ptr<DefinedIO> & definedio) {
+
+    std::string optfile = "D:\\work\\field\\field\\defined\\optipar.txt";
+
+    definedio->definedDir = m_pVoxelebXml->definedDir;
+    std::string predifineDir = definedio->definedDir+"/defined/";
+    std::string infileName = predifineDir + "optipar.txt";
+    int num = 1;
+    Utils::readascfileinout(infileName,0,0,definedio->m_fluspectCoeff.wl_,num);
+    Utils::readascfileinout(infileName,0,1,definedio->m_fluspectCoeff.nr_,num);
+    Utils::readascfileinout(infileName,0,2,definedio->m_fluspectCoeff.kab_,num);
+    Utils::readascfileinout(infileName,0,3,definedio->m_fluspectCoeff.kca_,num);
+    Utils::readascfileinout(infileName,0,4,definedio->m_fluspectCoeff.ks_,num);
+    Utils::readascfileinout(infileName,0,5,definedio->m_fluspectCoeff.kw_,num);
+    Utils::readascfileinout(infileName,0,6,definedio->m_fluspectCoeff.kdm_,num);
+    Utils::readascfileinout(infileName,0,7,definedio->m_fluspectCoeff.phiI_,num);
+    Utils::readascfileinout(infileName,0,8,definedio->m_fluspectCoeff.phiII_,num);
+    Utils::readascfileinout(infileName,0,9,definedio->m_fluspectCoeff.kcaV_,num);
+    Utils::readascfileinout(infileName,0,10,definedio->m_fluspectCoeff.kcaZ_,num);
+    Utils::readascfileinout(infileName,0,11,definedio->m_fluspectCoeff.kcant_,num);
+    Utils::readascfileinout(infileName,0,12,definedio->m_fluspectCoeff.kcaV2_,num);
+    Utils::readascfileinout(infileName,0,13,definedio->m_fluspectCoeff.phi_,num);
+    Utils::readascfileinout(infileName,0,14,definedio->m_fluspectCoeff.gsv1_,num);
+    Utils::readascfileinout(infileName,0,15,definedio->m_fluspectCoeff.gsv2_,num);
+    Utils::readascfileinout(infileName,0,16,definedio->m_fluspectCoeff.gsv3_,num);
+    Utils::readascfileinout(infileName,0,17,definedio->m_fluspectCoeff.nw_,num);
+    // return false;
+}
+
 void FileIO::readMeteo(std::shared_ptr<DefinedIO> &defineio,int & n_node,
                        std::vector<Meteo> &meteos, std::vector<AtomCond> &wavesets) {
 
 
-    auto & meteofile = m_pVoxelLstXml->meteoxml.meteofile;
+    auto & meteofile = m_pVoxelebXml->meteoxml.meteofile;
 
 
     
@@ -183,15 +174,15 @@ void FileIO::readMeteo(std::shared_ptr<DefinedIO> &defineio,int & n_node,
         mi.ea = ea;
         mi.Ca = Ca;
         mi.Oa = Oa;
-//        mi.Tsold = Tsold;
-//        mi.SatWater = SatWater;
-//        mi.dTime = dTime;
+        mi.dTime = dTime;
 
         meteos.emplace_back(mi);
         //m_meteoParams.emplace_back(mi);
     }
 
-    //meta = fileio->m_pVoxelLstXml->meteoxml.meta;
+    ///-----------------------------------------------------------------------------
+    ///   WaveLength and atmospheric condition
+    ///----------------------------------------------------------------------------
 
     wavesets.resize(N1+N2);
     for (int i = 0; i <  2001 ; i++)
@@ -208,12 +199,14 @@ void FileIO::readMeteo(std::shared_ptr<DefinedIO> &defineio,int & n_node,
     }
 
 
-    // atomCond;
+    ///-----------------------------------------------------------------------------
+    ///   Atmospheric condition in radiative transfer domain
+    ///----------------------------------------------------------------------------
     float  *esun_, *esky_, *fesky_, *fesun_;
     int num = 1;
     // wave_ = Utils::infile2num(predifineDir+'Esk', 0, 0, num);
-    esun_ = Utils::readascfile(m_pVoxelLstXml->meteoxml.rinfile, 0, 0, num);
-    esky_ = Utils::readascfile(m_pVoxelLstXml->meteoxml.rlifile, 0, 0, num);
+    esun_ = Utils::readascfile(m_pVoxelebXml->atomcondxml.rinfile, 0, 0, num);
+    esky_ = Utils::readascfile(m_pVoxelebXml->atomcondxml.rlifile, 0, 0, num);
     fesky_ = new float[num];
     fesun_ = new float[num];
 
@@ -268,28 +261,33 @@ void FileIO::readMeteo(std::shared_ptr<DefinedIO> &defineio,int & n_node,
 
 
 void FileIO::writeENVIdata(std::string projectDir, float *pData, int width, int height, int band,
-                           Angle &angle, int knode) {
+                           Angle &angle, float t) {
 
     std::ostringstream  oss_x;
-    oss_x << std::setw(3)<<std::setfill('0')<<angle.vza;
+    oss_x << std::fixed << std::setprecision(2)<<std::setfill('0')<<angle.vza;
     std::ostringstream  oss_y;
-    oss_y << std::setw(3)<<std::setfill('0')<<angle.vaa;
+    oss_y << std::fixed << std::setprecision(2)<<std::setfill('0')<<angle.vaa;
     std::ostringstream  oss_z;
-    oss_z << std::setw(3)<<std::setfill('0')<<angle.sza;
+    oss_z << std::fixed << std::setprecision(2)<<std::setfill('0')<<angle.sza;
     std::ostringstream  oss_w;
-    oss_w << std::setw(3)<<std::setfill('0')<<angle.saa;
+    oss_w << std::fixed << std::setprecision(2)<<std::setfill('0')<<angle.saa;
+    std::ostringstream  oss_t;
+    oss_t << std::fixed << std::setprecision(2)<<std::setfill('0')<<t;
 
-    std::string outPath = projectDir + "/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
-                          "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".tif";
-
-
-
-
-    std::string tifName = projectDir + +"/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
-                          "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".img";
-    std::string hdrName = projectDir + +"/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
-                          "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".hdr";
-
+//    std::string outPath = projectDir + "/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
+//                          "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".tif";
+    std::string tifName,hdrName;
+    if(t > 0){
+        tifName = projectDir + "/results/t=" + oss_t.str() +"_VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
+                              "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".img";
+        hdrName = projectDir + "/results/t=" + oss_t.str() +"_VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
+                               "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".hdr";
+    }else {
+        tifName = projectDir +"/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
+                              "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".img";
+        hdrName = projectDir +"/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
+                              "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".hdr";
+    }
     std::ofstream outfilet1(tifName.c_str(), std::ios::binary);
     outfilet1.write(reinterpret_cast<const char*>(pData), sizeof(float) * width * height * band);
     outfilet1.close();

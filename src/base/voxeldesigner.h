@@ -21,9 +21,9 @@
 #include "src/base/utils.h"
 #include <cmath>
 
-// �������ɵ�λ�þ�Ϊxyz����ϵ�µ�����
-
-
+///---------------------------------------------------------
+/// In this class, all object is XYZ (5,5,0)
+///---------------------------------------------------------
 
 class VoxelDesigner
 {
@@ -35,13 +35,19 @@ public:
 	std::vector<glm::ivec3> createBackground(float sceneLength, float sceneWidth, float stepSize);
 
 	PrimMesh createTriBackground(float sceneLength, float sceneWidth, float stepSize);
-    PrimMesh createTriEntity(ShapeType shapeType, Shape shape, float stepSize);
-//    VoxelTriModel createTriEntity_rotate(ShapeType shapeType, Shape shape,
-//                                         float stepSize, float rotateAngle,std::vector<glm::ivec3> centers);
+    PrimMesh createTriEntity(Shape shape, float stepSize);
 
-	//VoxelTriModel createTriBackgroundFromDEM(const std::string &filename, nvmath::vec3f sceneSize,
+//    VoxelTriModel createTriEntity_rotate(ShapeType shapeType, Shape shape,
+//                                         float stepSize, float rotateAngle,std::vector<glm::ivec3> voxelIds);
+	//VoxelTriModel createTriBackgroundFromDEM(const std::string &filename, nvmath::vec3f sceneSize_XYZ,
  //                                            _2D::BilinearInterpolator<double> &interp);
 
+    PrimMesh createTriEntitiesFromTif(std::string heightPath, float stepSize);
+
+    PrimMesh createTriEntitiesFromTif_roof(std::string heightPath, glm::vec3 targetSize, float heightStep);
+    PrimMesh createTriEntitiesFromTif_wall(std::string heightPath, glm::vec3 targetSize, float heightStep);
+    PrimMesh createTriCube_wall(Shape shape, float stepSize);
+    PrimMesh createTriCube_roof(Shape shape, float stepSize);
 
     float minElevation{0};
 
@@ -52,13 +58,14 @@ private:
 	std::vector<glm::ivec3> createCube(float length, float width, float height, float stepSize);
 	
 	PrimMesh createTriCube(Shape shape, float stepSize);
+
     PrimMesh createTriEllipsoid(Shape shape, float stepSize);
 
 	bool isInPloy(nvmath::vec2i testPoint, std::vector<nvmath::vec2f> ploys);
 
 
 //	Mesh createTriCube_rotate(Shape shape, float stepSize,
-//                                       float rotateAngle,,std::vector<glm::ivec3> centers);
+//                                       float rotateAngle,,std::vector<glm::ivec3> voxelIds);
 	/*VoxelPrimitive createCubePrimitive(Cube cube);
 
 	VoxelPrimitive createBackgroundPrimitive(Background background);

@@ -35,7 +35,7 @@ namespace nanovdb {
 /// @param buffer    Buffer used for memory allocation by the handle
 ///
 /// @details The @c ValueT template parameter must be float (default) or double.
-///          The @c VoxelT template parameter must be one of the following:
+///          The @c VoxelT template parameter must be ONE of the following:
 ///          float (default), double, Fp4, Fp8, Fp16 or FpN. The @c tolerance
 ///          argument is only used when VoxelT is set to FpN.
 template<typename ValueT = float,
@@ -74,7 +74,7 @@ createLevelSetSphere(ValueT              radius = 100,
 /// @param buffer    Buffer used for memory allocation by the handle
 ///
 /// @details The @c ValueT template parameter must be float (default) or double.
-///          The @c VoxelT template parameter must be one of the following:
+///          The @c VoxelT template parameter must be ONE of the following:
 ///          float (default), double, Fp4, Fp8, Fp16 or FpN. The @c tolerance
 ///          argument is only used when VoxelT is set to FpN.
 template<typename ValueT = float,
@@ -138,7 +138,7 @@ createPointSphere(int                 pointsPerVoxel = 1,
 /// @param buffer      Buffer used for memory allocation by the handle
 ///
 /// @details The @c ValueT template parameter must be float (default) or double.
-///          The @c VoxelT template parameter must be one of the following:
+///          The @c VoxelT template parameter must be ONE of the following:
 ///          float (default), double, Fp4, Fp8, Fp16 or FpN. The @c tolerance
 ///          argument is only used when VoxelT is set to FpN.
 template<typename ValueT = float,
@@ -179,7 +179,7 @@ createLevelSetTorus(ValueT              majorRadius = 100.0f,
 /// @param buffer      Buffer used for memory allocation by the handle
 ///
 /// @details The @c ValueT template parameter must be float (default) or double.
-///          The @c VoxelT template parameter must be one of the following:
+///          The @c VoxelT template parameter must be ONE of the following:
 ///          float (default), double, Fp4, Fp8, Fp16 or FpN. The @c tolerance
 ///          argument is only used when VoxelT is set to FpN.
 template<typename ValueT = float,
@@ -247,7 +247,7 @@ createPointTorus(int                 pointsPerVoxel = 1, // half-width of narrow
 /// @param buffer    Buffer used for memory allocation by the handle
 ///
 //// @details The @c ValueT template parameter must be float (default) or double.
-///          The @c VoxelT template parameter must be one of the following:
+///          The @c VoxelT template parameter must be ONE of the following:
 ///          float (default), double, Fp4, Fp8, Fp16 or FpN. The @c tolerance
 ///          argument is only used when VoxelT is set to FpN.
 template<typename ValueT = float,
@@ -290,7 +290,7 @@ createLevelSetBox(ValueT              width = 40.0f,
 /// @param buffer    Buffer used for memory allocation by the handle
 ///
 /// @details The @c ValueT template parameter must be float (default) or double.
-///          The @c VoxelT template parameter must be one of the following:
+///          The @c VoxelT template parameter must be ONE of the following:
 ///          float (default), double, Fp4, Fp8, Fp16 or FpN. The @c tolerance
 ///          argument is only used when VoxelT is set to FpN.
 template<typename ValueT = float,
@@ -328,7 +328,7 @@ createFogVolumeBox(ValueT              width = 40.0f,
 /// @param buffer    Buffer used for memory allocation by the handle
 ///
 /// @details The @c ValueT template parameter must be float (default) or double.
-///          The @c VoxelT template parameter must be one of the following:
+///          The @c VoxelT template parameter must be ONE of the following:
 ///          float (default), double, Fp4, Fp8, Fp16 or FpN. The @c tolerance
 ///          argument is only used when VoxelT is set to FpN.
 template<typename ValueT = float,
@@ -367,7 +367,7 @@ createLevelSetOctahedron(ValueT              scale = 100.0f,
 /// @param buffer    Buffer used for memory allocation by the handle
 ///
 /// @details The @c ValueT template parameter must be float (default) or double.
-///          The @c VoxelT template parameter must be one of the following:
+///          The @c VoxelT template parameter must be ONE of the following:
 ///          float (default), double, Fp4, Fp8, Fp16 or FpN. The @c tolerance
 ///          argument is only used when VoxelT is set to FpN.
 template<typename ValueT = float,
@@ -406,7 +406,7 @@ createFogVolumeOctahedron(ValueT              scale = 100.0f,
 /// @param buffer    Buffer used for memory allocation by the handle
 ///
 /// @details The @c ValueT template parameter must be float (default) or double.
-///          The @c VoxelT template parameter must be one of the following:
+///          The @c VoxelT template parameter must be ONE of the following:
 ///          float (default), double, Fp4, Fp8, Fp16 or FpN. The @c tolerance
 ///          argument is only used when VoxelT is set to FpN.
 template<typename ValueT = float,
@@ -487,7 +487,7 @@ namespace {
 ///        the narrow band) are still undefined. Call GridBuilder::sdfToLevelSet() to set those
 ///        values or alternatively call GridBuilder::sdfToFog to generate a FOG volume.
 ///
-/// @details The @c VoxelT template parameter must be one of the following:
+/// @details The @c VoxelT template parameter must be ONE of the following:
 ///          float (default), Fp4, Fp8, Fp16 or FpN.
 template<typename ValueT, typename VoxelT>
 std::shared_ptr<GridBuilder<ValueT, VoxelT>>
@@ -502,7 +502,7 @@ initSphere(ValueT              radius, // radius of sphere in world units
     if (!(radius > 0))
         throw std::runtime_error("Sphere: radius must be positive!");
     if (!(voxelSize > 0))
-        throw std::runtime_error("Sphere: voxelSize must be positive!");
+        throw std::runtime_error("Sphere: voxelSize_XZY must be positive!");
     if (!(halfWidth > 0))
         throw std::runtime_error("Sphere: halfWidth must be positive!");
 
@@ -566,7 +566,7 @@ initTorus(ValueT              radius1, // major radius of torus in world units
     if (!(radius1 > radius2))
         throw std::runtime_error("Torus: radius1 must be larger than radius2!");
     if (!(voxelSize > 0))
-        throw std::runtime_error("Torus: voxelSize must be positive!");
+        throw std::runtime_error("Torus: voxelSize_XZY must be positive!");
     if (!(halfWidth > 0))
         throw std::runtime_error("Torus: halfWidth must be positive!");
 
@@ -634,7 +634,7 @@ initBox(ValueT              width, // major radius of torus in world units
         throw std::runtime_error("Box: depth must be positive!");
 
     if (!(voxelSize > 0))
-        throw std::runtime_error("Box: voxelSize must be positive!");
+        throw std::runtime_error("Box: voxelSize_XZY must be positive!");
     if (!(halfWidth > 0))
         throw std::runtime_error("Box: halfWidth must be positive!");
 
@@ -711,7 +711,7 @@ initBBox(ValueT              width, // width of the bbox in world units
     if (!(thickness > 0))
         throw std::runtime_error("BBox: thickness must be positive!");
     if (!(voxelSize > 0.0))
-        throw std::runtime_error("BBox: voxelSize must be positive!");
+        throw std::runtime_error("BBox: voxelSize_XZY must be positive!");
 
     auto builder = std::make_shared<GridBuilder<ValueT, VoxelT>>(ValueT(halfWidth * voxelSize));
     auto acc = builder->getAccessor();
@@ -790,7 +790,7 @@ initOctahedron(ValueT              scale, // scale of the octahedron in world un
     if (!(scale > 0))
         throw std::runtime_error("Octahedron: width must be positive!");
     if (!(voxelSize > 0))
-        throw std::runtime_error("Octahedron: voxelSize must be positive!");
+        throw std::runtime_error("Octahedron: voxelSize_XZY must be positive!");
 
     auto builder = std::make_shared<GridBuilder<ValueT>>(halfWidth * voxelSize);
     auto acc = builder->getAccessor();
@@ -1197,7 +1197,7 @@ createPointScatter(const NanoGrid<ValueT>& srcGrid, // origin of grid in world u
     static_assert(is_floating_point<ValueT>::value, "createPointScatter: expect floating point");
     using Vec3T = Vec3<ValueT>;
     if (pointsPerVoxel < 1) {
-        throw std::runtime_error("createPointScatter: Expected at least one point per voxel");
+        throw std::runtime_error("createPointScatter: Expected at least ONE point per voxel");
     }
     if (!srcGrid.isLevelSet()) {
         throw std::runtime_error("createPointScatter: Expected a level set grid");

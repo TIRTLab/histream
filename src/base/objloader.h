@@ -36,9 +36,9 @@ public:
 	void createBackground(glm::vec3);
 	void creatBackgroundFromDEM(const std::string& filename, nvmath::vec3f sceneSize);
 //
-//	void createBackgroundFromDEM(const std::string& filename, nvmath::vec3f sceneSize, _2D::ThinPlateSplineInterpolator<double>& interp);
-//	void createBackgroundFromDEM(const std::string& filename, nvmath::vec3f sceneSize, _2D::BilinearInterpolator<double>& interp);//�������ǰ���ԭ����DEM���ɣ�����������ʱ�볡����С��һ�£�
-//    void createBackgroundFromResizedDEM(const std::string &filename, nvmath::vec3f sceneSize, _2D::BilinearInterpolator<double> &interp);//�Ƚ�DEM��ֵΪ������С��������
+//	void createBackgroundFromDEM(const std::string& filename, nvmath::vec3f sceneSize_XYZ, _2D::ThinPlateSplineInterpolator<double>& interp);
+//	void createBackgroundFromDEM(const std::string& filename, nvmath::vec3f sceneSize_XYZ, _2D::BilinearInterpolator<double>& interp);//�������ǰ���ԭ����DEM���ɣ�����������ʱ�볡����С��һ�£�
+//    void createBackgroundFromResizedDEM(const std::string &filename, nvmath::vec3f sceneSize_XYZ, _2D::BilinearInterpolator<double> &interp);//�Ƚ�DEM��ֵΪ������С��������
 //	double getShiftInterp(_2D::BilinearInterpolator<double> interp, nvmath::vec3f shift0);
 
 	ObjMesh m_objmesh;

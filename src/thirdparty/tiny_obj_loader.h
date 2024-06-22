@@ -49,7 +49,7 @@ THE SOFTWARE.
 //
 
 //
-// Use this in *one* .cc
+// Use this in *ONE* .cc
 //   #define TINYOBJLOADER_IMPLEMENTATION
 //   #include "tiny_obj_loader.h"
 //
@@ -701,8 +701,8 @@ struct PrimGroup {
 static std::istream &safeGetline(std::istream &is, std::string &t) {
   t.clear();
 
-  // The characters in the stream are read one-by-one using a std::streambuf.
-  // That is faster than reading them one-by-one using the std::istream.
+  // The characters in the stream are read ONE-by-ONE using a std::streambuf.
+  // That is faster than reading them ONE-by-ONE using the std::istream.
   // Code that uses streambuf this way must be guarded by a sentry object.
   // The sentry object performs various tasks,
   // such as thread synchronization and updating the stream state.
@@ -811,7 +811,7 @@ static bool tryParseDouble(const char *s, const char *s_end, double *result) {
 
   double mantissa = 0.0;
   // This exponent is base 2 rather than 10.
-  // However the exponent we parse is supposed to be one of ten,
+  // However the exponent we parse is supposed to be ONE of ten,
   // thus we must take care to convert the exponent/and or the
   // mantissa to a * 2^E, where a is the mantissa and E is the
   // exponent.
@@ -1198,7 +1198,7 @@ bool ParseTextureNameAndOption(std::string *texname, texture_option_t *texopt,
       token += 9;
       token += strspn(token, " \t");
       const char *end = token + strcspn(token, " \t\r");
-      if ((end - token) == 1) {  // Assume one char for -imfchan
+      if ((end - token) == 1) {  // Assume ONE char for -imfchan
         texopt->imfchan = (*token);
       }
       token = end;

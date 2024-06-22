@@ -41,8 +41,8 @@ public:
     bool create(std::shared_ptr<RaytracingIO> &raytracingio);
     bool run(std::shared_ptr<RaytracingIO> &raytracingio, std::shared_ptr<FileIO> &fileio);
     bool destroy( std::shared_ptr<RaytracingIO> &raytracingio);
-    void output(std::shared_ptr<RaytracingIO> &raytracingio,std::shared_ptr<FileIO> &fileio,int kangle);
-
+    void output(std::shared_ptr<RaytracingIO> &modelio, std::shared_ptr<FileIO> &fileio, int kangle);
+    //void output(std::shared_ptr<RaytracingIO> &modelio, std::shared_ptr<FileIO> &fileio, int kangle);
    // bool recordCommandBuffer();
 
 

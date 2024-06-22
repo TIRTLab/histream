@@ -25,10 +25,12 @@ public:
 //    std::shared_ptr<nvvk::Buffer> m_pCanopyBuffer;
     std::shared_ptr<nvvk::Buffer> m_pLeafBioBuffer; // Bio
     std::shared_ptr<nvvk::Buffer> m_pSoilSetBuffer;
+    std::shared_ptr<nvvk::Buffer> m_pBuildupBuffer;
 
     std::vector<Canopy> canopies;
     std::vector<LeafBio> leafbios;
     std::vector<SoilSet> soilsets;
+    std::vector<BuildUp> buildups;
     std::vector<Spectral> spectrals;
     std::vector<Thermal> thermals;
     std::vector<Spectral> fixedSpectrals;

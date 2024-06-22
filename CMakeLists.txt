@@ -16,7 +16,8 @@ message(STATUS "Processing Project ${PROJNAME}:")
 # C++ target and defines
 set(CMAKE_CXX_STANDARD 17)
 add_executable(${PROJNAME}
-        src/voxellst/voxellst.cpp)
+        src/voxeleb/voxeleb.cpp)
+
 
 
 if (MSVC)
@@ -94,7 +95,7 @@ file(GLOB SOURCE_FILES
         src/base/*.cpp
         src/thirdparty/*.cpp
         src/raytracing/*.cpp
-        src/voxellst/*.cpp
+        src/voxeleb/*.cpp
 )
 
 file(GLOB HEADER_FILES
@@ -102,7 +103,7 @@ file(GLOB HEADER_FILES
         src/base/*.h
         src/thirdparty/*.h
         src/raytracing/*.h
-        src/voxellst/*.h
+        src/voxeleb/*.h
 )
 
 #--------------------------------------------------------------------------------------------------
@@ -138,7 +139,6 @@ source_group("Shader Headers" FILES ${GLSL_HEADERS})
 # Linkage
 #
 
-
 #set(Boost_USE_STATIC_LIBS ON)
 #find_package(Boost COMPONENTS filesystem iostreams REQUIRED)
 #if (Boost_FOUND)
@@ -153,6 +153,9 @@ target_link_libraries(${PROJNAME} ${PLATFORM_LIBRARIES} nvpro_core)
 find_package(GDAL REQUIRED)
 target_include_directories(${PROJNAME} PUBLIC ${GDAL_INCLUDE_DIRS})
 target_link_libraries(${PROJNAME} ${GDAL_LIBRARIES})
+
+find_package(Eigen3 CONFIG REQUIRED)
+target_link_libraries(${PROJNAME}  Eigen3::Eigen)
 
 set(OpenCV_DIR "${VCPKG_INSTALLED_DIR}/x64-windows/share/opencv2")
 find_package(OpenCV REQUIRED)

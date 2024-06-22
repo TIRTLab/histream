@@ -6,7 +6,7 @@
 #define FIELD_COMPO_H
 
 #include "src/raytracing/raytracingio.h"
-#include "src/voxellst/voxellstio.h"
+#include "src/voxeleb/voxelebio.h"
 #include "fileio.h"
 #include "src/base/utils.h"
 
@@ -17,12 +17,12 @@ public:
 
     bool createCompOptical(std::shared_ptr<FileIO> &fileio, std::shared_ptr<RaytracingIO> &raytracingio);
 
-    bool createCompProperty(std::shared_ptr<FileIO> &fileio, std::shared_ptr<VoxellstIO> &voxellstio);
+    bool createCompProperty(std::shared_ptr<FileIO> &fileio, std::shared_ptr<VoxelebIO> &voxelebio);
 
+    /// fluspect model
     float calctav(float alfa,float nr);
     void fluspect(OptCoeff fluspectCoeff, FluspectParam fluspectParam, std::vector<Spectral>& spectrals);
-
-
+    // bsm model
     void bsm(OptCoeff bsmCoeff, BSMParam bsm, std::vector<Spectral> &spectral);
 
 };

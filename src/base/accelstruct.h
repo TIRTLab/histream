@@ -19,7 +19,6 @@ public:
     AccelStruct(){};
 
     nvvk::RaytracingBuilderKHR::BlasInput objectToVkGeometryKHR(const VkDevice device, const MeshBuffer& model);
-//    bool createAccelStruct(std::shared_ptr<RaytracingIO> &raytracingio);
     bool createAccelStruct(VkDevice device, std::shared_ptr<MeshIO> &meshio, std::shared_ptr<InstanceIO> &instanceio);
     VkAccelerationStructureKHR getTlas() { return m_rtBuilder.getAccelerationStructure(); }
 

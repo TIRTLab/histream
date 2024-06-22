@@ -310,7 +310,7 @@ protected:
 	static const char* ReadName(const char* p, TIXML_STRING* name, TiXmlEncoding encoding);
 
 	/*	Reads text. Returns a pointer past the given end tag.
-		Wickedly complex options, but it keeps the (sensitive) code in one place.
+		Wickedly complex options, but it keeps the (sensitive) code in ONE place.
 	*/
 	static const char* ReadText(const char* in,				// where to start
 		TIXML_STRING* text,			// the string read
@@ -556,7 +556,7 @@ public:
 	@endverbatim
 
 	IterateChildren takes the previous child as input and finds
-	the next one. If the previous child is null, it returns the
+	the next ONE. If the previous child is null, it returns the
 	first. IterateChildren will return null when done.
 */
 	const TiXmlNode* IterateChildren(const TiXmlNode* previous) const;
@@ -1445,7 +1445,7 @@ public:
 	virtual const char* Parse(const char* p, TiXmlParsingData* data = 0, TiXmlEncoding encoding = TIXML_DEFAULT_ENCODING);
 
 	/** Get the root element -- the only top level element -- of the document.
-		In well formed XML, there should only be one. TinyXml is tolerant of
+		In well formed XML, there should only be ONE. TinyXml is tolerant of
 		multiple elements at the document level.
 	*/
 	const TiXmlElement* RootElement() const { return FirstChildElement(); }
@@ -1458,7 +1458,7 @@ public:
 	*/
 	bool Error() const { return error; }
 
-	/// Contains a textual (english) description of the error if one occurs.
+	/// Contains a textual (english) description of the error if ONE occurs.
 	const char* ErrorDesc() const { return errorDesc.c_str(); }
 
 	/** Generally, you probably want the error string ( ErrorDesc() ). But if you

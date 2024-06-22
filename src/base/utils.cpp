@@ -454,3 +454,67 @@ std::vector <int> Utils::findnum(std::string& ch)
 	}
 	return numVec;
 }
+
+
+
+double Utils::calculateDeltaT(int year, int month) {
+    double deltaT = 0.0;
+    int y = year + (month - 0.5) / 12.0;
+
+    if (year < -500) {
+        deltaT = -20.0 + 32.0 * pow((y - 1820) / 100.0, 2);
+    } else if (year < 500) {
+        deltaT = 10583.6 - 1014.41 * (y / 100.0) + 33.78311 * pow(y / 100.0, 2) - 5.952053 * pow(y / 100.0, 3) - 0.1798452 * pow(y / 100.0, 4) + 0.022174192 * pow(y / 100.0, 5) + 0.0090316521 * pow(y / 100.0, 6);
+    } else if (year < 1600) {
+        deltaT = 1574.2 - 556.01 * ((y - 1000) / 100.0) + 71.23472 * pow((y - 1000) / 100.0, 2) + 0.319781 * pow((y - 1000) / 100.0, 3) - 0.8503463 * pow((y - 1000) / 100.0, 4) - 0.005050998 * pow((y - 1000) / 100.0, 5) + 0.0083572073 * pow((y - 1000) / 100.0, 6);
+    } else if (year < 1700) {
+        deltaT = 120.0 - 0.9808 * (y - 1600) - 0.01532 * pow(y - 1600, 2) + pow((y - 1600) / 20.0, 2);
+    } else if (year < 1800) {
+        deltaT = 8.83 + 0.1603 * (y - 1700) - 0.0059285 * pow(y - 1700, 2) + 0.00013336 * pow(y - 1700, 3) - pow((y - 1700) / 40.0, 2);
+    } else if (year < 1860) {
+        deltaT = 13.72 - 0.332447 * (y - 1800) + 0.0068612 * pow(y - 1800, 2) + 0.0041116 * pow(y - 1800, 3) - 0.00037436 * pow(y - 1800, 4) + 0.0000121272 * pow(y - 1800, 5) - 0.0000001699 * pow(y - 1800, 6) + 0.000000000875 * pow(y - 1800, 7);
+    } else if (year < 1900) {
+        deltaT = 7.62 + 0.5737 * (y - 1860) - 0.251754 * pow(y - 1860, 2) + 0.01680668 * pow(y - 1860, 3) - 0.0004473624 * pow(y - 1860, 4) + pow((y - 1860) / 40.0, 2);
+    } else if (year < 1920) {
+        deltaT = -2.79 + 1.494119 * (y - 1900) - 0.0598939 * pow(y - 1900, 2) + 0.0061966 * pow(y - 1900, 3) - 0.000197 * pow(y - 1900, 4);
+    } else if (year < 1941) {
+        deltaT = 21.2 + 0.84493 * (y - 1920) - 0.0761 * pow(y - 1920, 2) + 0.0020936 * pow(y - 1920, 3);
+    } else if (year < 1961) {
+        deltaT = 29.07 + 0.407 * (y - 1950) - pow((y - 1950) / 2.0, 2) + 0.0000326 * pow(y - 1950, 3) - 0.000000126 * pow(y - 1950, 4);
+    } else if (year < 1986) {
+        deltaT = 45.45 + 1.067 * (y - 1975) - pow((y - 1975) / 3.0, 2) + 0.00002364 * pow(y - 1975, 3);
+    } else if (year < 2005) {
+        deltaT = 63.86 + 0.3345 * (y - 2000) - 0.060374 * pow(y - 2000, 2) + 0.0017275 * pow(y - 2000, 3) + 0.000651814 * pow(y - 2000, 4) + 0.00002373599 * pow(y - 2000, 5);
+    } else if (year < 2050) {
+        deltaT = 62.92 + 0.32217 * (y - 2000) + 0.005589 * pow(y - 2000, 2);
+    } else if (year < 2150) {
+        deltaT = -20.0 + 32.0 * pow((y - 1820) / 100.0, 2) - 0.5628 * (2150 - y);
+    } else {
+        deltaT = -20.0 + 32.0 * pow((y - 1820) / 100.0, 2);
+    }
+
+    return deltaT;
+}
+
+bool Utils::isLeapYear(int year) {
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+void Utils::calculateMonthAndDay(int kyear, int kdoy, int *kmonth, int *kday) {
+    // 各个月的天数（平年）
+    int daysInMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    // 如果是闰年，2月有29天
+    if (isLeapYear(kyear)) {
+        daysInMonth[1] = 29;
+    }
+    int dayOfYear = kdoy;
+    int month = 0;
+    // 找出对应的月
+    while (dayOfYear > daysInMonth[month]) {
+        dayOfYear -= daysInMonth[month];
+        month++;
+    }
+    // 返回结果
+    *kmonth = month + 1;
+    *kday = dayOfYear;
+}

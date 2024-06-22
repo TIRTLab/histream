@@ -82,7 +82,7 @@ public:
     {
     }
     Range(Range &r, Split) : Range(r.mRange[0], r.mRange[1]) {
-        assert( r.is_divisible() );// at least one of the two dimensions must be divisible!
+        assert( r.is_divisible() );// at least ONE of the two dimensions must be divisible!
         if( mRange[0].size()*double(mRange[1].grainsize()) < mRange[1].size()*double(mRange[0].grainsize()) ) {
             r.mRange[1].mEnd = mRange[1].mBegin = mRange[1].middle();
         } else {
@@ -120,7 +120,7 @@ public:
     }
     Range(Range &r, Split) : Range(r.mRange[0], r.mRange[1], r.mRange[2])
     {
-        assert( r.is_divisible() );// at least one of the three dimensions must be divisible!
+        assert( r.is_divisible() );// at least ONE of the three dimensions must be divisible!
         if ( mRange[2].size()*double(mRange[0].grainsize()) < mRange[0].size()*double(mRange[2].grainsize()) ) {
             if ( mRange[0].size()*double(mRange[1].grainsize()) < mRange[1].size()*double(mRange[0].grainsize()) ) {
                 r.mRange[1].mEnd = mRange[1].mBegin = mRange[1].middle();

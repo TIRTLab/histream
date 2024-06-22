@@ -1,0 +1,100 @@
+#version 460
+#extension GL_ARB_separate_shader_objects : enable
+#extension GL_EXT_nonuniform_qualifier : enable
+#extension GL_GOOGLE_include_directive : enable
+#extension GL_EXT_scalar_block_layout : enable
+#extension GL_EXT_ray_tracing : enable
+#extension GL_EXT_ray_query : enable
+#extension GL_ARB_shader_clock : enable                 // Using clockARB
+#extension GL_EXT_shader_image_load_formatted : enable  // The folowing extension allow to pass images as function parameters
+#extension GL_NV_shader_sm_builtins : require     // Debug - gl_WarpIDNV, gl_SMIDNV
+#extension GL_ARB_gpu_shader_int64 : enable       // Debug - heatmap value
+#extension GL_EXT_shader_realtime_clock : enable  // Debug - heatmap timing
+#extension GL_EXT_shader_explicit_arithmetic_types_int64 : require
+#extension GL_EXT_buffer_reference2 : require
+#extension GL_EXT_debug_printf : enable
+#extension GL_KHR_memory_scope_semantics:require
+#extension GL_EXT_shader_atomic_float: require 
+
+#define HUAILAILIDAR
+
+#include "../bindinglayout.h"
+#include "../parameters.h"
+#include "../global.glsl"
+#include "../functions.glsl"
+#include "../nanovdb_info.glsl"
+#include "../shade_state_voxel.glsl"
+
+PtPayload        prd;
+ShadowHitPayload shadow_payload;
+
+#include "../traceray_comp.glsl"
+
+layout(local_size_x = GROUP_SIZEX) in;
+#define MAXSTEP   100
+// #define DIFFUSE_ANGLE_NUM 32
+#define MAXBAND    25
+#define NUM_VNIR 2001 
+#define NUM_BAND 2002
+#define NUM_ATOM 2162
+
+float GammaR[DIFFUSE_ANGLE_NUM * DIFFUSE_ANGLE_NUM];
+float GammaT[DIFFUSE_ANGLE_NUM * DIFFUSE_ANGLE_NUM];
+
+
+void main()
+{
+    //------------------------------------------------------------
+    // Initialization for the position and SSBO index
+    //------------------------------------------------------------
+    // get bufferId, voxelPos, instanceId and typeId
+    uint bufferId0 = uint(gl_GlobalInvocationID.x);
+    ivec3 voxelId0 = voxelLinks[bufferId0].voxelPos;
+    // Get nanoVDBLink: from voxelPos to bufferId
+    NanoVDBLink nanoVDBLink = nanovdbInit();
+    uint bufferId = nanovdbGet(nanoVDBLink, voxelId0);
+    uint instanceId = voxelLinks[bufferId].instanceId;
+    uint meshId = instanceLinks[instanceId].meshId;
+    uint typeId = meshLinks[meshId].type;
+    uint spectralId = meshLinks[meshId].spectralId;
+    uint spectralIdBase = spectralId * NUM_BAND;
+
+    voxelNetRads[bufferId0].directTrad = 0;
+
+    float Rin = ubom.meteo.Rin;               // measurement height 
+    float Rli = ubom.meteo.Rli;               // wind speed
+
+    //---------------------------------------------------
+    // Iteration in TIR band
+    //---------------------------------------------------
+    float alpha_toSolar = voxelDirs[bufferId0].solar; 
+    for(int kband = NUM_VNIR; kband < NUM_BAND; kband++)
+    {
+        // solar direct radiance: lightSet.Rin*waveSets[kband].direct*0.001
+        // transmittance to solar: alpha_toSolar
+        // absorb = 1- refl - trans
+        float absorb = 1- spectralMaterials[spectralIdBase + kband].transmittance - 
+                spectralMaterials[spectralIdBase + kband].reflectance;
+        
+        float curDirect = 0.0;
+        float effectWave = 0.0;
+        for (int kband_Atom = NUM_VNIR; kband_Atom < NUM_ATOM; kband_Atom++){
+            float band0 = atomConds[kband_Atom-1].wavelength;
+            float bandwidth = atomConds[kband_Atom].wavelength - band0;
+            curDirect += atomConds[kband_Atom].direct * 0.001 * bandwidth;
+            effectWave += bandwidth * 0.001;
+        }
+        // float rad = Rli * curDirect / effectWave * alpha_toSolar * absorb;
+        float rad = Rli * curDirect / effectWave * absorb;
+        // float band0 = atomConds[kband-1].wavelength;
+        // float bandwidth = atomConds[kband].wavelength - band0;
+        // float rad = Rli * atomConds[kband].direct * 0.001 * bandwidth * alpha_toSolar * absorb;
+
+        atomicAdd(voxelNetRads[bufferId0].directTrad,rad,
+            gl_ScopeDevice,gl_StorageSemanticsBuffer,gl_SemanticsRelaxed);
+
+    }
+
+// atomicAdd(voxelNetRads[bufferId0].directTrad,300,
+// gl_ScopeDevice,gl_StorageSemanticsBuffer,gl_SemanticsRelaxed);
+}

@@ -47,7 +47,7 @@ bool Voxel_raytracing(Ray ray, NanoVDBLink nanoVDBLink)
 	float alpha_toSensor = 1.0;
 	/// transmittance from voxel to solar; from voxel to current voxel; current voxel
     float alpha_toSolar, alpha_voxel;
-	ivec3 voxelPos;                          // current passed voxel
+	ivec3 voxelId;                          // current passed voxel
     int bufferId;                           // passed voxel Id
 	float scale = settingxml.scale;			// scale
 	vec3 ffnormal;                          // Collision Point Normals
@@ -90,8 +90,8 @@ bool Voxel_raytracing(Ray ray, NanoVDBLink nanoVDBLink)
 		///////////////////////////////////////////////////
 		/// get hit information.
 		ShadeState sstate = GetShadeState(prd);
-		voxelPos = getPassedVoxelId(sstate.position, scale, normalize(ray.direction));
-		bufferId = nanovdbGet(nanoVDBLink, voxelPos);
+		voxelId = getPassedVoxelId(sstate.position, scale, normalize(ray.direction));
+		bufferId = nanovdbGet(nanoVDBLink, voxelId);
 		// a valid voxel and get this voxel information.
 		if(bufferId >= 0)
 		{
