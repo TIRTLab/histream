@@ -3,7 +3,7 @@ import os
 import glob
 import subprocess
 
-versionName = r'F:\work\field_aoyunlst\field\shader\voxeleb\\'
+versionName = r'F:\work\field_aoyunlst\field\shader\voxelrt\\'
 # versionName = 'RayTracing_Lambert'
 # versionName = 'VoxelTracing'
 # versionName = 'VoxelTriTracing'

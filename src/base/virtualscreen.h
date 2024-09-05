@@ -8,7 +8,6 @@
 #include "src/raytracing/raytracingio.h"
 #include "src/voxelrt/voxelrtio.h"
 #include "src/voxeleb/voxelebio.h"
-#include "src/voxeleb/voxelebio.h"
 
 class VirtualScreen {
 public:

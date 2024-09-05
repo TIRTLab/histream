@@ -3,6 +3,8 @@
 *.ninja
 *.txt
 *.bin
+cmake-build-debug/*
+cmake-build-debug-visual-studio/*
 cmake-build-debug-visual-studio/.ninja_deps
 cmake-build-debug-visual-studio/.ninja_log
 cmake-build-debug-visual-studio/CMakeFiles/3.27.8/CompilerIdC/CMakeCCompilerId.c

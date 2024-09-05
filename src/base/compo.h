@@ -7,6 +7,7 @@
 
 #include "src/raytracing/raytracingio.h"
 #include "src/voxeleb/voxelebio.h"
+#include "src/voxelrt/voxelrtio.h"
 #include "fileio.h"
 #include "src/base/utils.h"
 
@@ -16,8 +17,8 @@ public:
     Compo(){};
 
     bool createCompOptical(std::shared_ptr<FileIO> &fileio, std::shared_ptr<RaytracingIO> &raytracingio);
-
     bool createCompProperty(std::shared_ptr<FileIO> &fileio, std::shared_ptr<VoxelebIO> &voxelebio);
+    bool createCompOptical(std::shared_ptr<FileIO> &fileio, std::shared_ptr<VoxelrtIO> &voxelrtio);
 
     /// fluspect model
     float calctav(float alfa,float nr);

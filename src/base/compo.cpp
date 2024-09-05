@@ -36,6 +36,47 @@ bool Compo::createCompOptical(std::shared_ptr<FileIO> &fileio, std::shared_ptr<R
     return true;
 }
 
+bool Compo::createCompOptical(std::shared_ptr<FileIO> &fileio, std::shared_ptr<VoxelrtIO> &modelio)
+{
+    auto & meshio = modelio->m_meshio;
+    meshio->spectrals.clear();
+    meshio->thermals.clear();
+
+    //--------------------------------------------------
+    //--- Spectral
+    //--------------------------------------------------
+    int id = 0;
+    for(auto &spectralxml: fileio->m_pVoxelrtXml->spectralxmls ){
+        if(spectralxml.type == spectralType::CUSTOM){
+            for(int i=0;i<spectralxml.reflectances.size();i++)
+                meshio->spectrals.push_back(Spectral{spectralxml.reflectances[i],spectralxml.transmittance[i]});
+        }
+        meshio->spectralNames.insert({spectralxml.spectralName,id});
+        id++;
+    }
+    //--------------------------------------------------
+    //--- Thermal
+    //--------------------------------------------------
+    id = 0;
+    for(auto &thermalxml: fileio->m_pVoxelrtXml->thermalxmls ) {
+        meshio->thermals.push_back(Thermal{thermalxml.sunlitTemperature, thermalxml.shadedTemperature});
+        meshio->thermalNames.insert({thermalxml.thermalName,id});
+        id++;
+    }
+    //--------------------------------------------------
+    //--- Canopy
+    //--------------------------------------------------
+    id = 0;
+    for(auto &canopyxml: fileio->m_pVoxelrtXml->canopyxmls){
+
+        ;
+        meshio->canopies.push_back(canopyxml.canopy);
+        meshio->canopyNames.insert({canopyxml.canopyName,id});
+        id++;
+    }
+
+    return true;
+}
 
 
 float Compo::calctav(float alfa,float nr)
@@ -158,90 +199,6 @@ void Compo::fluspect(OptCoeff fluspectCoeff, FluspectParam fluspectParam, std::v
         spectral.transmittance        = Ta*Tsub/denom;
         spectral.reflectance      = Ra+Ta*Rsub*tt/denom;
         spectrals.push_back(spectral);
-//leafopt.refl = refl;
-//leafopt.tran = tran;
-//leafopt.kChlrel = kChlrel;
-
-//t        =   tran;
-//r        =   refl;
-//
-//I_rt     =   (r+t)<1;
-//D(I_rt)  =   sqrt((1 + r(I_rt) + t(I_rt)) * ...
-//                  (1 + r(I_rt) - t(I_rt)) * ...
-//                  (1 - r(I_rt) + t(I_rt)) * ...
-//                  (1 - r(I_rt) - t(I_rt)));
-//a(I_rt)  =   (1 + r(I_rt).^2 - t(I_rt).^2 + D(I_rt)) / (2*r(I_rt));
-//b(I_rt)  =   (1 - r(I_rt).^2 + t(I_rt).^2 + D(I_rt)) / (2*t(I_rt));
-//a(~I_rt) =   1;
-//b(~I_rt) =   1;
-//
-//I_a      =   a>1;
-//s(I_a)   =   2*a(I_a) / (a(I_a).^2 - 1) * log(b(I_a));
-//s(~I_a)  =   r(~I_a) / t(~I_a);
-//
-//k        =   (a-1) / (a+1) * log(b);
-//kChl     =   kChlrel * k;
-//k(j)        = 0;
-//kChl(j)     = 0;
-//
-//if fqe > 0
-//
-//    %% Fluorescence
-//    wle         = spectral.wlE';    % excitation wavelengths, transpose to column
-//    wlf         = spectral.wlF';    % fluorescence wavelengths, transpose to column
-//    wlp         = spectral.wlP;     % PROSPECT wavelengths, also a row vector
-//
-//    minwle      = min(wle);
-//    maxwle      = max(wle);
-//    minwlf      = min(wlf);
-//    maxwlf      = max(wlf);
-//
-//    % indices of wle and wlf within wlp
-//
-//    Iwle        = find(wlp>=minwle & wlp<=maxwle);
-//    Iwlf        = find(wlp>=minwlf & wlp<=maxwlf);
-//
-//    eps         = 2^(-ndub);
-//
-//    % initialisations
-//    te          = 1-(k(Iwle)+s(Iwle)) * eps;
-//    tf          = 1-(k(Iwlf)+s(Iwlf)) * eps;
-//    re          = s(Iwle) * eps;
-//    rf          = s(Iwlf) * eps;
-//
-//    sigmoid     = 1/(1+exp(-wlf/10)*exp(wle'/10));  % matrix computed as an outproduct
-//
-//    % Other factor .5 deleted, since these are the complete efficiencies
-//    % for either PSI or PSII. not a linear combination
-//    [MfI,  MbI]  = deal(fqe(1) * ((.5*phiI( Iwlf))*eps) * kChl(Iwle)'*sigmoid);
-//    [MfII, MbII] = deal(fqe(2) * ((.5*phiII(Iwlf))*eps) * kChl(Iwle)'*sigmoid);
-//
-//    Ih          = ones(1,length(te));     % row of ones
-//    Iv          = ones(length(tf),1);     % column of ones
-//
-//    % Doubling routine
-//
-//    for i = 1:ndub
-//
-//        xe = te/(1-re*re);  ten = te*xe;  ren = re*(1+ten);
-//        xf = tf/(1-rf*rf);  tfn = tf*xf;  rfn = rf*(1+tfn);
-//
-//        A11  = xf*Ih + Iv*xe';           A12 = (xf*xe')*(rf*Ih + Iv*re');
-//        A21  = 1+(xf*xe')*(1+rf*re');   A22 = (xf*rf)*Ih+Iv*(xe*re)';
-//
-//        MfnI   = MfI  * A11 + MbI  * A12;
-//        MbnI   = MbI  * A21 + MfI  * A22;
-//        MfnII  = MfII * A11 + MbII * A12;
-//        MbnII  = MbII * A21 + MfII * A22;
-//
-//        te   = ten;  re  = ren;   tf   = tfn;   rf   = rfn;
-//        MfI  = MfnI; MbI = MbnI;  MfII = MfnII; MbII = MbnII;
-//
-//    end
-//}
-//    leafopt.MbI  = MbI;
-//    leafopt.MbII = MbII;
-//    leafopt.MfI  = MfI;
     }
 }
 
@@ -307,6 +264,28 @@ bool Compo::createCompProperty(std::shared_ptr<FileIO> &fileio, std::shared_ptr<
             meshio->fixedSpectrals.push_back(Spectral{spectralxml.refl_tir,spectralxml.tau_tir});
 
         }
+
+        if(spectralxml.type == spectralType::CUSTOM){
+
+            //spectral
+            for(int i=0;i<spectralxml.reflectances.size();i++)
+                meshio->spectrals.push_back(Spectral{spectralxml.reflectances[i],spectralxml.transmittance[i]});
+
+            // fixedSpectral
+            //------------------------------------
+            //std::string infileName1 = spectralxml.path;
+            //m_soilRefl_ = Utils::readascfile(infileName, 0, 1, num);
+            //std::vector<float> refl_;
+            //Utils::readascfileinout(infileName1,0,1,refl_,num);
+            for(int k = 0;k<N1;k++){
+                Spectral spectral{spectralxml.reflectances[0],spectralxml.transmittance[0]};
+                meshio->fixedSpectrals.push_back(spectral);
+            }
+            meshio->fixedSpectrals.push_back(Spectral{spectralxml.refl_tir,spectralxml.tau_tir});
+
+        }
+
+
 
         meshio->spectralNames.insert({spectralxml.spectralName,id});
         id++;

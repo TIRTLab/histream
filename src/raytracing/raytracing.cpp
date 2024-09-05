@@ -225,9 +225,9 @@ void Raytracing::output(std::shared_ptr<RaytracingIO> &modelio, std::shared_ptr<
     }
 
     if(modelio->istime==false) {
-        fileio->writeENVIdata(modelio->projectDir, pData_orth, width, height, n_wave, angle);
+        fileio->writeENVIdata(modelio->projectDir, pData_orth, width, height, n_wave, angle,-1,-1);
     }else{
-        fileio->writeENVIdata(modelio->projectDir, pData_orth, width, height, n_wave, angle,-1);
+        fileio->writeENVIdata(modelio->projectDir, pData_orth, width, height, n_wave, angle,-1,-1);
     }
 
     //delete [] pData;

@@ -61,9 +61,16 @@ enum class VoxelEBStage
 enum class VoxelRTStage
 {
     gap,
-    run,
-    outImage
+    diffuse,
+    out
 };
+
+//enum class VoxelRTStage
+//{
+//    gap,
+//    run,
+//    outImage
+//};
 
 
 enum Queues
@@ -76,7 +83,7 @@ enum Queues
 
 enum Mode {
     eRaytracing,
-    eVoxelET,
+    eVoxelEB,
     eVoxelRT,
 };
 
@@ -217,6 +224,9 @@ struct SensorXml
     bool isAlbedo{false};
     bool isTemperature{true};
     bool isDisplay{false};
+
+    std::vector<glm::vec3> uavPoses;
+    float sensorFov{60};
 };
 
 
@@ -243,6 +253,7 @@ struct SettingXml
     int theGPU{0};
     int n_sample{32};
     int maxDepth{5};
+    int isUAVtrave{false};
 //    bool isTemperature{false};
 //    bool isDisplay{false};
 //    bool isImage{false};
@@ -517,7 +528,35 @@ struct  VoxelEBXml
 
 };
 
+struct  VoxelRTXml
+{
+    // main IO part
+    std::string projectDir;
+    // define is a inside directory
+    std::string definedDir;
+    // system setting
+    SettingXml settingxml;
 
+    // run setting
+    LightXml lightxml;  // for solar angle
+    SensorXml sensorxml; // for viewing angle
+
+
+    // Scene structural, i.e., background and its result;
+    SceneXml scenexml;
+
+    // component materials
+    std::vector<SpectralXml> spectralxmls;
+    std::vector<ThermalXml> thermalxmls;
+    std::vector<PropertyXml> propxmls;
+    std::vector<CanopyXml> canopyxmls;
+
+    MeteoXml meteoxml;
+    AeroCondXml aerocondxml;
+    AtomCondXml atomcondxml;
+
+
+};
 
 
 

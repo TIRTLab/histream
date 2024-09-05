@@ -10,12 +10,10 @@
 class Descriptor {
 public:
 
-    enum VoxellstbindingInd
+    enum VoxelrtbindingInd
     {
         spectral,  // for the specific band
-        fixedSpectral, // for the all band;
         thermal,  // for the voxel with constant temperature;
-        tempe, // voxel temperatures
         canopy,
         meshLink,
         instanceLink,
@@ -25,28 +23,16 @@ public:
         sensor,
         wave,
         light,
-        atomcond,
         dir,
         rads,
         netRad,
-        pnet,
         storage,
-        meteo,
-        aerocond,
-        raa,
-        leafBio,
-        soilSet,
-        rss,
-        air,
-        flux,
-        tLast,
-        state,
         lad,
     };
 
 
-    bool createDescriptor(std::shared_ptr<VoxelebIO> &raytracingio);
-    void destroy(std::shared_ptr<VoxelebIO> &raytracingio);
+    bool createDescriptor(std::shared_ptr<VoxelrtIO> &raytracingio);
+    void destroy(std::shared_ptr<VoxelrtIO> &raytracingio);
 
 };
 

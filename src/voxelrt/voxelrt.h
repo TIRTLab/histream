@@ -48,16 +48,9 @@ public:
     bool updateSetting(std::shared_ptr<VoxelrtIO> &voxellstio);
     bool uploadSetting(std::shared_ptr<FileIO> &fileio, std::shared_ptr<VoxelrtIO> &voxellstio);
 
-    bool uploadAero(std::shared_ptr<FileIO> &fileio, std::shared_ptr<VoxelrtIO> &voxellstio);
-
-
-
-    bool uploadMeteo(std::shared_ptr<FileIO> &fileio, std::shared_ptr<VoxelrtIO> &modelio);
-    bool updateMeteo(std::shared_ptr<VoxelrtIO> &modelio, int knode);
-
     void output(std::shared_ptr<VoxelrtIO> &modelio, std::shared_ptr<FileIO> &fileio, int knode, int kangle);
     void outputVoxel(std::shared_ptr<VoxelrtIO> &modelio, std::shared_ptr<FileIO> &fileio);
-
+    void outputPos(std::shared_ptr<VoxelrtIO> &modelio, std::shared_ptr<FileIO> &fileio, int knode, int kangle);
 
     std::shared_ptr<Geometry> m_pGeometry;
     std::shared_ptr<Scene> m_pScene;

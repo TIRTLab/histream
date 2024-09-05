@@ -6,7 +6,7 @@
 
 
 
-bool Buffer::createBuffer(std::shared_ptr<VoxelebIO> &voxellstio){
+bool Buffer::createBuffer(std::shared_ptr<VoxelrtIO> &voxellstio){
 
     VkDevice & m_device = voxellstio->m_device;
     nvvk::Queue &m_queue  = voxellstio->m_queues[eGCT];
@@ -33,13 +33,13 @@ bool Buffer::createBuffer(std::shared_ptr<VoxelebIO> &voxellstio){
 
 
     // fixedSpectral
-    if (meshio->fixedSpectrals.size() > 0)
-    {
-        VkCommandBuffer cmdBufSpectral = cmdGen.createCommandBuffer();
-        VkBufferUsageFlags usage_ = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
-        meshio->m_pFixedSpectralBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufSpectral, meshio->fixedSpectrals, usage_));
-        cmdGen.submitAndWait(cmdBufSpectral);
-    }
+//    if (meshio->fixedSpectrals.size() > 0)
+//    {
+//        VkCommandBuffer cmdBufSpectral = cmdGen.createCommandBuffer();
+//        VkBufferUsageFlags usage_ = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
+//        meshio->m_pFixedSpectralBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufSpectral, meshio->fixedSpectrals, usage_));
+//        cmdGen.submitAndWait(cmdBufSpectral);
+//    }
 
     if (meshio->thermals.size() > 0)
     {
@@ -164,12 +164,6 @@ bool Buffer::createBuffer(std::shared_ptr<VoxelebIO> &voxellstio){
     }
 
     // meteo and aero
-    if (voxellstio->atomconds.size() > 0)
-    {
-        VkCommandBuffer cmdBufWave = cmdGen.createCommandBuffer();
-        voxellstio->m_pBufferAtomcond = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufWave, voxellstio->atomconds, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT));
-        cmdGen.submitAndWait(cmdBufWave);
-    }
 
     // dir
     VkCommandBuffer cmdBufDir = cmdGen.createCommandBuffer();
@@ -196,32 +190,32 @@ bool Buffer::createBuffer(std::shared_ptr<VoxelebIO> &voxellstio){
     cmdGen.submitAndWait(cmdBufNetRad);
 
     // pnet
-    VkCommandBuffer cmdBufPnet = cmdGen.createCommandBuffer();
-    std::vector<VoxelPnet> voxelPnets(n_voxel, VoxelPnet{0, 0});
-    voxelio->m_pPnetBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufPnet, voxelPnets,
-                                                                          VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
-                                                                          VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
-    cmdGen.submitAndWait(cmdBufPnet);
+//    VkCommandBuffer cmdBufPnet = cmdGen.createCommandBuffer();
+//    std::vector<VoxelPnet> voxelPnets(n_voxel, VoxelPnet{0, 0});
+//    voxelio->m_pPnetBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufPnet, voxelPnets,
+//                                                                          VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+//                                                                          VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
+//    cmdGen.submitAndWait(cmdBufPnet);
 
 ///--------------------------------------------------------------------
     ///  aero properties
     ///--------------------------------------------------------------------
     // aero
-    auto cmdBufAero = cmdGen.createCommandBuffer();
-    voxellstio->m_pBufferAero = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufAero, voxellstio->aeroconds,
-                                                                          VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-                                                                          VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
-    cmdGen.submitAndWait(cmdBufAero);
+//    auto cmdBufAero = cmdGen.createCommandBuffer();
+//    voxellstio->m_pBufferAero = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufAero, voxellstio->aeroconds,
+//                                                                          VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+//                                                                          VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
+//    cmdGen.submitAndWait(cmdBufAero);
 
     ///--------------------------------------------------------------------
     ///  meteo properties
     ///--------------------------------------------------------------------
     // meteo
-    auto cmdBufMeteo = cmdGen.createCommandBuffer();
-    uint32_t size = sizeof(Meteo);
-    voxellstio->m_pMeteoBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufMeteo,sizeof(Meteo), &voxellstio->meteos[voxellstio->k_node],
-                                                                 VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT));
-    cmdGen.submitAndWait(cmdBufMeteo);
+//    auto cmdBufMeteo = cmdGen.createCommandBuffer();
+//    uint32_t size = sizeof(Meteo);
+//    voxellstio->m_pMeteoBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufMeteo,sizeof(Meteo), &voxellstio->meteos[voxellstio->k_node],
+//                                                                 VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT));
+//    cmdGen.submitAndWait(cmdBufMeteo);
 
 
 
@@ -232,56 +226,56 @@ bool Buffer::createBuffer(std::shared_ptr<VoxelebIO> &voxellstio){
 //    cmdGen.submitAndWait(cmdBufSurfL);
 
     // raa
-    VkCommandBuffer cmdBufRaa = cmdGen.createCommandBuffer();
-    std::vector<VoxelRaa> voxelRaas(n_voxel, VoxelRaa{0});
-    voxelio->m_pRaaBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufRaa, voxelRaas,
-                                                                         VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-                                                                         VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
-    cmdGen.submitAndWait(cmdBufRaa);
+//    VkCommandBuffer cmdBufRaa = cmdGen.createCommandBuffer();
+//    std::vector<VoxelRaa> voxelRaas(n_voxel, VoxelRaa{0});
+//    voxelio->m_pRaaBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufRaa, voxelRaas,
+//                                                                         VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+//                                                                         VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
+//    cmdGen.submitAndWait(cmdBufRaa);
 
     ///--------------------------------------------------------------------
     ///  bio properties
     ///--------------------------------------------------------------------
-    auto cmdBufBio = cmdGen.createCommandBuffer();
-    // leafBio
-    meshio->m_pLeafBioBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufBio, meshio->leafbios, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT));
-    // soilSet
-    meshio->m_pSoilSetBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufBio, meshio->soilsets, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT));
-    // air
-    std::vector<VoxelAir> voxelair(n_voxel, VoxelAir{voxellstio->meteos[0].Ca, voxellstio->meteos[0].Oa, voxellstio->meteos[0].ea});
-    voxelio->m_pAirBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufBio, voxelair,
-                                                            VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
-                                                            VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT));
-    cmdGen.submitAndWait(cmdBufBio);
-
-    // rss
-    voxelio->m_pRssBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(n_voxel * sizeof(VoxelRss),
-                                                                         VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
-                                                                         VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
+//    auto cmdBufBio = cmdGen.createCommandBuffer();
+//    // leafBio
+//    meshio->m_pLeafBioBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufBio, meshio->leafbios, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT));
+//    // soilSet
+//    meshio->m_pSoilSetBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufBio, meshio->soilsets, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT));
+//    // air
+//    std::vector<VoxelAir> voxelair(n_voxel, VoxelAir{voxellstio->meteos[0].Ca, voxellstio->meteos[0].Oa, voxellstio->meteos[0].ea});
+//    voxelio->m_pAirBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufBio, voxelair,
+//                                                            VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+//                                                            VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT));
+//    cmdGen.submitAndWait(cmdBufBio);
+//
+//    // rss
+//    voxelio->m_pRssBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(n_voxel * sizeof(VoxelRss),
+//                                                                         VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+//                                                                         VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
     ///--------------------------------------------------------------------
     ///  Evapo properties
     ///--------------------------------------------------------------------
-    auto cmdBufEvapo = cmdGen.createCommandBuffer();
-    // flux
-    voxelio->m_pFluxBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(n_voxel * sizeof(VoxelHeatflux),
-                                                                          VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-                                                                          VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
-    // tLast
-    std::vector<TLAST> tlast(n_voxel * TLASTNUM, TLAST{25, 25});
-    voxelio->m_pTLASTBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufEvapo, tlast,
-                                                                           VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
-                                                                           VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
-    cmdGen.submitAndWait(cmdBufEvapo);
+//    auto cmdBufEvapo = cmdGen.createCommandBuffer();
+//    // flux
+//    voxelio->m_pFluxBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(n_voxel * sizeof(VoxelHeatflux),
+//                                                                          VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+//                                                                          VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
+//    // tLast
+//    std::vector<TLAST> tlast(n_voxel * TLASTNUM, TLAST{25, 25});
+//    voxelio->m_pTLASTBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufEvapo, tlast,
+//                                                                           VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+//                                                                           VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
+//    cmdGen.submitAndWait(cmdBufEvapo);
 
     // state
-    auto cmdBufState = cmdGen.createCommandBuffer();
-    size = sizeof(EBState);
-    voxelio->m_pStateBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufState,
-                                                             size, &voxelio->m_state,
-                                                             VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
-                                                             VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT));
-    cmdGen.submitAndWait(cmdBufState);
+//    auto cmdBufState = cmdGen.createCommandBuffer();
+//    size = sizeof(EBState);
+//    voxelio->m_pStateBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufState,
+//                                                             size, &voxelio->m_state,
+//                                                             VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+//                                                             VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT));
+//    cmdGen.submitAndWait(cmdBufState);
 
 
     ///--------------------------------------------------------------------
@@ -310,7 +304,7 @@ bool Buffer::createBuffer(std::shared_ptr<VoxelebIO> &voxellstio){
 
 
 
-void Buffer::destroy(std::shared_ptr<VoxelebIO> &voxellstio){
+void Buffer::destroy(std::shared_ptr<VoxelrtIO> &voxellstio){
 
     VkDevice & m_device = voxellstio->m_device;
     nvvk::Queue &m_queue  = voxellstio->m_queues[eGCT];
@@ -330,7 +324,7 @@ void Buffer::destroy(std::shared_ptr<VoxelebIO> &voxellstio){
         m_pAlloc->destroy(*(meshio->m_pBufferSpectral));
     }
 
-    m_pAlloc->destroy(*(meshio->m_pFixedSpectralBuffer));
+   // m_pAlloc->destroy(*(meshio->m_pFixedSpectralBuffer));
 //    m_pAlloc->destroy(*(voxelio->m_pSurfLBuffer));
 
 
@@ -363,30 +357,25 @@ void Buffer::destroy(std::shared_ptr<VoxelebIO> &voxellstio){
         m_pAlloc->destroy((meshio->m_bufferMeshes[i].indexBuffer));
     }
 
-    if (voxellstio->atomconds.size() > 0)
-    {
-        m_pAlloc->destroy(*(voxellstio->m_pBufferAtomcond));
-    }
 
     m_pAlloc->destroy(*(voxelio->m_pDirBuffer));
     m_pAlloc->destroy(*(voxelio->m_pRadsBuffer));
     m_pAlloc->destroy(*(voxelio->m_pNetRadBuffer));
-    m_pAlloc->destroy(*(voxelio->m_pPnetBuffer));
+    //m_pAlloc->destroy(*(voxelio->m_pPnetBuffer));
     m_pAlloc->destroy(*(virtualio->m_pBufferStorage));
 
-    m_pAlloc->destroy(*(voxellstio->m_pMeteoBuffer));
-    m_pAlloc->destroy(*(voxellstio->m_pBufferAero));
 
-    m_pAlloc->destroy(*(voxelio->m_pRaaBuffer));
-    m_pAlloc->destroy(*(meshio->m_pLeafBioBuffer));
-    m_pAlloc->destroy(*(meshio->m_pSoilSetBuffer));
 
-    m_pAlloc->destroy(*(voxelio->m_pRssBuffer));
-    m_pAlloc->destroy(*(voxelio->m_pAirBuffer));
+    //m_pAlloc->destroy(*(voxelio->m_pRaaBuffer));
+    //m_pAlloc->destroy(*(meshio->m_pLeafBioBuffer));
+    //m_pAlloc->destroy(*(meshio->m_pSoilSetBuffer));
 
-    m_pAlloc->destroy(*(voxelio->m_pFluxBuffer));
-    m_pAlloc->destroy(*(voxelio->m_pTLASTBuffer));
-    m_pAlloc->destroy(*(voxelio->m_pStateBuffer));
+    //m_pAlloc->destroy(*(voxelio->m_pRssBuffer));
+    //m_pAlloc->destroy(*(voxelio->m_pAirBuffer));
+
+    //m_pAlloc->destroy(*(voxelio->m_pFluxBuffer));
+    //m_pAlloc->destroy(*(voxelio->m_pTLASTBuffer));
+    //m_pAlloc->destroy(*(voxelio->m_pStateBuffer));
 
     //m_rtBuilder.destroy();
 }

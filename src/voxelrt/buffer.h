@@ -14,8 +14,8 @@ class Buffer {
 
 public:
     Buffer(){}
-    bool createBuffer(std::shared_ptr<VoxelebIO> &voxellstio);
-    void destroy(std::shared_ptr<VoxelebIO> &voxellstio);
+    bool createBuffer(std::shared_ptr<VoxelrtIO> &voxellstio);
+    void destroy(std::shared_ptr<VoxelrtIO> &voxellstio);
 };
 
 

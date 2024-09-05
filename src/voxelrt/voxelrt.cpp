@@ -60,14 +60,14 @@ bool Voxelrt::upload(std::shared_ptr<FileIO> &fileio, std::shared_ptr<VoxelrtIO>
     // auto & fileio = modelio->m_fileio;
     // auto & meshio = modelio->m_meshio;
 
-    uploadDefined(fileio,modelio);
-    m_pCompo->createCompProperty(fileio, modelio);
+    //uploadDefined(fileio,modelio);
+    m_pCompo->createCompOptical(fileio, modelio);
     m_pScene->createPrimObjScene(fileio, modelio);
     m_pGeometry->createGeometry(fileio,modelio);
 //    defineOPO(modelio);
-    uploadMeteo(fileio,modelio);
+   // uploadMeteo(fileio,modelio);
     uploadSetting(fileio, modelio);
-    uploadAero(fileio,modelio);
+  //  uploadAero(fileio,modelio);
 
     return true;
 }
@@ -108,26 +108,6 @@ bool Voxelrt::updateSetting(std::shared_ptr<VoxelrtIO> &modelio){
 }
 
 
-bool  Voxelrt::uploadMeteo(std::shared_ptr<FileIO> &fileio, std::shared_ptr<VoxelrtIO> &modelio){
-
-
-   // Utils::readascfileinout(meteofile,0,1,)
-
-   fileio->readMeteo(modelio->m_defined,modelio->n_node,modelio->meteos,modelio->atomconds);
-   return true;
-}
-
-bool  Voxelrt::updateMeteo(std::shared_ptr<VoxelrtIO> &modelio, int knode){
-
-    modelio->meteo = modelio->meteos[knode];
-
-    nvvk::CommandPool cmdBufGet(modelio->m_device, modelio->m_queueIndex);
-    vk::CommandBuffer cmdBuf = cmdBufGet.createCommandBuffer();
-    vkCmdUpdateBuffer(cmdBuf, (*modelio->m_pMeteoBuffer).buffer, 0, sizeof(Meteo), &modelio->meteo);
-    cmdBufGet.submitAndWait(cmdBuf);
-
-    return true;
-}
 
 bool Voxelrt::uploadDefined(std::shared_ptr<FileIO> &fileio, std::shared_ptr<VoxelrtIO> &modelio)
 {
@@ -151,37 +131,41 @@ bool Voxelrt::create(std::shared_ptr<VoxelrtIO> &modelio) {
 bool Voxelrt::run(std::shared_ptr<VoxelrtIO> &modelio, std::shared_ptr<FileIO> &fileio) {
 
 
-for(int knode = 20; knode < 36;knode ++) {
+
+    modelio->k_node = -1;
+
+    std::cout << "Time Info:" << "    t_"  << std::endl;
 
 
+    if(modelio->isUAVTrave == true) {
 
-    modelio->k_node = knode;
+        for (int kpos = 0; kpos < modelio->n_pos; kpos++) {
+            modelio->k_pos = kpos;
+            m_pGeometry->updateSensorPos(modelio, kpos);
+//            Angle angle = modelio->angles[kangle];
+//            std::cout << "Angle Info:"
+//                      << "    vza_" << std::to_string(angle.vza) << "    vaa_" << std::to_string(angle.vaa)
+//                      << "    sza_" << std::to_string(angle.sza) << "    saa_" << std::to_string(angle.saa)
+//                      << std::endl;
+            m_pCommand->runRT(modelio);
+            outputPos(modelio, fileio, -1, kpos);
+        }
+    }else {
 
-    updateMeteo(modelio,knode);
-
-    m_pCommand->runEB(modelio);
-
-    std::cout << "Time Info:" << "    t_" << std::to_string(modelio->meteo.t) << std::endl;
-    outputVoxel(modelio,fileio);
-    for (int kangle = 0; kangle < modelio->n_angle; kangle++) {
-        modelio->k_angle = kangle;
-        m_pGeometry->updateAngle(modelio,kangle);
-
-        Angle angle = modelio->angles[kangle];
-        std::cout << "Angle Info:"
-                  << "    vza_" << std::to_string(angle.vza) << "    vaa_" << std::to_string(angle.vaa)
-                  << "    sza_" << std::to_string(angle.sza) << "    saa_" << std::to_string(angle.saa) << std::endl;
-
-        ////updateSetting(modelio);
-        m_pCommand->runRT(modelio);
-
-//        std::cout << "Success: " << kangle << std::endl;
-
-        output(modelio,fileio,knode, kangle);
-
+        for (int kangle = 0; kangle < modelio->n_angle; kangle++) {
+            modelio->k_angle = kangle;
+            m_pGeometry->updateAngle(modelio, kangle);
+            Angle angle = modelio->angles[kangle];
+            std::cout << "Angle Info:"
+                      << "    vza_" << std::to_string(angle.vza) << "    vaa_" << std::to_string(angle.vaa)
+                      << "    sza_" << std::to_string(angle.sza) << "    saa_" << std::to_string(angle.saa)
+                      << std::endl;
+            m_pCommand->runRT(modelio);
+            output(modelio, fileio, -1, kangle);
+        }
     }
 
-}
+
     return true;
 }
 
@@ -271,15 +255,67 @@ void Voxelrt::output(std::shared_ptr<VoxelrtIO> &modelio, std::shared_ptr<FileIO
     }
 
 
-
-    float t = modelio->meteo.t;
-    fileio->writeENVIdata(modelio->projectDir, pData_orth, width, height, n_wave, angle, t);
+    float t=-1;
+    if(knode == -1){
+        t = -1;
+    }else {
+        t = modelio->meteo.t;
+    }
+    fileio->writeENVIdata(modelio->projectDir, pData_orth, width, height, n_wave, angle, t,-1);
 
     // fileio
 
 
     //m_pFileOutput->writeTif(, pData, angles, waves, resolution);
 }
+
+void Voxelrt::outputPos(std::shared_ptr<VoxelrtIO> &modelio, std::shared_ptr<FileIO> &fileio, int knode, int kpos) {
+
+
+    VkBufferUsageFlags usage{VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT};
+    int width = modelio->imageSize.x;
+    int height = modelio->imageSize.y;
+    int n_wave = modelio->n_wave;
+    VkDeviceSize bufferSize = width * height *n_wave* sizeof(float);
+    nvvk::Buffer pixelBuffer = modelio->m_pAlloc->createBuffer(bufferSize, usage,
+                                                               VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
+
+    m_pVirtual->bufferToBuffer(modelio, *(modelio->m_virtualio->m_pBufferStorage), bufferSize, pixelBuffer);
+
+    // write the buffer to disk
+    void *data = modelio->m_pAlloc->map(pixelBuffer);
+    float *pData = reinterpret_cast<float *>(data);
+
+    float test0 = pData[0];
+//     float test6 = pData[10000];
+//     float test10 = pData[250000];
+    //std::cout << "value: " << test0 << std::endl;
+
+    modelio->m_pAlloc->unmap(pixelBuffer);
+    modelio->m_pAlloc->destroy(pixelBuffer);
+
+    Angle angle = modelio->angles[0];
+    std::vector<float> waves = modelio->waves;
+    glm::vec2 resolution = modelio->imageSize;
+
+
+
+
+
+    float t=-1;
+    if(knode == -1){
+        t = -1;
+    }else {
+        t = modelio->meteo.t;
+    }
+    fileio->writeENVIdata(modelio->projectDir, pData, width, height, n_wave, angle, t,kpos);
+
+    // fileio
+
+
+    //m_pFileOutput->writeTif(, pData, angles, waves, resolution);
+}
+
 
 void Voxelrt::outputVoxel(std::shared_ptr<VoxelrtIO> &modelio, std::shared_ptr<FileIO> &fileio) {
 

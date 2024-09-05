@@ -21,16 +21,14 @@ class Pipeline {
 public:
     Pipeline(){};
 
-    bool createRTPipeline(std::shared_ptr<VoxelebIO> &modelio);
-    bool createAeroPipeline(std::shared_ptr<VoxelebIO> &modelio);
-    bool createBioPipeline(std::shared_ptr<VoxelebIO> &modelio);
-    bool createETPipeline(std::shared_ptr<VoxelebIO> &modelio);
-    bool createEBPipeline(std::shared_ptr<VoxelebIO> &modelio);
-
-    bool createPipeline(std::shared_ptr<VoxelebIO> &modelio);
-
-    void createShaderBindingTable(std::shared_ptr<VoxelebIO> &modelio);
-    void destroy(std::shared_ptr<VoxelebIO> &modelio);
+    bool createRTPipeline(std::shared_ptr<VoxelrtIO> &modelio);
+    bool createAeroPipeline(std::shared_ptr<VoxelrtIO> &modelio);
+    bool createBioPipeline(std::shared_ptr<VoxelrtIO> &modelio);
+    bool createETPipeline(std::shared_ptr<VoxelrtIO> &modelio);
+    bool createEBPipeline(std::shared_ptr<VoxelrtIO> &modelio);
+    bool createPipeline(std::shared_ptr<VoxelrtIO> &modelio);
+    void createShaderBindingTable(std::shared_ptr<VoxelrtIO> &modelio);
+    void destroy(std::shared_ptr<VoxelrtIO> &modelio);
 
 };
 

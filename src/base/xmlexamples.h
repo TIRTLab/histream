@@ -21,16 +21,18 @@ public:
     XmlExamples(){
         createRaytracingxml();
         createVoxelebxml();
+        createVoxelrtxml();
      //   createEcolstxml();
     }
     std::shared_ptr<RaytracingXml> m_pRaytracingXml;
     std::shared_ptr<VoxelEBXml>   m_pVoxelebXml;
-    //std::shared_ptr<Huailai::VoxelEBXml> m_pHuailaiXml;
+    std::shared_ptr<VoxelRTXml>   m_pVoxelrtXml;
+
 
     void createRaytracingxml();
     void createVoxelebxml();
+    void createVoxelrtxml();
 
-    //void createEcolstxml();
 };
 
 

@@ -96,6 +96,7 @@ file(GLOB SOURCE_FILES
         src/thirdparty/*.cpp
         src/raytracing/*.cpp
         src/voxeleb/*.cpp
+        src/voxelrt/*.cpp
 )
 
 file(GLOB HEADER_FILES
@@ -104,6 +105,7 @@ file(GLOB HEADER_FILES
         src/thirdparty/*.h
         src/raytracing/*.h
         src/voxeleb/*.h
+        src/voxelrt/*.h
 )
 
 #--------------------------------------------------------------------------------------------------

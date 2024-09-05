@@ -8,12 +8,15 @@
 
 bool FileIO::readXml(std::string filePath) {
 
-    m_mode = Mode::eRaytracing;
-    m_pRaytracingXml = std::move(xmlexamples.m_pRaytracingXml);
-//    m_mode = Mode::eVoxelET;
-//    m_pVoxelebXml = std::move(xmlexamples.m_pVoxelebXml);
-
+//    m_mode = Mode::eRaytracing;
+//    m_pRaytracingXml = std::move(xmlexamples.m_pRaytracingXml);
+    m_mode = Mode::eVoxelEB;
+    m_pVoxelebXml = std::move(xmlexamples.m_pVoxelebXml);
     return false;
+
+//    m_mode = Mode::eVoxelRT;
+//    m_pVoxelrtXml = std::move(xmlexamples.m_pVoxelrtXml);
+//    return false;
 
     TiXmlDocument mydoc(filePath.c_str()); // tinyxml.h
     bool isloadOk = mydoc.LoadFile();
@@ -37,20 +40,12 @@ bool FileIO::readXml(std::string filePath) {
         m_pRaytracingXml->thermalxmls = readThermal(RootElement->FirstChild("Attribute"));
         m_pRaytracingXml->scenexml = readScene(RootElement->FirstChild("Scene"));
         m_pRaytracingXml->settingxml = readSetting(RootElement->FirstChild("Setting"));
-
-
-    }else if(modeInd == Mode::eVoxelET){
-        m_mode = Mode::eVoxelET;
+    }else if(modeInd == Mode::eVoxelEB){
+        m_mode = Mode::eVoxelEB;
         m_pVoxelebXml = std::make_shared<VoxelEBXml>();
-
     }
     //readSetting(settingNode);
-
-
-
     return true;
-
-
 }
 
 
@@ -315,6 +310,68 @@ void FileIO::writeENVIdata(std::string projectDir, float *pData, int width, int 
 
 }
 
+void FileIO::writeENVIdata(std::string projectDir, float *pData, int width, int height, int band,
+                           Angle &angle, float t, int k) {
+
+    std::ostringstream  oss_x;
+    oss_x << std::fixed << std::setprecision(2)<<std::setfill('0')<<angle.vza;
+    std::ostringstream  oss_y;
+    oss_y << std::fixed << std::setprecision(2)<<std::setfill('0')<<angle.vaa;
+    std::ostringstream  oss_z;
+    oss_z << std::fixed << std::setprecision(2)<<std::setfill('0')<<angle.sza;
+    std::ostringstream  oss_w;
+    oss_w << std::fixed << std::setprecision(2)<<std::setfill('0')<<angle.saa;
+    std::ostringstream  oss_t;
+    oss_t << std::fixed << std::setprecision(2)<<std::setfill('0')<<t;
+    std::ostringstream  oss_k;
+    oss_k << std::fixed << std::setprecision(0)<<std::setfill('0')<<k;
+
+//    std::string outPath = projectDir + "/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
+//                          "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".tif";
+    std::string tifName,hdrName;
+    if(t >= 0){
+        tifName = projectDir + "/results/t=" + oss_t.str() +"_VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
+                  "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".img";
+        hdrName = projectDir + "/results/t=" + oss_t.str() +"_VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
+                  "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".hdr";
+    }else if(k >= 0) {
+        tifName = projectDir +"/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
+                  "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + "_"+oss_k.str()+".img";
+        hdrName = projectDir +"/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
+                  "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + "_"+oss_k.str()+".hdr";
+    }else
+    {
+        tifName = projectDir +"/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
+                  "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".img";
+        hdrName = projectDir +"/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
+                  "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".hdr";
+    }
+    std::ofstream outfilet1(tifName.c_str(), std::ios::binary);
+    outfilet1.write(reinterpret_cast<const char*>(pData), sizeof(float) * width * height * band);
+    outfilet1.close();
+
+    std::ofstream outfile(hdrName);
+    if (outfile.is_open())
+    {
+        outfile << "ENVI" << std::endl;
+        outfile << "description = {" << std::endl;
+        outfile << " File Imported into ENVI.} " << std::endl;
+        outfile << "samples = " << width << std::endl;
+        outfile << "lines   = " << height << std::endl;
+        outfile << "bands   =  " << band << std::endl;
+        outfile << "header offset = 0" << std::endl;
+        outfile << "file type = ENVI Standard" << std::endl;
+        outfile << "data type = 4" << std::endl;
+        outfile << "interleave = bsp" << std::endl;
+        outfile << "sensor type = unknown" << std::endl;
+        outfile << "byte order = 0" << std::endl;
+        outfile << "wavelength units = Unknown" << std::endl;
+        outfile.close();
+    }
+    outfile.close();
+
+
+}
 
 
 

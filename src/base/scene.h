@@ -11,6 +11,7 @@
 #include "src/base/objloader.h"
 #include "src/raytracing/raytracingio.h"
 #include "src/voxeleb/voxelebio.h"
+#include "src/voxelrt/voxelrtio.h"
 #include "src/thirdparty/NanoVDB.h"
 #include "src/thirdparty/nanoutil/GridBuilder.h"
 #include "src/thirdparty/nanoutil/Primitives.h"
@@ -22,14 +23,26 @@ class Scene {
 public:
     Scene(){};
 
+    bool createObjScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<RaytracingIO> &raytracingio);
+
+
+    bool createPrimObjScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<VoxelebIO> &voxellstio);
     bool createPrimObj_Crown(PrimEntity & pe,nanovdb::GridBuilder<int32_t> &nanoBuilder,std::shared_ptr<VoxelebIO> &modelio);
     bool createPrimObj_Crowns(PrimEntity & pe,nanovdb::GridBuilder<int32_t> &nanoBuilder,std::shared_ptr<VoxelebIO> &modelio);
     bool createPrimObj_Building(PrimEntity & pe,nanovdb::GridBuilder<int32_t> &nanoBuilder,std::shared_ptr<VoxelebIO> &modelio);
     bool createPrimObj_Background(Background & background,nanovdb::GridBuilder<int32_t> &nanoBuilder, std::shared_ptr<VoxelebIO> &modelio);
-    bool createObjScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<RaytracingIO> &raytracingio);
-    bool createPrimObjScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<VoxelebIO> &voxellstio);
 
-   PrimMesh XYZ2XZY(PrimMesh model,int mark=0);
+
+
+    bool createPrimObjScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<VoxelrtIO> &voxelrtio);
+    bool createPrimObj_Crown(PrimEntity & pe,nanovdb::GridBuilder<int32_t> &nanoBuilder,std::shared_ptr<VoxelrtIO> &modelio);
+    bool createPrimObj_Crowns(PrimEntity & pe,nanovdb::GridBuilder<int32_t> &nanoBuilder,std::shared_ptr<VoxelrtIO> &modelio);
+    bool createPrimObj_Building(PrimEntity & pe,nanovdb::GridBuilder<int32_t> &nanoBuilder,std::shared_ptr<VoxelrtIO> &modelio);
+    bool createPrimObj_Background(Background & background,nanovdb::GridBuilder<int32_t> &nanoBuilder, std::shared_ptr<VoxelrtIO> &modelio);
+
+
+
+    PrimMesh XYZ2XZY(PrimMesh model,int mark=0);
    ObjMesh XYZ2XZY(ObjMesh model);
 
 };

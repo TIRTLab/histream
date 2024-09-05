@@ -43,6 +43,25 @@ struct VoxellstSetting
 	int dumpy_;
 };
 
+struct VoxelrtSetting
+{
+
+	int frame;
+	int maxIteration; 
+	int maxDepth;
+	int maxStep;
+	int n_sample;
+	int n_wave;
+	int n_jump;
+	float scale;
+	ivec2 imageSize;
+	int isDisplay;
+	int isface;
+	ivec3 voxelSize; // xzy
+	int islad;
+	int dumpy_;
+};
+
 
 // 光线追踪过程中光线信息
 struct PtPayload

@@ -24,7 +24,7 @@ struct alignas(16) SensorMatrix
     glm::mat4 projInverse;
     float focalDist;
     float aperture;
-    int empty{ 0 };
+    int n_wave{ 0 };
     int empty_{ 0 };
 
     glm::vec3 direction;
@@ -90,6 +90,24 @@ struct alignas(32)  VoxelLstSetting
     int dumpyy{0};
 };
 
+struct alignas(32)  VoxelRTSetting
+{
+
+    int frame{0};
+    int maxIteration{3};
+    int maxDepth{16};
+    int maxStep{10};
+    int n_sample{16};
+    int n_wave{5};
+    int n_jump{10};
+    float scale{1};
+    glm::ivec2 imageSize{100, 100};  // imageSize and VoxelSize do not put together
+    int isDisplay{0};
+    int isface{80};
+    glm::ivec3 voxelSize{50, 0, 50};
+    int islad{0};
+    int dumpyy{0};
+};
 
 // atmospheric radiative transfer linked to modtrain
 struct AtomCond

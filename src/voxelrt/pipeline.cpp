@@ -7,7 +7,7 @@
 
 
 
-void Pipeline::createShaderBindingTable(std::shared_ptr<VoxelebIO> &modelio)
+void Pipeline::createShaderBindingTable(std::shared_ptr<VoxelrtIO> &modelio)
 {
 
 
@@ -15,7 +15,7 @@ void Pipeline::createShaderBindingTable(std::shared_ptr<VoxelebIO> &modelio)
 
 }
 
-bool Pipeline::createPipeline(std::shared_ptr<VoxelebIO> &modelio)
+bool Pipeline::createPipeline(std::shared_ptr<VoxelrtIO> &modelio)
 {
 
 
@@ -44,38 +44,29 @@ bool Pipeline::createPipeline(std::shared_ptr<VoxelebIO> &modelio)
 
 
     std::string baseDirectory = modelio->definedDir;
-    std::map<VoxelEBStage, std::string> VoxellstPaths{
-            {VoxelEBStage::gap,         baseDirectory + "/shader/voxeleb/voxelrad_solar.comp.spv"},
-            {VoxelEBStage::directVNIR,  baseDirectory + "/shader/voxeleb/voxelrad_direct_VNIR.comp.spv"},
-            {VoxelEBStage::directTIR,   baseDirectory + "/shader/voxeleb/voxelrad_direct_TIR.comp.spv"},
-            {VoxelEBStage::diffuseVNIR, baseDirectory + "/shader/voxeleb/voxelrad_diffuse_VNIR_single.comp.spv"},
-            {VoxelEBStage::diffuseTIR,  baseDirectory + "/shader/voxeleb/voxelrad_diffuse_TIR_single.comp.spv"},
-            {VoxelEBStage::budget,      baseDirectory + "/shader/voxeleb/budget.comp.spv"},
-            {VoxelEBStage::evapo,       baseDirectory + "/shader/voxeleb/evapo.comp.spv"},
-            {VoxelEBStage::updateTp,    baseDirectory + "/shader/voxeleb/updateTp.comp.spv"},
-            {VoxelEBStage::updateL,     baseDirectory + "/shader/voxeleb/updateL.comp.spv"},
-            {VoxelEBStage::aero,        baseDirectory + "/shader/voxeleb/aeresist.comp.spv"},
-            {VoxelEBStage::bio,         baseDirectory + "/shader/voxeleb/biochemical_m12.comp.spv"},
-            {VoxelEBStage::out,         baseDirectory + "/shader/voxeleb/voxelrad_image.comp.spv"}};
+    std::map<VoxelRTStage, std::string> VoxelrtPaths{
+            {VoxelRTStage::gap,         baseDirectory + "/shader/voxelrt/voxelrad_solar.comp.spv"},
+            {VoxelRTStage::diffuse,  baseDirectory + "/shader/voxelrt/voxelrad_diffuse_single.comp.spv"},
+            {VoxelRTStage::out,         baseDirectory + "/shader/voxelrt/voxelrad_image.comp.spv"}};
 
 
-    if (_access(VoxellstPaths[VoxelEBStage::gap].c_str(), 0) == -1)
+    if (_access(VoxelrtPaths[VoxelRTStage::gap].c_str(), 0) == -1)
     {
         std::string error = "Error: no shader file (.spv) found in " + baseDirectory + "\n";
         LOGI(error.c_str());
     }
 
-    for (const auto &stage : magic_enum::enum_values<VoxelEBStage>())
+    for (const auto &stage : magic_enum::enum_values<VoxelRTStage>())
     {
         //int stageInt = (int)stage;
         VkComputePipelineCreateInfo computePipelineCreateInfo{VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO};
         computePipelineCreateInfo.layout = m_pipelineLayout;
         computePipelineCreateInfo.stage =
-                nvvk::createShaderStageInfo(m_device, nvh::loadFile(VoxellstPaths[stage], true), VK_SHADER_STAGE_COMPUTE_BIT);
+                nvvk::createShaderStageInfo(m_device, nvh::loadFile(VoxelrtPaths[stage], true), VK_SHADER_STAGE_COMPUTE_BIT);
 
         vkCreateComputePipelines(m_device, {}, 1, &computePipelineCreateInfo, nullptr, &m_pipelines[stage]);
 
-        m_debug.setObjectName(m_pipelines[stage], "VoxelLST");
+        m_debug.setObjectName(m_pipelines[stage], "VoxelRT");
         vkDestroyShaderModule(m_device, computePipelineCreateInfo.stage.module, nullptr);
     }
 
@@ -83,7 +74,7 @@ bool Pipeline::createPipeline(std::shared_ptr<VoxelebIO> &modelio)
 }
 
 //
-//bool Pipeline::createRTPipeline(std::shared_ptr<VoxelebIO> &modelio)
+//bool Pipeline::createRTPipeline(std::shared_ptr<VoxelrtIO> &modelio)
 //{
 //
 //
@@ -132,7 +123,7 @@ bool Pipeline::createPipeline(std::shared_ptr<VoxelebIO> &modelio)
 //}
 //
 //
-//bool Pipeline::createETPipeline(std::shared_ptr<VoxelebIO> &modelio)
+//bool Pipeline::createETPipeline(std::shared_ptr<VoxelrtIO> &modelio)
 //{
 //
 //
@@ -178,7 +169,7 @@ bool Pipeline::createPipeline(std::shared_ptr<VoxelebIO> &modelio)
 //}
 //
 //
-//bool Pipeline::createEBPipeline(std::shared_ptr<VoxelebIO> &modelio)
+//bool Pipeline::createEBPipeline(std::shared_ptr<VoxelrtIO> &modelio)
 //{
 //
 //
@@ -224,7 +215,7 @@ bool Pipeline::createPipeline(std::shared_ptr<VoxelebIO> &modelio)
 //}
 //
 //
-//bool Pipeline::createAeroPipeline(std::shared_ptr<VoxelebIO> &modelio)
+//bool Pipeline::createAeroPipeline(std::shared_ptr<VoxelrtIO> &modelio)
 //{
 //
 //    auto & m_device = modelio->m_device;
@@ -264,7 +255,7 @@ bool Pipeline::createPipeline(std::shared_ptr<VoxelebIO> &modelio)
 //}
 //
 //
-//bool Pipeline::createBioPipeline(std::shared_ptr<VoxelebIO> &modelio)
+//bool Pipeline::createBioPipeline(std::shared_ptr<VoxelrtIO> &modelio)
 //{
 //
 //
@@ -306,7 +297,7 @@ bool Pipeline::createPipeline(std::shared_ptr<VoxelebIO> &modelio)
 
 
 
-void Pipeline::destroy(std::shared_ptr<VoxelebIO> &modelio) {
+void Pipeline::destroy(std::shared_ptr<VoxelrtIO> &modelio) {
 
     // modelio->m_sbtWrapper.destroy();
    // modelio->m_pAlloc->destroy((modelio->m_rtSBTBuffer));
@@ -325,7 +316,7 @@ void Pipeline::destroy(std::shared_ptr<VoxelebIO> &modelio) {
 //    modelio->m_pipelineLayout_eb = VkPipelineLayout();
 
 
-    for (auto &stage : magic_enum::enum_values<VoxelEBStage>()) {
+    for (auto &stage : magic_enum::enum_values<VoxelRTStage>()) {
         vkDestroyPipeline(modelio->m_device, modelio->m_pipelines[stage], nullptr);
         modelio->m_pipelines[stage] = VkPipeline();
     }

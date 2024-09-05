@@ -10,7 +10,7 @@
 class Descriptor {
 public:
 
-    enum VoxellstbindingInd
+    enum VoxelebbindingInd
     {
         spectral,  // for the specific band
         fixedSpectral, // for the all band;

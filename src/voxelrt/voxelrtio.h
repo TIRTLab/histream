@@ -2,8 +2,8 @@
 // Created by admin on 2024/1/26.
 //
 
-#ifndef FIELD_VOXELEBIO_H
-#define FIELD_VOXELEBIO_H
+#ifndef FIELD_VOXELRTIO_H
+#define FIELD_VOXELRTIO_H
 
 #include <vulkan/vulkan.hpp>
 #include <nvvk/resourceallocator_vk.hpp>
@@ -77,6 +77,8 @@ VoxelrtIO(){
     int n_buffer = 0;
     int n_surface = 0;
 
+    bool isUAVTrave = false; // for the scene or for the UAV
+    std::vector<glm::vec3> uavposes;
     //Meteo Info
 
     std::vector<Meteo> meteos;
@@ -90,17 +92,17 @@ VoxelrtIO(){
     LightSet     light;
     std::vector<Angle> angles;
     std::vector<float> waves;
-    std::vector<AtomCond> atomconds;
-    std::vector<AeroCond>  aeroconds;
 
 
     // setting infor
     int n_pipeline = 12;
     int n_wave;
     int n_angle;
+    int n_pos;
     int n_node;
     int k_angle;
     int k_node=0;
+    int k_pos;
 
     glm::ivec2 imageSize;
     int n_sample;
@@ -118,15 +120,13 @@ VoxelrtIO(){
     std::shared_ptr<SurfIO> m_surfio;
     std::shared_ptr<DefinedIO> m_defined;
 
-    VoxelLstSetting setting;
+    VoxelRTSetting setting;
 
     std::shared_ptr<nvvk::Buffer> m_pBufferWave;
-    std::shared_ptr<nvvk::Buffer> m_pBufferAtomcond;
     std::shared_ptr<nvvk::Buffer> m_pBufferSensor;
     std::shared_ptr<nvvk::Buffer> m_pBufferLight;
-    std::shared_ptr<nvvk::Buffer> m_pMeteoBuffer;   // Meteo
     std::shared_ptr<AccelStruct>  m_pAccelStruct;
-    std::shared_ptr<nvvk::Buffer> m_pBufferAero;
+
 
     //std::shared_ptr<
 
@@ -163,7 +163,7 @@ VoxelrtIO(){
     std::vector<VkPipeline> m_pipelines_et;
     std::vector<VkPipeline> m_pipelines_eb;
 
-    std::map<VoxelEBStage, VkPipeline> m_pipelines;
+    std::map<VoxelRTStage, VkPipeline> m_pipelines;
     VkPipelineLayout m_pipelineLayout { VK_NULL_HANDLE };
 
     VkPipeline m_pipeline_aero;

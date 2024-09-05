@@ -117,5 +117,62 @@ layout(push_constant) uniform _RtxState
 
 #endif
 
+
+
+
+#ifdef VOXELRT
+
+#define B_SPECTRAL 0
+#define B_THERMAL 1
+#define B_CANOPY 2
+#define B_MESHLINK 3
+#define B_INSTANCELINK 4
+#define B_VOXELLINK 5
+#define B_NANO 6
+#define B_TLAS 7
+#define B_SENSOR 8
+#define B_WAVE 9
+#define B_LIGHT 10
+#define B_DIR 11
+#define B_RADS 12
+#define B_NETRAD 13
+#define B_STORAGE 14
+#define B_LAD 15  
+
+
+// 1-5
+layout(binding = B_SPECTRAL) buffer _bufferOPTICAL { SpectralMaterial spectralMaterials[]; }; // --
+layout(binding = B_THERMAL) buffer _bufferTem { ThermalMaterial thermalMaterials[]; }; // --
+layout(binding = B_CANOPY) buffer _BufferCanopy {Canopy canopies[];};
+// 5-10 
+layout(binding = B_MESHLINK) buffer _bufferMODELLINK { MeshLink meshLinks[]; }; 
+layout(binding = B_INSTANCELINK) buffer _BufferInstanceLink {InstanceLink instanceLinks[];};
+layout(binding = B_VOXELLINK) buffer _BufferBufferVoxelLink {VoxelLink voxelLinks[];};
+layout(binding = B_NANO) buffer _BufferVoxelNANO {uint pnanovdb_buf_data[];};
+layout(binding = B_TLAS)		uniform accelerationStructureEXT topLevelAS;
+layout(binding = B_SENSOR) uniform _CameraMatrix { SensorMatrix sensorMatrix; };
+//11-15
+layout(binding = B_WAVE) buffer _bufferWAVE { float wave[]; };
+layout(binding = B_LIGHT) uniform _LightSet { LightSet lightSet; };
+layout(binding = B_DIR) buffer _bufferDir { VoxelDir voxelDirs[]; };
+layout(binding = B_RADS) buffer _bufferRad { VoxelRad voxelRads[]; };
+//12 -20
+//20-25
+
+// 25-28
+layout(binding = B_NETRAD) buffer _bufferNET {VoxelNetRad voxelNetRads[];}; //
+layout(binding = B_STORAGE) buffer _bufferstorage { float outImage[]; };
+layout(binding = B_LAD) buffer  _LAD{float lads[];};
+
+layout(buffer_reference, scalar) buffer Vertices { VertexAttribute v[]; };
+layout(buffer_reference, scalar) buffer Indices { uvec3 i[]; };
+layout(push_constant) uniform _RtxState
+{
+  VoxelrtSetting setting;
+};
+
+#endif
+
+
 #endif
 

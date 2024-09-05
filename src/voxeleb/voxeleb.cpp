@@ -273,7 +273,7 @@ void Voxeleb::output(std::shared_ptr<VoxelebIO> &modelio, std::shared_ptr<FileIO
 
 
     float t = modelio->meteo.t;
-    fileio->writeENVIdata(modelio->projectDir, pData_orth, width, height, n_wave, angle, t);
+    fileio->writeENVIdata(modelio->projectDir, pData_orth, width, height, n_wave, angle, t,-1);
 
     // fileio
 

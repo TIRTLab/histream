@@ -91,7 +91,7 @@ struct SensorMatrix
 	mat4 projInverse;
 	float focalDist;
 	float aperture;
-	int empty_;
+	int n_wave;
 	int empty;
 	vec3 direction;
 };
