@@ -81,6 +81,8 @@ VoxelebIO(){
 
     std::vector<Meteo> meteos;
     Meteo meteo;
+    int startTimeNode;
+    int endTimeNode;
     float lat;
     float lon;
    // MeteoMeta meta;

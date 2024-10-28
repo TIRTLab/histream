@@ -219,8 +219,13 @@ bool Buffer::createBuffer(std::shared_ptr<VoxelebIO> &voxellstio){
     // meteo
     auto cmdBufMeteo = cmdGen.createCommandBuffer();
     uint32_t size = sizeof(Meteo);
+    // voxellstio->m_pMeteoBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufMeteo,sizeof(Meteo), &voxellstio->meteos[voxellstio->k_node],
+    //                                                              VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+    //                                                              VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT));
     voxellstio->m_pMeteoBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufMeteo,sizeof(Meteo), &voxellstio->meteos[voxellstio->k_node],
-                                                                 VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT));
+                                                                 VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+                                                                 VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
+
     cmdGen.submitAndWait(cmdBufMeteo);
 
 
@@ -249,9 +254,12 @@ bool Buffer::createBuffer(std::shared_ptr<VoxelebIO> &voxellstio){
     meshio->m_pSoilSetBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufBio, meshio->soilsets, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT));
     // air
     std::vector<VoxelAir> voxelair(n_voxel, VoxelAir{voxellstio->meteos[0].Ca, voxellstio->meteos[0].Oa, voxellstio->meteos[0].ea});
+    // voxelio->m_pAirBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufBio, voxelair,
+    //                                                         VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+    //                                                         VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT));
     voxelio->m_pAirBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufBio, voxelair,
                                                             VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
-                                                            VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT));
+                                                            VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
     cmdGen.submitAndWait(cmdBufBio);
 
     // rss
@@ -277,10 +285,15 @@ bool Buffer::createBuffer(std::shared_ptr<VoxelebIO> &voxellstio){
     // state
     auto cmdBufState = cmdGen.createCommandBuffer();
     size = sizeof(EBState);
+    // voxelio->m_pStateBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufState,
+    //                                                          size, &voxelio->m_state,
+    //                                                          VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+    //                                                          VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT));
     voxelio->m_pStateBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufState,
                                                              size, &voxelio->m_state,
                                                              VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
-                                                             VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT));
+                                                             VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT));
+
     cmdGen.submitAndWait(cmdBufState);
 
 

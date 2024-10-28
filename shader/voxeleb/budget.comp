@@ -72,18 +72,30 @@ void main()
     float refl = spectralMaterials[spectralBase + NUM_VNIR].reflectance;
     float trans = spectralMaterials[spectralBase + NUM_VNIR].transmittance;
     float emis = 1-refl-trans;
-    float outShadedRad = Stefen_Boltzmann(TshadedOld,emis);
-    float outSunlitRad = Stefen_Boltzmann(TsunlitOld,emis);
+    float outShadedRad;
+    float outSunlitRad;
+    // float outShadedRad = Stefen_Boltzmann(TshadedOld,emis);
+    // float outSunlitRad = Stefen_Boltzmann(TsunlitOld,emis);
     //---------------------------------------------
     // Calculate net radiation for sunlit/shaded veg/soil
     //---------------------------------------------
     float netSunlitRad,netShadedRad;
     if(typeId == TYPE_VEGETATION)
     { 
+        float lai = canopies[canopyId].lai;
+        float p = calReCor(lai);
+        float w = refl + trans;
+        float s = (w - p* w) / (1 - p* w);
+        float a = (1-w) / (1 - p *w); 
+        // emis = a;
+        outShadedRad = Stefen_Boltzmann(TshadedOld,emis);
+        outSunlitRad = Stefen_Boltzmann(TsunlitOld,emis);
         netSunlitRad = inSunlitRad - outSunlitRad;
         netShadedRad = inShadedRad - outShadedRad;
     }else if(typeId == TYPE_SOIL || typeId == TYPE_BUILDING)
     {
+        outShadedRad = Stefen_Boltzmann(TshadedOld,emis);
+        outSunlitRad = Stefen_Boltzmann(TsunlitOld,emis);
         netSunlitRad = inSunlitRad - outSunlitRad;
         netShadedRad = inShadedRad - outShadedRad;
     }// IF TYPE
@@ -104,7 +116,7 @@ void main()
     float Tsunlit,Tshaded;
     float Ta = ubom.meteo.Ta;
     float innovation1 = 0,innovation2 = 0;
-    float wc = 0.2;  // update coefficient 
+    float wc = 0.1;  // update coefficient 
     float raa = voxelRaas[bufferId].raa ;
     float diffHeatfluxSunlit =  voxelHeatFlux[bufferId].LEsunlit + Gsunlit;
     float diffHeatfluxShaded =  voxelHeatFlux[bufferId].LEshaded + Gshaded;
@@ -134,26 +146,23 @@ void main()
     // float diffShadedRad = netShadedRad - (voxelHeatFlux[bufferId].LEshaded + Gshaded + voxelHeatFlux[bufferId].Hshaded);
     // float lambdas_sunlit = (2.501-0.002361*TsunlitOld)*1E6;
     // float lambdas_shaded = (2.501-0.002361*TshadedOld)*1E6;
-
-    // //-------------------------------
-    // // Attension!!! no emissivity
-    // //-------------------------------
     // float wc = 0.5;
-    // Tsunlit = TsunlitOld + diffSunlitRad * wc / ((RHOA*CP)/raa+
-    //     RHOA*lambdas_sunlit*e_to_q*s_sunlit/(raa+rss_sunlit)+4*SIGMASB*pow(TsunlitOld,3));
-    // Tshaded = TshadedOld + diffShadedRad * wc / ((RHOA*CP)/raa+
-    //     RHOA*lambdas_shaded*e_to_q*s_shaded/(raa+rss_shaded)+4*SIGMASB*pow(TshadedOld,3));
-    // // //----------------------------------------
-    // // // count bad result
-    // // //----------------------------------------
+    // // if(setting.theIteration>5) wc = 0.3;
+    // // if(setting.theIteration>10) wc = 0.2;
+    // // if(setting.theIteration>30) wc = 0.1;
+    // // Tsunlit = TsunlitOld + diffSunlitRad * wc / ((RHOA*CP)/raa+
+    // //     RHOA*lambdas_sunlit*e_to_q*s_sunlit/(raa+rss_sunlit)+4*SIGMASB*pow(TsunlitOld,3));
+    // // Tshaded = TshadedOld + diffShadedRad * wc / ((RHOA*CP)/raa+
+    // //     RHOA*lambdas_shaded*e_to_q*s_shaded/(raa+rss_shaded)+4*SIGMASB*pow(TshadedOld,3));
+    // //    分母第二项太大了，导致温度修正量很小很小
+    // // 暂时先用下列近似情况
+    // Tsunlit = TsunlitOld + diffSunlitRad * wc / ((RHOA*CP)/raa + (RHOA*CP)/raa + 4*SIGMASB*pow(TsunlitOld,3));
+    // Tshaded = TshadedOld + diffShadedRad * wc / ((RHOA*CP)/raa + (RHOA*CP)/raa + 4*SIGMASB*pow(TshadedOld,3));
+    // // Tsunlit = TsunlitOld + diffSunlitRad * wc / ((RHOA*CP)/raa + 4*SIGMASB*pow(TsunlitOld,3));
+    // // Tshaded = TshadedOld + diffShadedRad * wc / ((RHOA*CP)/raa + 4*SIGMASB*pow(TshadedOld,3));
     // int count=0;
     // if (abs(diffSunlitRad) > RAD_THRESHOLD) count = count + 1;
     // if (abs(diffShadedRad) > RAD_THRESHOLD) count = count + 1;
-
-    // for debug
-    // voxelTempes[bufferId].sunlit = raa;//(RHOA*CP)/raa + RHOA*lambdas_sunlit*e_to_q*s_sunlit/(raa+rss_sunlit)+4*SIGMASB*pow(TsunlitOld,3);
-    // voxelTempes[bufferId].shaded = RHOA;//(RHOA*CP)/raa + RHOA*lambdas_shaded*e_to_q*s_shaded/(raa+rss_shaded)+4*SIGMASB*pow(TshadedOld,3);
-    // return;
 
 
 

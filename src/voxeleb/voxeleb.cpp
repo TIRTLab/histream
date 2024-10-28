@@ -112,7 +112,8 @@ bool  Voxeleb::uploadMeteo(std::shared_ptr<FileIO> &fileio, std::shared_ptr<Voxe
 
 
    // Utils::readascfileinout(meteofile,0,1,)
-
+    modelio->startTimeNode = fileio->m_pVoxelebXml->meteoxml.startTimeNode;
+    modelio->endTimeNode = fileio->m_pVoxelebXml->meteoxml.endTimeNode;
    fileio->readMeteo(modelio->m_defined,modelio->n_node,modelio->meteos,modelio->atomconds);
    return true;
 }
@@ -151,10 +152,12 @@ bool Voxeleb::create(std::shared_ptr<VoxelebIO> &modelio) {
 bool Voxeleb::run(std::shared_ptr<VoxelebIO> &modelio, std::shared_ptr<FileIO> &fileio) {
 
 
-for(int knode = 20; knode < 36;knode ++) {
+// for(int knode = 72; knode < 75;knode = knode + 1) {
 
-
-
+//modelio->startTimeNode = 63;
+//modelio->endTimeNode = 74;
+for(int knode = modelio->startTimeNode; knode < modelio->endTimeNode;knode = knode +1) {
+// for(int knode = 0; knode < 144;knode = knode + 1) {
     modelio->k_node = knode;
 
     updateMeteo(modelio,knode);
@@ -163,21 +166,28 @@ for(int knode = 20; knode < 36;knode ++) {
 
     std::cout << "Time Info:" << "    t_" << std::to_string(modelio->meteo.t) << std::endl;
     outputVoxel(modelio,fileio);
+//
+//    if (knode == 73)
+    // if (1)
+    {
     for (int kangle = 0; kangle < modelio->n_angle; kangle++) {
         modelio->k_angle = kangle;
         m_pGeometry->updateAngle(modelio,kangle);
 
         Angle angle = modelio->angles[kangle];
-        std::cout << "Angle Info:"
-                  << "    vza_" << std::to_string(angle.vza) << "    vaa_" << std::to_string(angle.vaa)
-                  << "    sza_" << std::to_string(angle.sza) << "    saa_" << std::to_string(angle.saa) << std::endl;
 
         ////updateSetting(modelio);
         m_pCommand->runRT(modelio);
 
 //        std::cout << "Success: " << kangle << std::endl;
 
-        output(modelio,fileio,knode, kangle);
+
+            std::cout << "Angle Info:"
+                  << "    vza_" << std::to_string(angle.vza) << "    vaa_" << std::to_string(angle.vaa)
+                  << "    sza_" << std::to_string(angle.sza) << "    saa_" << std::to_string(angle.saa) << std::endl;
+            output(modelio,fileio,knode, kangle);
+        }
+        // output(modelio,fileio,knode, kangle);
 
     }
 

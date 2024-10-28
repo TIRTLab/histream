@@ -450,6 +450,21 @@ float cross0(vec3 A, vec3 B){
 ///----------------------------------------------
 vec2 scattering_phase_function_direct_XZY(vec3 directioni,vec3 directionj)
 {
+    // vec2 Gamma;
+    // float thetai = acos(directioni.y);
+    // float thetaj = acos(directionj.y);
+    // float alphai = 0,alphaj = 0;
+    // alphai = atan2(directioni.z,directioni.x);
+    // alphaj = atan2(directionj.z,directionj.x);
+    // //入射方向与出射方向的夹角余弦值; Cosine value of scattering angle between incident direction and exit direction
+    // float cosa = directioni.y * directionj.y + sin(thetai) * sin(thetaj)*cos(alphai-alphaj);
+    // //scattering angle 
+    // float a = acos(cosa);
+    // float sina = sin(a);
+    // Gamma.x = (sina + (PI - a)*cosa)/(3*PI);
+    // Gamma.y = (sina + a*cosa)/(3*PI);
+    // return Gamma;
+
     vec2 Gamma;
     float thetai = acos(directioni.y);
     float thetaj = acos(directionj.y);
@@ -457,12 +472,12 @@ vec2 scattering_phase_function_direct_XZY(vec3 directioni,vec3 directionj)
     alphai = atan2(directioni.z,directioni.x);
     alphaj = atan2(directionj.z,directionj.x);
     //入射方向与出射方向的夹角余弦值; Cosine value of scattering angle between incident direction and exit direction
-    float cosa = directioni.y * directionj.y + sin(thetai) * sin(thetaj)*cos(alphai-alphaj);
+    float cosa = cos(thetai) * cos(thetaj) + sin(thetai) * sin(thetaj)*cos(alphai-alphaj);
     //scattering angle 
     float a = acos(cosa);
     float sina = sin(a);
-    Gamma.x = (sina + (PI - a)*cosa)/(3*PI);
-    Gamma.y = (sina + a*cosa)/(3*PI);
+    Gamma.x = abs(sina + (PI - a)*cosa)/(3*PI);
+    Gamma.y = abs(sina + a*cosa)/(3*PI);
     return Gamma;
 }
 /////--------------------------------------------
@@ -470,19 +485,34 @@ vec2 scattering_phase_function_direct_XZY(vec3 directioni,vec3 directionj)
 ///----------------------------------------------
 vec2 scattering_phase_function_direct_XZY_paper(vec3 directioni,vec3 directionj)
 {
-    vec2 Gamma;
+    // vec2 Gamma;
+    // float thetai = acos(directioni.y);
+    // float thetaj = acos(directionj.y);
+    // float alphai = 0,alphaj = 0;
+    // alphai = atan2(directioni.z,directioni.x);
+    // alphaj = atan2(directionj.z,directionj.x);
+    // //入射方向与出射方向的夹角余弦值; Cosine value of scattering angle between incident direction and exit direction
+    // float cosa = directioni.y * directionj.y + sin(thetai) * sin(thetaj)*cos(alphai-alphaj);
+    // //scattering angle 
+    // float a = acos(cosa);
+    // float sina = sin(a);
+    // Gamma.x = (sina - a * cosa) / 3 * PI;
+    // Gamma.y = cosa / 3;
+    // return Gamma;
+
+     vec2 Gamma;
     float thetai = acos(directioni.y);
     float thetaj = acos(directionj.y);
     float alphai = 0,alphaj = 0;
     alphai = atan2(directioni.z,directioni.x);
     alphaj = atan2(directionj.z,directionj.x);
     //入射方向与出射方向的夹角余弦值; Cosine value of scattering angle between incident direction and exit direction
-    float cosa = directioni.y * directionj.y + sin(thetai) * sin(thetaj)*cos(alphai-alphaj);
+    float cosa = cos(thetai) * cos(thetaj) + sin(thetai) * sin(thetaj)*cos(alphai-alphaj);
     //scattering angle 
     float a = acos(cosa);
     float sina = sin(a);
-    Gamma.x = (sina - a * cosa) / 3 * PI;
-    Gamma.y = cosa / 3;
+    Gamma.x = (sina - a * cosa) / (3 * PI);
+    Gamma.y = cosa / PI;
     return Gamma;
 }
 
@@ -490,24 +520,49 @@ vec2 scattering_phase_function_direct_XZY_paper(vec3 directioni,vec3 directionj)
 float Hotspot_Kuusk(vec3 directioni,vec3 directionj, float pl_from, float pl_to, float density, float hs)
 {
 
+    // float thetai = acos((directioni.y));
+    // float thetaj = acos((directionj.y));
+    // float alphai = 0,alphaj = 0;
+    // alphai = atan2(directioni.z,directioni.x);
+    // alphaj = atan2(directionj.z,directionj.x);
+    // float cosa = (directioni.y) * (directionj.y) + sin(thetai) * sin(thetaj)*cos(alphai-alphaj);
+    // float angle = acos(cosa);
+    // float sina = sin(angle);
+
+    // float pl = pow(pl_from,2)+pow(pl_to,2)-cosa*2.0*pl_from*pl_to;
+    // float correction = sqrt(pl)/hs;
+    // float xtemp = 1.0;
+    // if (correction <= 0) { xtemp = 1- correction * 0.5;}
+    // if (correction > 0) {xtemp = (1-exp(-correction))/correction;}
+    // float chs = sqrt(pl_from * pl_to) * xtemp;
+    // float xx = (chs - pl_from - pl_to) *GLEAF;
+    // float hotspot = exp(xx * density);
+
     float thetai = acos((directioni.y));
     float thetaj = acos((directionj.y));
     float alphai = 0,alphaj = 0;
     alphai = atan2(directioni.z,directioni.x);
     alphaj = atan2(directionj.z,directionj.x);
-    float cosa = (directioni.y) * (directionj.y) + sin(thetai) * sin(thetaj)*cos(alphai-alphaj);
+    // float cosa = (directioni.y) * (directionj.y) + sin(thetai) * sin(thetaj)*cos(alphai-alphaj);
+    float cosa = cos(thetai) * cos(thetaj) + sin(thetai) * sin(thetaj)*cos(alphai-alphaj);
     float angle = acos(cosa);
     float sina = sin(angle);
 
     float pl = pow(pl_from,2)+pow(pl_to,2)-cosa*2.0*pl_from*pl_to;
-    float correction = sqrt(pl)/hs;
+
+    float kv = 0.5 / cos(thetai);
+    float ki = 0.5 / cos(thetaj);
+    float cor = 2.0 / (kv + ki);
+
+    float ks = sqrt(pl)/hs ; // k_l * S_{AB}
     float xtemp = 1.0;
-    if (correction <= 0) { xtemp = 1- correction * 0.5;}
-    if (correction > 0) {xtemp = (1-exp(-correction))/correction;}
-    float chs = sqrt(pl_from * pl_to) * xtemp;
+
+    if (ks <= 0.1) { xtemp = 1- ks * 0.5;}
+    if (ks > 0.1) {xtemp = (1-exp(-ks))/ks;}
+    float chs = sqrt(pl_from * pl_to) * xtemp;  // Tau * s
+    // float chs = sqrt(0.5 * pl_from * 0.5 * pl_to) * xtemp;  // Tau * s
     float xx = (chs - pl_from - pl_to) *GLEAF;
     float hotspot = exp(xx * density);
-
     return hotspot;
 }
 

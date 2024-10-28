@@ -49,6 +49,8 @@ public:
     PrimMesh createTriCube_wall(Shape shape, float stepSize);
     PrimMesh createTriCube_roof(Shape shape, float stepSize);
 
+	bool outputPrimMesh(std::string path, PrimMesh mesh);
+
     float minElevation{0};
 
 private:

@@ -3,252 +3,78 @@
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
-  <component name="CMakePresetLoader">{
-  &quot;useNewFormat&quot;: true
-}</component>
-  <component name="CMakeProjectFlavorService">
-    <option name="flavorId" value="CMakePlainProjectFlavor" />
-  </component>
+  <component name="CMakePresetLoader"><![CDATA[{
+  "useNewFormat": true
+}]]></component>
   <component name="CMakeReloadState">
     <option name="reloaded" value="true" />
   </component>
   <component name="CMakeRunConfigurationManager">
-    <generated>
-      <config projectName="filed_newest" targetName="nvpro_core" />
-      <config projectName="filed_newest" targetName="imgui" />
-      <config projectName="filed_newest" targetName="fmt" />
-      <config projectName="filed_newest" targetName="update_mappings" />
-      <config projectName="filed_newest" targetName="filed_newest" />
-      <config projectName="filed_newest" targetName="glfw" />
-      <config projectName="filed_newest" targetName="implot" />
-    </generated>
+    <generated />
   </component>
   <component name="CMakeSettings">
     <configurations>
-      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" GENERATION_OPTIONS="-DCMAKE_TOOLCHAIN_FILE=D:\vcpkg\scripts\buildsystems\vcpkg.cmake" />
+      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eeca3a8a-e0cc-436e-aad2-a8078012f1ed" name="Changes" comment="">
+    <list default="true" id="1e2362a2-31cb-4a3a-91e8-2e966ba0064f" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/field.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/editor.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/buffer.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/buffer.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/command.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/command.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/descriptor.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/descriptor.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/pipeline.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/pipeline.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/voxeleb.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/voxeleb.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/voxelebio.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/voxelebio.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shader/.vscode/c_cpp_properties.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shader/bindingLayout.h" beforeDir="false" afterPath="$PROJECT_DIR$/shader/bindingLayout.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shader/parameters.h" beforeDir="false" afterPath="$PROJECT_DIR$/shader/parameters.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shader/settings.h" beforeDir="false" afterPath="$PROJECT_DIR$/shader/settings.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug-visual-studio/CMakeFiles/field.dir/F_/work/nvpro_core/nvp/perproject_globals.cpp.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug-visual-studio/CMakeFiles/field.dir/F_/work/nvpro_core/nvp/resources.i" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug-visual-studio/CMakeFiles/field.dir/F_/work/nvpro_core/nvp/resources.rc.res" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug-visual-studio/CMakeFiles/field.dir/F_/work/nvpro_core/nvvk/nsight_aftermath_vk.cpp.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/base/createVoxelFromHeightTif.cpp.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/thirdparty/spa.cpp.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/buffer.cpp.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/command.cpp.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/descriptor.cpp.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/pipeline.cpp.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/voxeleb.cpp.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/voxelebio.cpp.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/functions.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/shader/functions.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/global.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/shader/global.glsl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shader/shadersCompile.py" beforeDir="false" afterPath="$PROJECT_DIR$/shader/shadersCompile.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/traceray_comp.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/shader/traceray_comp.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/voxeleb/aeresist.comp" beforeDir="false" afterPath="$PROJECT_DIR$/shader/voxeleb/aeresist.comp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/voxeleb/aeresist.comp.spv" beforeDir="false" afterPath="$PROJECT_DIR$/shader/voxeleb/aeresist.comp.spv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/voxeleb/biochemical.comp" beforeDir="false" afterPath="$PROJECT_DIR$/shader/voxeleb/biochemical.comp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/voxeleb/biochemical.comp.spv" beforeDir="false" afterPath="$PROJECT_DIR$/shader/voxeleb/biochemical.comp.spv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/voxeleb/biochemical_m12.comp" beforeDir="false" afterPath="$PROJECT_DIR$/shader/voxeleb/biochemical_m12.comp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/voxeleb/biochemical_m12.comp.spv" beforeDir="false" afterPath="$PROJECT_DIR$/shader/voxeleb/biochemical_m12.comp.spv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shader/voxeleb/budget.comp" beforeDir="false" afterPath="$PROJECT_DIR$/shader/voxeleb/budget.comp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai/aeresist.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai/aeresist.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai/biochemical.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai/biochemical.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai/biochemical_m12.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai/biochemical_m12.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai/budget.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai/budget.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai/evapo.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai/evapo.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai/updateL.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai/updateL.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai/updateTp.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai/updateTp.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai/voxelrad_diffuse_TIR_single.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai/voxelrad_diffuse_TIR_single.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai/voxelrad_diffuse_VNIR_single.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai/voxelrad_diffuse_VNIR_single.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai/voxelrad_direct_TIR.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai/voxelrad_direct_TIR.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai/voxelrad_direct_VNIR.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai/voxelrad_direct_VNIR.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai/voxelrad_image.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai/voxelrad_image.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai/voxelrad_solar.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai/voxelrad_solar.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/HuailaiLidar/aeresist.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/HuailaiLidar/aeresist.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/HuailaiLidar/biochemical.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/HuailaiLidar/biochemical.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/HuailaiLidar/biochemical_m12.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/HuailaiLidar/biochemical_m12.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/HuailaiLidar/budget.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/HuailaiLidar/budget.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/HuailaiLidar/evapo.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/HuailaiLidar/evapo.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/HuailaiLidar/updateL.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/HuailaiLidar/updateL.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/HuailaiLidar/updateTp.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/HuailaiLidar/updateTp.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/HuailaiLidar/voxelrad_diffuse_TIR_single.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/HuailaiLidar/voxelrad_diffuse_TIR_single.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/HuailaiLidar/voxelrad_diffuse_VNIR_single.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/HuailaiLidar/voxelrad_diffuse_VNIR_single.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/HuailaiLidar/voxelrad_direct_TIR.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/HuailaiLidar/voxelrad_direct_TIR.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/HuailaiLidar/voxelrad_direct_VNIR.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/HuailaiLidar/voxelrad_direct_VNIR.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/HuailaiLidar/voxelrad_image.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/HuailaiLidar/voxelrad_image.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/HuailaiLidar/voxelrad_solar.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/HuailaiLidar/voxelrad_solar.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai_origin/aeresist.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai_origin/aeresist.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai_origin/biochemical.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai_origin/biochemical.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai_origin/biochemical_m12.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai_origin/biochemical_m12.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai_origin/budget.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai_origin/budget.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai_origin/evapo.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai_origin/evapo.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai_origin/updateL.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai_origin/updateL.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai_origin/updateTp.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai_origin/updateTp.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai_origin/voxelrad_diffuse_TIR_single.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai_origin/voxelrad_diffuse_TIR_single.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai_origin/voxelrad_diffuse_VNIR_single.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai_origin/voxelrad_diffuse_VNIR_single.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai_origin/voxelrad_direct_TIR.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai_origin/voxelrad_direct_TIR.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai_origin/voxelrad_direct_VNIR.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai_origin/voxelrad_direct_VNIR.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai_origin/voxelrad_image.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai_origin/voxelrad_image.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai_origin/voxelrad_solar.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/Huailai_origin/voxelrad_solar.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/PNanoVDB.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/RayTracing_Hapke/closestHit.rchit" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/RayTracing_Hapke/offline.rgen" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/RayTracing_Hapke/rmiss.rmiss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/RayTracing_Hapke/shadow.rmiss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/RayTracing_Lambert/closestHit.rchit" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/RayTracing_Lambert/offline.rgen" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/RayTracing_Lambert/rmiss.rmiss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/RayTracing_Lambert/shader.code-workspace" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/RayTracing_Lambert/shadow.rmiss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/VoxelTracing/diffuse.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/VoxelTracing/outImage.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/VoxelTracing/raytrace2_.rchit" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/VoxelTracing/raytraceShadow_.rmiss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/VoxelTracing/raytrace_.rchit" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/VoxelTracing/raytrace_.rgen" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/VoxelTracing/raytrace_.rint" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/VoxelTracing/raytrace_.rmiss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/VoxelTracing/solar.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/VoxelTriTracing/diffuse.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/VoxelTriTracing/diffuse.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/VoxelTriTracing/outImageTri.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/VoxelTriTracing/outImageTri.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/VoxelTriTracing/solar.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/VoxelTriTracing/solar.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/bindingLayout.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/bsdf.glsl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/compress.glsl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/functions.glsl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/global.glsl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/nanovdb_info.glsl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/parameters.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/random.glsl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/raytracing/closestHit.rchit" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/raytracing/closestHit.rchit.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/raytracing/offline.rgen" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/raytracing/offline.rgen.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/raytracing/rmiss.rmiss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/raytracing/rmiss.rmiss.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/raytracing/shadow.rmiss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/raytracing/shadow.rmiss.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/sampling.glsl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/settings.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/shade_state.glsl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/shade_state_voxel.glsl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/shadersCompile.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/traceray_comp.glsl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/voxellst/aeresist.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/voxellst/aeresist.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/voxellst/biochemical.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/voxellst/biochemical.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/voxellst/biochemical_m12.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/voxellst/budget.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/voxellst/budget.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/voxellst/evapo.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/voxellst/evapo.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/voxellst/updateL.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/voxellst/updateL.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/voxellst/updateTp.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/voxellst/updateTp.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/voxellst/voxelrad_diffuse_TIR_single.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/voxellst/voxelrad_diffuse_TIR_single.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/voxellst/voxelrad_diffuse_VNIR_single.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/voxellst/voxelrad_diffuse_VNIR_single.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/voxellst/voxelrad_direct_TIR.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/voxellst/voxelrad_direct_TIR.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/voxellst/voxelrad_direct_VNIR.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/voxellst/voxelrad_direct_VNIR.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/voxellst/voxelrad_image.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/voxellst/voxelrad_image.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/voxellst/voxelrad_solar.comp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaderr/shader/voxellst/voxelrad_solar.comp.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/compo.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/compo.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/compo.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/compo.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/engine.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/engine.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/engine.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/engine.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/voxeleb/budget.comp.spv" beforeDir="false" afterPath="$PROJECT_DIR$/shader/voxeleb/budget.comp.spv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/voxeleb/evapo.comp" beforeDir="false" afterPath="$PROJECT_DIR$/shader/voxeleb/evapo.comp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/voxeleb/evapo.comp.spv" beforeDir="false" afterPath="$PROJECT_DIR$/shader/voxeleb/evapo.comp.spv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/voxeleb/updateL.comp.spv" beforeDir="false" afterPath="$PROJECT_DIR$/shader/voxeleb/updateL.comp.spv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/voxeleb/updateTp.comp.spv" beforeDir="false" afterPath="$PROJECT_DIR$/shader/voxeleb/updateTp.comp.spv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/voxeleb/voxelrad_diffuse_TIR_single.comp" beforeDir="false" afterPath="$PROJECT_DIR$/shader/voxeleb/voxelrad_diffuse_TIR_single.comp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/voxeleb/voxelrad_diffuse_TIR_single.comp.spv" beforeDir="false" afterPath="$PROJECT_DIR$/shader/voxeleb/voxelrad_diffuse_TIR_single.comp.spv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/voxeleb/voxelrad_diffuse_VNIR_single.comp" beforeDir="false" afterPath="$PROJECT_DIR$/shader/voxeleb/voxelrad_diffuse_VNIR_single.comp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/voxeleb/voxelrad_diffuse_VNIR_single.comp.spv" beforeDir="false" afterPath="$PROJECT_DIR$/shader/voxeleb/voxelrad_diffuse_VNIR_single.comp.spv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/voxeleb/voxelrad_direct_TIR.comp" beforeDir="false" afterPath="$PROJECT_DIR$/shader/voxeleb/voxelrad_direct_TIR.comp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/voxeleb/voxelrad_direct_TIR.comp.spv" beforeDir="false" afterPath="$PROJECT_DIR$/shader/voxeleb/voxelrad_direct_TIR.comp.spv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/voxeleb/voxelrad_direct_VNIR.comp" beforeDir="false" afterPath="$PROJECT_DIR$/shader/voxeleb/voxelrad_direct_VNIR.comp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/voxeleb/voxelrad_direct_VNIR.comp.spv" beforeDir="false" afterPath="$PROJECT_DIR$/shader/voxeleb/voxelrad_direct_VNIR.comp.spv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/voxeleb/voxelrad_image.comp" beforeDir="false" afterPath="$PROJECT_DIR$/shader/voxeleb/voxelrad_image.comp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/voxeleb/voxelrad_image.comp.spv" beforeDir="false" afterPath="$PROJECT_DIR$/shader/voxeleb/voxelrad_image.comp.spv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/voxeleb/voxelrad_solar.comp" beforeDir="false" afterPath="$PROJECT_DIR$/shader/voxeleb/voxelrad_solar.comp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shader/voxeleb/voxelrad_solar.comp.spv" beforeDir="false" afterPath="$PROJECT_DIR$/shader/voxeleb/voxelrad_solar.comp.spv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/fileio.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/fileio.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/fileio.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/fileio.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/geometry.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/geometry.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/geometry.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/geometry.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/scene.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/scene.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/scene.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/scene.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/structs.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/structs.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/structs_cg.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/structs_cg.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/virtualscreen.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/virtualscreen.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/utils.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/utils.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/voxeldesigner.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/voxeldesigner.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/voxeldesigner.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/voxeldesigner.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/xmlexamples.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/xmlexamples.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/xmlexamples.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/xmlexamples.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/raytracing/raytracing.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/raytracing/raytracing.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/voxeleb/descriptor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/voxeleb/descriptor.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/voxeleb/descriptor.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/voxeleb/descriptor.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/voxeleb/buffer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/voxeleb/buffer.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/voxeleb/voxeleb.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/voxeleb/voxeleb.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/voxelrt/buffer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/voxelrt/buffer.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/voxelrt/buffer.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/voxelrt/buffer.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/voxelrt/command.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/voxelrt/command.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/voxelrt/command.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/voxelrt/command.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/voxelrt/descriptor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/voxelrt/descriptor.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/voxelrt/descriptor.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/voxelrt/descriptor.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/voxelrt/pipeline.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/voxelrt/pipeline.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/voxelrt/pipeline.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/voxelrt/pipeline.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/voxelrt/voxelrt.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/voxelrt/voxelrt.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/voxelrt/voxelrt.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/voxelrt/voxelrt.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/voxelrt/voxelrtio.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/voxelrt/voxelrtio.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/doxygen/doxyfile.dox" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/doxygen/doxyfile.dox" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/fileformats/khr_df.h" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/fileformats/khr_df.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/imgui/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/imgui/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/nvh/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/nvh/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/nvp/nvpfilesystem.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/nvp/nvpfilesystem.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/nvvk/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/nvvk/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/nvvk/context_vk.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/nvvk/context_vk.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/nvvk/extensions_vk.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/nvvk/extensions_vk.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/nvvkhl/shaders/hdr_integrate_brdf.comp" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/nvvkhl/shaders/hdr_integrate_brdf.comp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/third_party/basis_universal/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/third_party/basis_universal/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/third_party/cgltf/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/third_party/cgltf/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/third_party/fmt/ChangeLog.md" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/third_party/fmt/ChangeLog.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/third_party/tinygltf/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/third_party/tinygltf/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/third_party/vma/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/third_party/vma/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/third_party/zlib/ChangeLog" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/third_party/zlib/ChangeLog" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/third_party/zlib/FAQ" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/third_party/zlib/FAQ" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/third_party/zstd/CHANGELOG" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/third_party/zstd/CHANGELOG" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/third_party/zstd/CONTRIBUTING.md" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/third_party/zstd/CONTRIBUTING.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/third_party/zstd/lib/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/third_party/zstd/lib/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -258,100 +84,56 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectApplicationVersion">
     <option name="ide" value="CLion" />
-    <option name="majorVersion" value="2024" />
-    <option name="minorVersion" value="2.1" />
-    <option name="productBranch" value="Classic" />
+    <option name="majorVersion" value="2023" />
+    <option name="minorVersion" value="3.4" />
   </component>
-  <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 7
-}</component>
-  <component name="ProjectId" id="2ldvWlqxsYqrt5k4fHbjY6VUC0i" />
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 3
+}]]></component>
+  <component name="ProjectId" id="2mI65POiJdCoC1yQfEIaGIsuIkO" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.RadMigrateCodeStyle&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
-    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/vcpkg&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "D:/code/filed_newest",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
-  <component name="RunManager" selected="CMake Application.filed_newest">
-    <configuration name="filed_newest" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="filed_newest" TARGET_NAME="filed_newest" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="filed_newest" RUN_TARGET_NAME="filed_newest">
+}]]></component>
+  <component name="RunManager">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
       </method>
     </configuration>
-    <configuration name="fmt" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="filed_newest" TARGET_NAME="fmt" CONFIG_NAME="Debug">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="glfw" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="filed_newest" TARGET_NAME="glfw" CONFIG_NAME="Debug">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="imgui" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="filed_newest" TARGET_NAME="imgui" CONFIG_NAME="Debug">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="implot" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="filed_newest" TARGET_NAME="implot" CONFIG_NAME="Debug">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="nvpro_core" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="filed_newest" TARGET_NAME="nvpro_core" CONFIG_NAME="Debug">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="update_mappings" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="filed_newest" TARGET_NAME="update_mappings" CONFIG_NAME="Debug">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <list>
-      <item itemvalue="CMake Application.update_mappings" />
-      <item itemvalue="CMake Application.filed_newest" />
-      <item itemvalue="CMake Application.fmt" />
-      <item itemvalue="CMake Application.glfw" />
-      <item itemvalue="CMake Application.imgui" />
-      <item itemvalue="CMake Application.implot" />
-      <item itemvalue="CMake Application.nvpro_core" />
-    </list>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
-    <task active="true" id="Default" summary="Default task">
-      <changelist id="eeca3a8a-e0cc-436e-aad2-a8078012f1ed" name="Changes" comment="" />
-      <created>1725522801881</created>
+    <task active="true" id="Default" summary="默认任务">
+      <changelist id="1e2362a2-31cb-4a3a-91e8-2e966ba0064f" name="更改" comment="" />
+      <created>1726751558704</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1725522801881</updated>
-      <workItem from="1725522802991" duration="241000" />
-      <workItem from="1725523092650" duration="1459000" />
-      <workItem from="1725524763392" duration="1463000" />
+      <updated>1726751558704</updated>
+      <workItem from="1726751559955" duration="669000" />
     </task>
     <servers />
   </component>

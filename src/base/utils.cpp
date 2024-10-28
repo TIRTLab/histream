@@ -4,56 +4,106 @@
 
 float* Utils::readascfile(std::string infileName, int skip, int col, int &num)
 {
-    std::string line;
-    std::vector <std::string> fields;
-    std::string deli(" ");
+    // std::string line;
+    // std::vector <std::string> fields;
+    // std::string deli(" ");
+    //
+    // std::ifstream infile(infileName.c_str());
+    // if (infile.is_open())
+    // {
+    //     num = 0;
+    //     if (skip != 0)
+    //     {
+    //         for (int i = 0; i < skip; i++) std::getline(infile, line);
+    //     }
+    //     while (std::getline(infile, line))
+    //     {
+    //         fields = Utils::splitt(line, deli);
+    //         if (int(fields.size()) >= 1)
+    //         {
+    //             num++;
+    //         }
+    //     }
+    // }
+    // else std::cout << "Unable to open the file: " << infileName << std::endl;
+    // infile.close();
+    //
+    // float* mydata = new float[num];
+    // if (num >= 1)
+    // {
+    //
+    //     int jj = 0;
+    //     std::ifstream infilee(infileName.c_str());
+    //     mydata = new float[num];
+    //     //getline(infilee,line);
+    //
+    //     if (skip != 0)
+    //     {
+    //         for (int i = 0; i < skip; i++) std::getline(infilee, line);
+    //     }
+    //     while (std::getline(infilee, line))
+    //     {
+    //         fields = Utils::splitt(line, deli);
+    //         if (int(fields.size()) > col)
+    //         {
+    //             mydata[jj] = atof(fields[col].c_str());
+    //             jj = jj + 1;
+    //         }
+    //     }
+    //     infilee.close();
+    // }
+    //
+    // return mydata;
+	std::string line;
+	std::vector <std::string> fields;
+	std::string deli(" ");
 
-    std::ifstream infile(infileName.c_str());
-    if (infile.is_open())
-    {
-        num = 0;
-        if (skip != 0)
-        {
-            for (int i = 0; i < skip; i++) std::getline(infile, line);
-        }
-        while (std::getline(infile, line))
-        {
-            fields = Utils::splitt(line, deli);
-            if (int(fields.size()) >= 1)
-            {
-                num++;
-            }
-        }
-    }
-    else std::cout << "Unable to open the file: " << infileName << std::endl;
-    infile.close();
+	std::ifstream infile(infileName.c_str());
+	if (infile.is_open())
+	{
+		num = 0;
+		if (skip != 0)
+		{
+			for (int i = 0; i < skip; i++) std::getline(infile, line);
+		}
+		while (std::getline(infile, line))
+		{
+			fields = Utils::splitt(line, deli);
+			if (int(fields.size()) >= 1)
+			{
+				num++;
+			}
+		}
+	}
+	else std::cout << "Unable to open the file: " << infileName << std::endl;
+	infile.close();
 
-    float* mydata = new float[num];
-    if (num >= 1)
-    {
+	float* mydata = new float[num];
+	if (num >= 1)
+	{
 
-        int jj = 0;
-        std::ifstream infilee(infileName.c_str());
-        mydata = new float[num];
-        //getline(infilee,line);
+		int jj = 0;
+		std::ifstream infilee(infileName.c_str());
+		mydata = new float[num];
+		//getline(infilee,line);
 
-        if (skip != 0)
-        {
-            for (int i = 0; i < skip; i++) std::getline(infilee, line);
-        }
-        while (std::getline(infilee, line))
-        {
-            fields = Utils::splitt(line, deli);
-            if (int(fields.size()) > col)
-            {
-                mydata[jj] = atof(fields[col].c_str());
-                jj = jj + 1;
-            }
-        }
-        infilee.close();
-    }
+		if (skip != 0)
+		{
+			for (int i = 0; i < skip; i++) std::getline(infilee, line);
+		}
+		while (std::getline(infilee, line))
+		{
+			fields = Utils::splitt(line, deli);
+			if (int(fields.size()) > col)
+			{
+				mydata[jj] = atof(fields[col].c_str());
+				jj = jj + 1;
+			}
+		}
+		infilee.close();
+	}
 
-    return mydata;
+	return mydata;
 }
 
 
@@ -328,6 +378,20 @@ int Utils::saveImage(std::string outfilepath, std::vector<std::vector<float>> &c
 
 std::vector<std::string> Utils::splitt(std::string& s, std::string& deli)
 {
+	// std::vector <std::string> ret;
+	// int last = 0;
+	// int index = s.find_first_of(deli, last);
+	// int endx = s.find_last_not_of(deli);
+	// std::string subpart;
+	// while (index != int(std::string::npos))
+	// {
+	// 	subpart = s.substr(last, index - last);
+	// 	if (subpart.size() != 0) ret.push_back(subpart);
+	// 	last = index + 1;
+	// 	index = s.find_first_of(deli, last);
+	// }
+	// if (endx - last > 0) ret.push_back(s.substr(last, endx));
+	// return ret;
 	std::vector <std::string> ret;
 	int last = 0;
 	int index = s.find_first_of(deli, last);
@@ -340,7 +404,7 @@ std::vector<std::string> Utils::splitt(std::string& s, std::string& deli)
 		last = index + 1;
 		index = s.find_first_of(deli, last);
 	}
-	if (endx - last > 0) ret.push_back(s.substr(last, endx));
+	if (endx - last >= 0) ret.push_back(s.substr(last, endx));
 	return ret;
 }
 

@@ -3,138 +3,326 @@
 //
 #include "xmlexamples.h"
 
+// void XmlExamples::createVoxelebxml(){
+//     m_pVoxelebXml=std::make_shared<VoxelEBXml>();
+//
+//     m_pVoxelebXml->projectDir = R"(D:\data\field_data\Sim_homo_LAI_2.0_timeSeries\)";            // 均质场景与SCOPE对比的时间序列观测：LAI=2
+//     m_pVoxelebXml->definedDir = R"(D:\code\field)";
+//
+//     m_pVoxelebXml->settingxml.n_sample=32;
+//     m_pVoxelebXml->settingxml.maxDepth = 32;
+//     m_pVoxelebXml->settingxml.theGPU = 0;
+//
+//
+//     m_pVoxelebXml->lightxml.name = "Solar";
+//     m_pVoxelebXml->lightxml.solarAngle = {40, 30};
+//     m_pVoxelebXml->lightxml.direct = 0.9;
+//     m_pVoxelebXml->lightxml.diffuse = 0.1;
+//     m_pVoxelebXml->lightxml.skyTemperature = 250;
+//     m_pVoxelebXml->lightxml.solarTemperature = 6000;
+//
+//     m_pVoxelebXml->sensorxml.name = "UAV";
+//     m_pVoxelebXml->sensorxml.resolution = {50, 50};
+//     m_pVoxelebXml->sensorxml.isImage = true;
+//     m_pVoxelebXml->sensorxml.isAlbedo = false;
+//     m_pVoxelebXml->sensorxml.isDisplay = false;
+//     m_pVoxelebXml->sensorxml.isTemperature = true;
+//     m_pVoxelebXml->sensorxml.viewAngles = {{0, 0}};
+//     m_pVoxelebXml->sensorxml.waves = {10500};
+//     m_pVoxelebXml->sensorxml.projection = Projection::PARALLAL;
+//
+//     m_pVoxelebXml->scenexml.background.sceneSize={100, 100, 50}; // length, width, height
+//     m_pVoxelebXml->scenexml.background.sceneOrigin={0, 0, 0};
+// /*    m_pVoxelebXml->scenexml.background.sMin={0,0,0};
+//     m_pVoxelebXml->scenexml.background.sMax={600,600,10};*/
+//     m_pVoxelebXml->scenexml.background.stepsize_surface=0.3;
+//     m_pVoxelebXml->scenexml.background.stepsize_height=0.3;
+// //    m_pVoxelebXml->scenexml.stepsize_atmosphere = 1000;
+//
+//
+//     m_pVoxelebXml->scenexml.background.bgSpectralName = "soil";
+//     m_pVoxelebXml->scenexml.background.bgThermalName = "K310";
+//     m_pVoxelebXml->scenexml.background.bgPropName = "soilset";
+//     m_pVoxelebXml->scenexml.background.isDEM = {false};
+//     m_pVoxelebXml->scenexml.background.DEMFile = "";
+//     m_pVoxelebXml->scenexml.background.lat = 40.3574;
+//     m_pVoxelebXml->scenexml.background.lon = 115.7923;
+//
+//
+//     PrimEntity primEntity1;
+//     primEntity1= PrimEntity{"building",
+//                             {"wall","roof"},
+//                             {"wall","roof"},
+//                             {"K300","K300"},
+//                             {"crown","crown"},
+//                             {"soilset","soilset"},
+//                             Type::BUILDING,
+//                             {ShapeType::ELLIPSOID,5,5,5,glm::vec3(0,0,0)},
+//                             false," ",
+//                             true,m_pVoxelebXml->projectDir + "\\height_0_5.tif",
+//                             false, " "};
+//
+//     PrimEntity primEntity2;
+//     primEntity2 = PrimEntity{"tree",
+//                              {"crown"},
+//                              {"leaf"},
+//                              {"K300"},
+//                            {"crown"},
+//                            {"leafbio"},
+//                            Type::VEGETATION,
+//                            {ShapeType::CUBE,3,50,50,glm::vec3(0,0,0)},
+//                            false,"",
+//                            false,"",
+//                            true,m_pVoxelebXml->projectDir + "\\entity_0_position.txt"};
+//
+//
+//     m_pVoxelebXml->scenexml.objEntities = {};
+//     m_pVoxelebXml->scenexml.primEntities = {primEntity2};
+//
+//
+//
+//     SpectralXml spectralXml1;
+//     spectralXml1.spectralName="soil";
+//     spectralXml1.type = spectralType::OTHER;
+//     spectralXml1.reflectances = {0.04};
+//     spectralXml1.transmittance ={0};
+//     spectralXml1.path = R"(D:\data\field_data\Sim_homo_LAI_2.0_timeSeries\Spectral\\soilnew_high.txt)";// m_pVoxelebXml->definedDir + "\\defined\\soilnew_high.txt";
+//     spectralXml1.tau_tir = 0;
+//     spectralXml1.refl_tir = 0.04;
+//
+//     SpectralXml spectralXml3;
+//     spectralXml3.spectralName="wall";
+//     spectralXml3.type = spectralType::OTHER;
+//     spectralXml3.reflectances = {0.05};
+//     spectralXml3.transmittance ={0};
+//     spectralXml3.path =  m_pVoxelebXml->definedDir + "\\defined\\VNIR_construction_tar_asphalt.txt";
+// //    spectralXml3.path = "F:\\work\\field_aoyunlst\\field\\defined\\VNIR_construction_concrete_cement_solid.txt";
+//     spectralXml3.tau_tir = 0;
+//     spectralXml3.refl_tir = 0.05;
+//
+//     SpectralXml spectralXml4;
+//     spectralXml4.spectralName="roof";
+//     spectralXml4.type = spectralType::OTHER;
+//     spectralXml4.reflectances = {0.05};
+//     spectralXml4.transmittance ={0};
+//     spectralXml4.path =  m_pVoxelebXml->definedDir + "\\defined\\VNIR_construction_tar_asphalt.txt";
+// //    spectralXml4.path = "D:\\work\\field_aoyunlst\\field\\defined\\VNIR_construction_concrete_cement_solid.txt";
+//     spectralXml4.tau_tir = 0;
+//     spectralXml4.refl_tir = 0.05;
+//
+//     SpectralXml spectralXml2{};
+//     spectralXml2.spectralName="leaf";
+//     spectralXml2.type = spectralType::PROSPECT;
+//     spectralXml2.reflectances = {0.02};
+//     spectralXml2.transmittance ={0};
+//     spectralXml2.fp = {80,0.009,0.012,0,1.46};
+//     spectralXml2.tau_tir = 0;
+//     spectralXml2.refl_tir = 0.02;
+//
+//     m_pVoxelebXml->spectralxmls = {spectralXml1, spectralXml2};
+//
+//
+//     m_pVoxelebXml->thermalxmls = {{"K310", 320, 300},
+//                                   {"K300", 305, 295}};
+//
+//
+//     PropertyXml propertyXml1,propertyXml2,propertyXml3;
+//     propertyXml1 = {"soilset",Type::SOIL};
+//     propertyXml1.soilset = SoilSet{1,2000,1180,1800,1.55,0.25,25,0.45};
+//
+//     propertyXml2 = {"leafbio",Type::VEGETATION};
+//     propertyXml2.leafbio = LeafBio{80,9,0.01,3,0.6396,0.015,
+//         {0.2,0.3,288,313,328},25,0.507,0,1,1,0};
+//
+//     propertyXml3 = {"buildup",Type::BUILDING};
+//     propertyXml3.buildup = BuildUp{1,500,1180,1800,1.55,25};
+//
+//
+//
+//
+//     m_pVoxelebXml->propxmls ={propertyXml1, propertyXml2};
+//
+//     m_pVoxelebXml->canopyxmls ={{"crown", {2.0, 0.666, 3, 1, 0.5, -0.35, -0.15, 0.2, 0.2}}};
+//
+//     m_pVoxelebXml->aerocondxml = {AeroType::ONE, {1, 0, 10, 3, 12.}, "", 1000};
+//
+//     m_pVoxelebXml->meteoxml.meteofile =  R"(D:\data\field_data\Sim_homo_LAI_2.0_timeSeries\Meteo\15m_meteo_corrected_sameWind.txt)";
+//     m_pVoxelebXml->atomcondxml.rlifile =  m_pVoxelebXml->definedDir + "\\defined\\Esky_scope.dat";
+//     m_pVoxelebXml->atomcondxml.rinfile =  m_pVoxelebXml->definedDir + "\\defined\\Esun_scope.dat";
+//     //   m_pVoxelebXml->meteoxml.aerocond = {10,10,3,0.36};
+// }
 
 void XmlExamples::createVoxelebxml(){
     m_pVoxelebXml=std::make_shared<VoxelEBXml>();
-
-    m_pVoxelebXml->projectDir = "F:\\work\\field_aoyunlst\\field_data\\aoyun\\";
-    m_pVoxelebXml->definedDir = "F:\\work\\field_aoyunlst\\field\\";
-
-    m_pVoxelebXml->settingxml.n_sample=64;
-    m_pVoxelebXml->settingxml.maxDepth = 32;
-    m_pVoxelebXml->settingxml.theGPU = 0;
-
-
-    m_pVoxelebXml->lightxml.name = "Solar";
-    m_pVoxelebXml->lightxml.solarAngle = {40, 30};
-    m_pVoxelebXml->lightxml.direct = 0.9;
-    m_pVoxelebXml->lightxml.diffuse = 0.1;
-    m_pVoxelebXml->lightxml.skyTemperature = 250;
-    m_pVoxelebXml->lightxml.solarTemperature = 6000;
-
-    m_pVoxelebXml->sensorxml.name = "UAV";
-    m_pVoxelebXml->sensorxml.resolution = {289*5, 289*5};
-    m_pVoxelebXml->sensorxml.isImage = true;
-    m_pVoxelebXml->sensorxml.isAlbedo = false;
-    m_pVoxelebXml->sensorxml.isDisplay = false;
-    m_pVoxelebXml->sensorxml.isTemperature = true;
-    m_pVoxelebXml->sensorxml.viewAngles = {{0, 0}};
-    m_pVoxelebXml->sensorxml.waves = {10500};
-    m_pVoxelebXml->sensorxml.projection = Projection::PARALLAL;
-
-    m_pVoxelebXml->scenexml.background.sceneSize={2890, 2890, 10}; // length, width, height
-    m_pVoxelebXml->scenexml.background.sceneOrigin={0, 0, 0};
-/*    m_pVoxelebXml->scenexml.background.sMin={0,0,0};
-    m_pVoxelebXml->scenexml.background.sMax={600,600,10};*/
-    m_pVoxelebXml->scenexml.background.stepsize_surface=1;
-    m_pVoxelebXml->scenexml.background.stepsize_height=1;
-//    m_pVoxelebXml->scenexml.stepsize_atmosphere = 1000;
+    // 时间序列案例
+    std::string caseName = "timeSeries";
+    caseName = "multiangle";
+   if (caseName == "multiangle")
+   {
+        m_pVoxelebXml->projectDir = R"(D:\rash\tst11eb)";            // 均质场景与SCOPE对比的时间序列观测：LAI=2
+        m_pVoxelebXml->definedDir = R"(D:\code\field_n\field)";
 
 
-    m_pVoxelebXml->scenexml.background.bgSpectralName = "soil";
-    m_pVoxelebXml->scenexml.background.bgThermalName = "K310";
-    m_pVoxelebXml->scenexml.background.bgPropName = "soilset";
-    m_pVoxelebXml->scenexml.background.isDEM = {false};
-    m_pVoxelebXml->scenexml.background.DEMFile = "";
-    m_pVoxelebXml->scenexml.background.lat = 40;
-    m_pVoxelebXml->scenexml.background.lon = 120;
+        m_pVoxelebXml->settingxml.n_sample= 32;
+        m_pVoxelebXml->settingxml.maxDepth = 32;
+        m_pVoxelebXml->settingxml.theGPU = 0;
 
 
-    PrimEntity primEntity1;
-    primEntity1= PrimEntity{"building",{"wall","roof"},{"wall","roof"},{"K300","K300"},
-                           {"crown","crown"},{"soilset","soilset"},Type::BUILDING,
-                           {ShapeType::ELLIPSOID,5,5,5,glm::vec3(0,0,0)},false," ", true,
-                           "F:\\work\\field_aoyunlst\\field_data\\aoyun\\beijing_zhong_height_normal_rotation.tif"};
+        m_pVoxelebXml->lightxml.name = "Solar";
+        m_pVoxelebXml->lightxml.solarAngle = {40, 30};
+        m_pVoxelebXml->lightxml.direct = 0.9;
+        m_pVoxelebXml->lightxml.diffuse = 0.1;
+        m_pVoxelebXml->lightxml.skyTemperature = 250;
+        m_pVoxelebXml->lightxml.solarTemperature = 6000;
 
-    PrimEntity primEntity2;
-    primEntity2 = PrimEntity{"tree",{"crown"},{"leaf"},{"K300"},
-                           {"crown"},{"leafbio"},Type::VEGETATION,{ShapeType::ELLIPSOID,10,10,10,glm::vec3(0,0,0)},false,
-                           " ", false,
-                           "",true,"F:\\work\\field_aoyunlst\\field_data\\aoyun\\entity_0_position.txt"};
-
-
-    m_pVoxelebXml->scenexml.objEntities = {};
-    m_pVoxelebXml->scenexml.primEntities = {primEntity1};
-
-
-
-    SpectralXml spectralXml1;
-    spectralXml1.spectralName="soil";
-    spectralXml1.type = spectralType::OTHER;
-    spectralXml1.reflectances = {0.1};
-    spectralXml1.transmittance ={0};
-    spectralXml1.path = "F:\\work\\field_aoyunlst\\field\\defined\\VNIR_construction_tar_asphalt.txt";
-    spectralXml1.tau_tir = 0;
-    spectralXml1.refl_tir = 0.05;
-
-    SpectralXml spectralXml3;
-    spectralXml3.spectralName="wall";
-    spectralXml3.type = spectralType::CUSTOM;
-    spectralXml3.reflectances = {0.5};
-    spectralXml3.transmittance ={0};
-  //  spectralXml3.path = "F:\\work\\field_aoyunlst\\field\\defined\\VNIR_construction_tar_asphalt.txt";
-    spectralXml3.path = "F:\\work\\field_aoyunlst\\field\\defined\\VNIR_construction_concrete_cement_solid.txt";
-    spectralXml3.tau_tir = 0;
-    spectralXml3.refl_tir = 0.05;
-
-    SpectralXml spectralXml4;
-    spectralXml4.spectralName="roof";
-    spectralXml4.type = spectralType::OTHER;
-    spectralXml4.reflectances = {0.5};
-    spectralXml4.transmittance ={0};
-   // spectralXml4.path = "F:\\work\\field_aoyunlst\\field\\defined\\VNIR_construction_tar_asphalt.txt";
-    spectralXml4.path = "f:\\work\\field_aoyunlst\\field\\defined\\VNIR_construction_concrete_cement_solid.txt";
-    spectralXml4.tau_tir = 0;
-    spectralXml4.refl_tir = 0.05;
-
-    SpectralXml spectralXml2{};
-    spectralXml2.spectralName="leaf";
-    spectralXml2.type = spectralType::PROSPECT;
-    spectralXml2.reflectances = {0.025};
-    spectralXml2.transmittance ={0};
-    spectralXml2.fp = {80,0.009,0.012,0,1.4};
-    spectralXml2.tau_tir = 0;
-    spectralXml2.refl_tir = 0.05;
-
-    m_pVoxelebXml->spectralxmls = {spectralXml1, spectralXml2, spectralXml3, spectralXml4};
+        m_pVoxelebXml->sensorxml.name = "UAV";
+        m_pVoxelebXml->sensorxml.resolution = {500, 500};
+        m_pVoxelebXml->sensorxml.isImage = true;
+        m_pVoxelebXml->sensorxml.isAlbedo = false;
+        m_pVoxelebXml->sensorxml.isDisplay = false;
+        m_pVoxelebXml->sensorxml.isTemperature = true;
+        // m_pVoxelebXml->sensorxml.viewAngles = {{0, 0}};
+       std::string vzaFileName = "C:\\Users\\zhongsy\\Documents\\WeChat Files\\wxid_ht1h2jl3lb0n12\\FileStorage\\File\\2024-10\\angles_Hemi.txt";
+       float  *vza, *vaa;
+       int num = 1;
+       // wave_ = Utils::infile2num(predifineDir+'Esk', 0, 0, num);
+       vza = Utils::readascfile(vzaFileName, 0, 0, num);
+       vaa = Utils::readascfile(vzaFileName, 0, 1, num);
+       for(int i = 0; i < num; i = i + 1){
+           m_pVoxelebXml->sensorxml.viewAngles.emplace_back(vza[i], vaa[i]);
+       }
 
 
-    m_pVoxelebXml->thermalxmls = {{"K310", 320, 300}, {"K300", 305, 295}};
+        m_pVoxelebXml->sensorxml.waves = {10500};
+        m_pVoxelebXml->sensorxml.projection = Projection::PARALLAL;
+
+        m_pVoxelebXml->scenexml.background.sceneSize={50, 50, 50}; // length, width, height
+        m_pVoxelebXml->scenexml.background.sceneOrigin={0, 0, 0};
+    /*    m_pVoxelebXml->scenexml.background.sMin={0,0,0};
+        m_pVoxelebXml->scenexml.background.sMax={600,600,10};*/
+        m_pVoxelebXml->scenexml.background.stepsize_surface=0.5;
+        m_pVoxelebXml->scenexml.background.stepsize_height=0.75;
+        // m_pVoxelebXml->scenexml.background.stepsize_surface=1;
+        // m_pVoxelebXml->scenexml.background.stepsize_height=1;
+    //    m_pVoxelebXml->scenexml.stepsize_atmosphere = 1000;
 
 
-    PropertyXml propertyXml1,propertyXml2,propertyXml3;
-    propertyXml1 = {"soilset",Type::SOIL};
-    propertyXml1.soilset = SoilSet{1,500,1180,1800,1.55,0.25,25,0.45};
+        m_pVoxelebXml->scenexml.background.bgSpectralName = "soil";
+        m_pVoxelebXml->scenexml.background.bgThermalName = "K310";
+        m_pVoxelebXml->scenexml.background.bgPropName = "soilset";
+        m_pVoxelebXml->scenexml.background.isDEM = {false};
+        m_pVoxelebXml->scenexml.background.DEMFile = "";
+        m_pVoxelebXml->scenexml.background.lat = 40.3574;
+        m_pVoxelebXml->scenexml.background.lon = 115.7923;
 
-    propertyXml2 = {"leafbio",Type::VEGETATION};
-    propertyXml2.leafbio = LeafBio{25,8,0.01,4,0.6396,0.025,{0.2,0.3,288,313,328},25,0.4,0,1,1,0};
 
-    propertyXml3 = {"buildup",Type::BUILDING};
-    propertyXml3.buildup = BuildUp{1,500,1180,1800,1.55,25};
+//        PrimEntity primEntity1;
+//        primEntity1= PrimEntity{"building",
+//                                {"wall","roof"},
+//                                {"wall","roof"},
+//                                {"K300","K300"},
+//                                {"crown","crown"},
+//                                {"soilset","soilset"},
+//                                Type::BUILDING,
+//                                {ShapeType::ELLIPSOID,5,5,5,glm::vec3(0,0,0)},
+//                                false," ",
+//                                true,m_pVoxelebXml->projectDir + "\\height_0_5.tif",
+//                                false, " "};
+
+        PrimEntity primEntity2;
+        primEntity2 = PrimEntity{"tree",
+                                 {"crown"},
+                                 {"leaf"},
+                                 {"K300"},
+                               {"crown"},
+                               {"leafbio"},
+                               Type::VEGETATION,
+                               {ShapeType::CUBE,3,40,40,glm::vec3(0,0,0)},
+                               false,"",
+                               false,"",
+                               true,m_pVoxelebXml->projectDir + "\\entity_0_position.txt"};
+
+
+        m_pVoxelebXml->scenexml.objEntities = {};
+        m_pVoxelebXml->scenexml.primEntities = {primEntity2};
 
 
 
+        SpectralXml spectralXml1;
+        spectralXml1.spectralName="soil";
+        spectralXml1.type = spectralType::OTHER;
+        spectralXml1.reflectances = {0.04};
+        spectralXml1.transmittance ={0};
+        spectralXml1.path = R"(C:\Users\zhongsy\Documents\WeChat Files\wxid_ht1h2jl3lb0n12\FileStorage\File\2024-10\1009test\1009test\soilnew_high.txt)";// m_pVoxelebXml->definedDir + "\\defined\\soilnew_high.txt";
+        spectralXml1.tau_tir = 0;
+        spectralXml1.refl_tir = 0.04;
 
-    m_pVoxelebXml->propxmls ={propertyXml1, propertyXml2};
+        SpectralXml spectralXml3;
+        spectralXml3.spectralName="wall";
+        spectralXml3.type = spectralType::OTHER;
+        spectralXml3.reflectances = {0.05};
+        spectralXml3.transmittance ={0};
+        spectralXml3.path =  m_pVoxelebXml->definedDir + "\\defined\\VNIR_construction_tar_asphalt.txt";
+    //    spectralXml3.path = "F:\\work\\field_aoyunlst\\field\\defined\\VNIR_construction_concrete_cement_solid.txt";
+        spectralXml3.tau_tir = 0;
+        spectralXml3.refl_tir = 0.05;
 
-    m_pVoxelebXml->canopyxmls ={{"crown", {1, 1, 1, 1, 0.5, -0.35, -0.15, 0.2, 0.2}}};
+        SpectralXml spectralXml4;
+        spectralXml4.spectralName="roof";
+        spectralXml4.type = spectralType::OTHER;
+        spectralXml4.reflectances = {0.05};
+        spectralXml4.transmittance ={0};
+        spectralXml4.path =  m_pVoxelebXml->definedDir + "\\defined\\VNIR_construction_tar_asphalt.txt";
+    //    spectralXml4.path = "D:\\work\\field_aoyunlst\\field\\defined\\VNIR_construction_concrete_cement_solid.txt";
+        spectralXml4.tau_tir = 0;
+        spectralXml4.refl_tir = 0.05;
 
-    m_pVoxelebXml->aerocondxml = {AeroType::ONE, {1, 10, 10, 3, 12.}, "", 1000};
+        SpectralXml spectralXml2{};
+        spectralXml2.spectralName="leaf";
+        spectralXml2.type = spectralType::PROSPECT;
+        spectralXml2.reflectances = {0.02};
+        spectralXml2.transmittance ={0};
+        spectralXml2.fp = {80,0.009,0.012,0,1.46};
+        spectralXml2.tau_tir = 0;
+        spectralXml2.refl_tir = 0.02;
 
-    m_pVoxelebXml->meteoxml.meteofile ="F:\\work\\field_aoyunlst\\field\\defined\\meteo.txt";
-    m_pVoxelebXml->atomcondxml.rlifile ="F:\\work\\field_aoyunlst\\field\\defined\\Esky_.dat";
-    m_pVoxelebXml->atomcondxml.rinfile ="F:\\work\\field_aoyunlst\\field\\defined\\Esun_.dat";
-    //   m_pVoxelebXml->meteoxml.aerocond = {10,10,3,0.36};
+        m_pVoxelebXml->spectralxmls = {spectralXml1, spectralXml2};
+
+
+        m_pVoxelebXml->thermalxmls = {{"K310", 320, 300},
+                                      {"K300", 305, 295}};
+
+
+        PropertyXml propertyXml1,propertyXml2,propertyXml3;
+        propertyXml1 = {"soilset",Type::SOIL};
+        propertyXml1.soilset = SoilSet{1,2000,1180,1800,1.55,0.25,25,0.45};
+
+        propertyXml2 = {"leafbio",Type::VEGETATION};
+        propertyXml2.leafbio = LeafBio{80,9,0.01,3,0.6396,0.015,
+            {0.2,0.3,288,313,328},25,0.507,0,1,1,0};
+
+        propertyXml3 = {"buildup",Type::BUILDING};
+        propertyXml3.buildup = BuildUp{1,500,1180,1800,1.55,25};
+
+
+
+
+        m_pVoxelebXml->propxmls ={propertyXml1, propertyXml2};
+
+        m_pVoxelebXml->canopyxmls ={{"crown", {2.0, 0.666, 3, 1, 0.5, -0.35, -0.15, 0.2, 0.2}}};
+        m_pVoxelebXml->aerocondxml = {AeroType::ONE, {0, 0, 10, 3, 12, 2.0, 0.2}, "", 1000};
+        // m_pVoxelebXml->canopyxmls ={{"crown", {1.0, 0.333, 3, 1, 0.5, -0.35, -0.15, 0.2, 0.2}}};
+        // m_pVoxelebXml->aerocondxml = {AeroType::ONE, {0, 0, 10, 3, 12, 1.0, 0.2}, "", 1000};
+        // m_pVoxelebXml->canopyxmls ={{"crown", {3.0, 1, 3, 1, 0.5, -0.35, -0.15, 0.2, 0.2}}};
+        // m_pVoxelebXml->aerocondxml = {AeroType::ONE, {0, 0, 10, 3, 12, 3.0, 0.2}, "", 1000};
+       // m_pVoxelebXml->canopyxmls ={{"crown", {5.0, 1, 5, 1, 0.5, -0.35, -0.15, 0.2, 0.2}}};
+       // m_pVoxelebXml->aerocondxml = {AeroType::ONE, {0, 0, 10, 5, 12, 5.0, 0.2}, "", 1000};
+
+        m_pVoxelebXml->meteoxml.meteofile =  R"(C:\Users\zhongsy\Documents\WeChat Files\wxid_ht1h2jl3lb0n12\FileStorage\File\2024-10\1009test\1009test\15m_meteo_corrected_sameWind.txt)";
+        m_pVoxelebXml->atomcondxml.rlifile =  "C:\\Users\\zhongsy\\Documents\\WeChat Files\\wxid_ht1h2jl3lb0n12\\FileStorage\\File\\2024-10\\1009test\\1009test\\Esky_scope.txt";//m_pVoxelebXml->definedDir + "\\defined\\Esky_scope.dat";
+        m_pVoxelebXml->atomcondxml.rinfile =  "C:\\Users\\zhongsy\\Documents\\WeChat Files\\wxid_ht1h2jl3lb0n12\\FileStorage\\File\\2024-10\\1009test\\1009test\\Esun_scope.txt";//m_pVoxelebXml->definedDir + "\\defined\\Esun_scope.dat";
+        //   m_pVoxelebXml->meteoxml.aerocond = {10,10,3,0.36};
+   }
 }
 
 

@@ -1,23 +1,67 @@
 //
 // Created by admin on 2024/1/24.
 //
-
 #include <iomanip>
 #include "fileio.h"
+#pragma once
+//#include "tinyxml.h"
+#include "structs.h"
+#include "myfunction.h"
+#include "stdlib.h"
+#include <stack>
+#include <string>
+#include "xmlexamples.h"
+
+using namespace std;
+
+TiXmlElement *RootElement1;
+Mode tick_mode;
+
+bool FileIO::readXml(std::string Path, std::string V) {
 
 
-bool FileIO::readXml(std::string filePath) {
+    Mode modeInd;
+//    Mode m_mode;
+//    m_mode = Mode::eVoxelEB;
+//    modeInd = Mode::eVoxelEB;
+//
+//    m_pVoxelebXml = std::move(xmlexamples.m_pVoxelebXml);
+//    return true;
+//
+//
+    if (V == "eRaytracing")
+    {
+        modeInd = Mode::eRaytracing;
+        m_mode = Mode::eRaytracing;
+    }
+    else if (V == "eVoxelEB")
+    {
+        modeInd = Mode::eVoxelEB;
+        m_mode = Mode::eVoxelEB;
+    }
 
-//    m_mode = Mode::eRaytracing;
-//    m_pRaytracingXml = std::move(xmlexamples.m_pRaytracingXml);
-    m_mode = Mode::eVoxelEB;
-    m_pVoxelebXml = std::move(xmlexamples.m_pVoxelebXml);
-    return false;
-
-//    m_mode = Mode::eVoxelRT;
-//    m_pVoxelrtXml = std::move(xmlexamples.m_pVoxelrtXml);
-//    return false;
-
+    else if(V == "eVoxelRT"){
+        modeInd = Mode::eVoxelRT;
+        m_mode = Mode::eVoxelRT;
+    }
+    else {
+        return false;
+    }
+////    modeInd = Mode::eRaytracing;
+////    m_mode = Mode::eRaytracing;
+////    m_pRaytracingXml = std::move(xmlexamples.m_pRaytracingXml);
+////    return false;
+//
+//
+//
+////    Mode  modeInd = Mode::eVoxelRT;
+////    m_mode = Mode::eVoxelRT;
+////    m_pVoxelrtXml = std::move(xmlexamples.m_pVoxelrtXml);
+////    return false;
+//
+//
+////    return false;
+    std::string filePath = Path + "\\Input.xml";
     TiXmlDocument mydoc(filePath.c_str()); // tinyxml.h
     bool isloadOk = mydoc.LoadFile();
     if (!isloadOk)
@@ -26,82 +70,779 @@ bool FileIO::readXml(std::string filePath) {
         exit(1);
     }
     TiXmlElement *RootElement = mydoc.RootElement(); // root node of xml
-    TiXmlNode *modeNode = RootElement->FirstChild("Mode");
-    TiXmlElement *rayTracingDepthEle = modeNode->FirstChildElement("rendermode");
-    Mode  modeInd = (Mode)std::stoi(rayTracingDepthEle->GetText());
-
+////    TiXmlNode *modeNode = RootElement->FirstChild("Mode");
+////    TiXmlElement *rayTracingDepthEle = modeNode->FirstChildElement("rendermode");
+////    Mode  modeInd = (Mode)std::stoi(rayTracingDepthEle->GetText());
+////    Mode  modeInd = Mode::eVoxelET;
+    RootElement1 = RootElement;
+    tick_mode = modeInd;
     if(modeInd == Mode::eRaytracing)
     {
         m_mode = Mode::eRaytracing;
         m_pRaytracingXml = std::make_shared<RaytracingXml>();
-        m_pRaytracingXml->lightxml = readLight(RootElement->FirstChild("Geometry"));
-        m_pRaytracingXml->sensorxml = readSensor(RootElement->FirstChild("Geometry"));
-        m_pRaytracingXml->spectralxmls = readSpectral(RootElement->FirstChild("Attribute"));
-        m_pRaytracingXml->thermalxmls = readThermal(RootElement->FirstChild("Attribute"));
-        m_pRaytracingXml->scenexml = readScene(RootElement->FirstChild("Scene"));
-        m_pRaytracingXml->settingxml = readSetting(RootElement->FirstChild("Setting"));
+        m_pRaytracingXml->projectDir = Path;
+        m_pRaytracingXml->definedDir = "..\\..\\field";
+        m_pRaytracingXml->settingxml = readSettingXML(RootElement->FirstChild("Control"), modeInd);
+        m_pRaytracingXml->lightxml = readLightXML(RootElement->FirstChild("Geometry"), modeInd);
+        m_pRaytracingXml->sensorxml = readSensorXML(RootElement->FirstChild("Geometry"), modeInd);
+        m_pRaytracingXml->spectralxmls = readSpectralXML(RootElement->FirstChild("Attribute"), modeInd);
+        m_pRaytracingXml->thermalxmls = readThermalXML(RootElement->FirstChild("Attribute"), modeInd);
+        m_pRaytracingXml->scenexml = readSceneXML(RootElement->FirstChild("Scene"), modeInd);
+
     }else if(modeInd == Mode::eVoxelEB){
+
         m_mode = Mode::eVoxelEB;
         m_pVoxelebXml = std::make_shared<VoxelEBXml>();
+        m_pVoxelebXml->projectDir = Path;
+        m_pVoxelebXml->definedDir = "..\\..\\field";
+        m_pVoxelebXml->settingxml = readSettingXML(RootElement->FirstChild("Control"), modeInd);
+        m_pVoxelebXml->lightxml = readLightXML(RootElement->FirstChild("Geometry"), modeInd);
+        m_pVoxelebXml->sensorxml = readSensorXML(RootElement->FirstChild("Geometry"), modeInd);
+        m_pVoxelebXml->scenexml = readSceneXML(RootElement->FirstChild("Scene"), modeInd);
+        m_pVoxelebXml->spectralxmls = readSpectralXML(RootElement->FirstChild("Attribute"), modeInd);
+//        m_pVoxelebXml->thermalxmls = readThermalXML(RootElement->FirstChild("Attribute"), modeInd);
+        m_pVoxelebXml->canopyxmls = readCanopyXML(RootElement->FirstChild("Attribute"), modeInd);
+        m_pVoxelebXml->propxmls = readPropertyXML(RootElement->FirstChild("Attribute"), modeInd);
+//        m_pVoxelebXml->atomcondxml = readAtomCondXML(RootElement->FirstChild("Geometry"), modeInd);
+        m_pVoxelebXml->meteoxml = readMeteoXML(RootElement->FirstChild("Meteorology"), modeInd);
+        m_pVoxelebXml->aerocondxml= readAeroXML(RootElement->FirstChild("Attribute"), modeInd);
+
     }
-    //readSetting(settingNode);
+
+    else if(modeInd == Mode::eVoxelRT){
+        m_mode = Mode::eVoxelRT;
+        m_pVoxelrtXml = std::make_shared<VoxelRTXml>();
+        m_pVoxelrtXml->projectDir = Path;
+        m_pVoxelrtXml->definedDir = "..\\..\\field";
+        m_pVoxelrtXml->settingxml = readSettingXML(RootElement->FirstChild("Control"), modeInd);
+        m_pVoxelrtXml->lightxml = readLightXML(RootElement->FirstChild("Geometry"), modeInd);
+        m_pVoxelrtXml->sensorxml = readSensorXML(RootElement->FirstChild("Geometry"), modeInd);
+        m_pVoxelrtXml->scenexml = readSceneXML(RootElement->FirstChild("Scene"), modeInd);
+        m_pVoxelrtXml->spectralxmls = readSpectralXML(RootElement->FirstChild("Attribute"), modeInd);
+        m_pVoxelrtXml->canopyxmls = readCanopyXML(RootElement->FirstChild("Attribute"), modeInd);
+        m_pVoxelrtXml->propxmls = readPropertyXML(RootElement->FirstChild("Attribute"), modeInd);
+//        m_pVoxelrtXml->thermalxmls = readThermalXML(RootElement->FirstChild("Attribute"), modeInd);
+
+    }
     return true;
+
+}
+
+
+AeroCondXml FileIO::readAeroXML(TiXmlNode *node, Mode mode) {
+
+    AeroCondXml aeroCondXml;
+    TiXmlElement *AeroNode = node->FirstChildElement("Aerodynamics");
+//    aeroCondXml = {
+//            AeroType::ONE,
+//            {
+//
+//            }
+//    };
+//    aeroCondXml = {AeroType::ONE,
+//                   {1, 10, 10, 3, 12.}, "", 1000};
+    for (TiXmlElement *AeroNode0 = AeroNode->FirstChildElement(); AeroNode0 != NULL; AeroNode0 = AeroNode->NextSiblingElement()) {
+
+        aeroCondXml = {AeroType::ONE,
+                       {stoi(AeroNode0->FirstChildElement("type")->GetText()),
+                        stof(AeroNode0->FirstChildElement("L")->GetText()),
+                        stof(AeroNode0->FirstChildElement("ustar")->GetText()),
+                        stof(AeroNode0->FirstChildElement("hc_veg")->GetText()),
+                        stof(AeroNode0->FirstChildElement("hc_build")->GetText()),
+                        stof(AeroNode0->FirstChildElement("lai")->GetText()),
+                        stof(AeroNode0->FirstChildElement("leaf_width")->GetText())},
+                       "1",
+                       stof(AeroNode0->FirstChildElement("stepsizeatmos")->GetText())
+        };
+
+    }
+    return aeroCondXml;
+}
+
+MeteoXml FileIO::readMeteoXML(TiXmlNode *node, Mode mode) {
+
+
+    MeteoXml meteoxml;
+    MeteoMeta meta;
+    meteoxml.startTimeNode = stoi(node->FirstChildElement("startTimeNode")->GetText());
+    meteoxml.endTimeNode = stoi(node->FirstChildElement("endTimeNode")->GetText());
+    meta.z = stof(node->FirstChildElement("z")->GetText());
+    meta.Tsold = stof(node->FirstChildElement("Tsold")->GetText());
+    meta.SatWater = stof(node->FirstChildElement("SatWater")->GetText());
+    meta.dTime = stof(node->FirstChildElement("dTime")->GetText());
+    meteoxml.meteofile = node->FirstChildElement("filePath")->GetText();
+    meteoxml.meta = meta;
+
+    m_meteoXml = meteoxml;
+    return meteoxml;
+
+}
+
+AtomCondXml FileIO::readAtomCondXML(TiXmlNode *node, Mode mode) {
+
+    AtomCondXml atomCondXml;
+    TiXmlNode* lightNode = node->FirstChildElement("Light");
+    for (TiXmlElement* pEle = lightNode->FirstChildElement(); pEle != NULL; pEle = pEle->NextSiblingElement())
+    {
+        atomCondXml.rlifile = pEle->FirstChildElement("eskyFileName")->GetText();
+        atomCondXml.rinfile = pEle->FirstChildElement("esunFileName")->GetText();
+        break;
+
+    }
+
+
+    return atomCondXml;
+}
+
+std::vector<PropertyXml> FileIO::readPropertyXML(TiXmlNode *node, Mode mode) {
+
+    std::vector<PropertyXml> propxmls;
+    TiXmlElement* chemstry_node = node->FirstChildElement("Biochemistry");
+    for (TiXmlElement* Node = chemstry_node->FirstChildElement(); Node != NULL; Node = Node->NextSiblingElement()){
+        PropertyXml propertyXml;
+        if (sonExists("leafBio", Node)){
+            TiXmlElement* leafNode = Node->FirstChildElement("leafBio");
+            propertyXml.name = leafNode->Attribute("name");
+//            propertyXml.name = "tree";
+            if (propertyXml.name == "leafBio"){
+                propertyXml.name = "leafbio";
+            }
+            propertyXml.type = Type::VEGETATION;
+            propertyXml.leafbio = LeafBio{
+                    stof(leafNode->FirstChildElement("Vcmax")->GetText()),
+                    stof(leafNode->FirstChildElement("m")->GetText()),
+                    stof(leafNode->FirstChildElement("BallBerry")->GetText()),
+                    stof(leafNode->FirstChildElement("Type")->GetText()),
+                    stof(leafNode->FirstChildElement("kV")->GetText()),
+                    stof(leafNode->FirstChildElement("Rdparam")->GetText()),
+                    {
+                            myFunction::mySplitFloat(leafNode->FirstChildElement("Tparam")->GetText(), ",")[0],
+                            myFunction::mySplitFloat(leafNode->FirstChildElement("Tparam")->GetText(), ",")[1],
+                            myFunction::mySplitFloat(leafNode->FirstChildElement("Tparam")->GetText(), ",")[2],
+                            myFunction::mySplitFloat(leafNode->FirstChildElement("Tparam")->GetText(), ",")[3],
+                            myFunction::mySplitFloat(leafNode->FirstChildElement("Tparam")->GetText(), ",")[4],
+                    },
+                    stof(leafNode->FirstChildElement("Tyear")->GetText()),
+                    stof(leafNode->FirstChildElement("beta")->GetText()),
+                    stof(leafNode->FirstChildElement("kNPQs")->GetText()),
+                    stof(leafNode->FirstChildElement("qLs")->GetText()),
+                    stof(leafNode->FirstChildElement("stressfactor")->GetText()),
+                    (stoi(leafNode->FirstChildElement("Tcor")->GetText()))
+            };
+            propxmls.push_back(propertyXml);
+//            continue;
+        }
+        if (sonExists("soilSet", Node)){
+            PropertyXml propertyXml2;
+            TiXmlElement* soilNode = Node->FirstChildElement("soilSet");
+            propertyXml2.name = soilNode->Attribute("name");
+//            propertyXml2.name = "soilset";
+            if (propertyXml2.name == "soil"){
+                propertyXml2.name = "soilset";
+            }
+            propertyXml2.type = Type::SOIL;
+            propertyXml2.soilset = SoilSet{
+                    stoi(soilNode->FirstChildElement("method")->GetText()),
+                    stof(soilNode->FirstChildElement("rss")->GetText()),
+                    stof(soilNode->FirstChildElement("cs")->GetText()),
+                    stof(soilNode->FirstChildElement("rhos")->GetText()),
+                    stof(soilNode->FirstChildElement("lambdas")->GetText()),
+                    stof(soilNode->FirstChildElement("Tsoil")->GetText()),
+                    stof(soilNode->FirstChildElement("SMC")->GetText()),
+                    stof(soilNode->FirstChildElement("Satwater")->GetText())
+//                    0.45
+            };
+            propxmls.push_back(propertyXml2);
+////            continue;
+//
+        }
+    }
+    return propxmls;
+
 }
 
 
 
-std::vector<SpectralXml> FileIO::readSpectral(TiXmlNode *node, Mode mode) {
+
+
+
+
+bool FileIO::sonExists(std::string sonName, TiXmlElement* parentEle)
+{
+    //根据节点名称进行查询
+    for (TiXmlElement* pEle = parentEle->FirstChildElement(); pEle; pEle = pEle->NextSiblingElement())///循环下面所有节点
+    {
+        //recursive find sub node return node pointer
+        if (!strcmp(sonName.c_str(), pEle->Value()))
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+std::vector<SpectralXml> FileIO::readSpectralXML(TiXmlNode *node, Mode mode) {
 
     std::vector<SpectralXml> spectralxmls;
+    TiXmlElement *spectralNode = node->FirstChildElement("Spectral");
 
+    for (TiXmlElement *Node = spectralNode->FirstChildElement("spectral");
+         Node != NULL; Node = Node->NextSiblingElement("spectral")) {
+        SpectralXml spectralXml;
+        const char *nameAttribute = Node->Attribute("name");
+
+        if (!nameAttribute) {
+            std::cerr << "Error: <spectral> element is missing 'name' attribute." << std::endl;
+            continue;
+        }
+
+        spectralXml.spectralName = nameAttribute;
+
+        if (Node->Attribute("type") == std::string("custom")) {
+            if (tick_mode == Mode::eRaytracing || tick_mode == Mode::eVoxelRT){
+                spectralXml.type = spectralType::CUSTOM;
+            }
+            else if (tick_mode == Mode::eVoxelEB){
+                spectralXml.type = spectralType::OTHER;
+            }
+            spectralXml.reflectances = {myFunction::mySplitFloat(Node->FirstChildElement("reflectance")->GetText(), ",")};
+            spectralXml.transmittance = {myFunction::mySplitFloat(Node->FirstChildElement("transmittance")->GetText(), ",")};
+            if (tick_mode == Mode::eVoxelEB || tick_mode == Mode::eVoxelRT){
+                spectralXml.tau_tir = stof(Node->FirstChildElement("tau_TIR")->GetText());
+                spectralXml.refl_tir = stof(Node->FirstChildElement("ref_TIR")->GetText());
+            }
+
+            std::string a = Node->FirstChildElement("spectral_file")->GetText();
+            spectralXml.path = a;
+        } else if (Node->Attribute("type") == std::string("Prospect")) {
+            spectralXml.type = spectralType::PROSPECT;
+            spectralXml.reflectances = {myFunction::mySplitFloat((Node->FirstChildElement("reflectance")->GetText()), ",")};
+            spectralXml.transmittance = {myFunction::mySplitFloat((Node->FirstChildElement("transmittance")->GetText()), ",")};
+//红外波段只取一个值
+            if (tick_mode == Mode::eVoxelEB || tick_mode == Mode::eVoxelRT){
+                spectralXml.tau_tir = stof(Node->FirstChildElement("tau_TIR")->GetText());
+                spectralXml.refl_tir = stof(Node->FirstChildElement("ref_TIR")->GetText());
+            }
+
+
+            spectralXml.fp = {
+                    stof(Node->FirstChildElement("Cab")->GetText()),
+                    stof(Node->FirstChildElement("Cw")->GetText()),
+                    stof(Node->FirstChildElement("Cdm")->GetText()),
+                    stof(Node->FirstChildElement("Cs")->GetText()),
+                    stof(Node->FirstChildElement("N")->GetText())
+            };
+        }
+        else if (Node->Attribute("type") == std::string("BSM")) {
+            spectralXml.type = spectralType::BSM;
+            spectralXml.reflectances = {
+                    myFunction::mySplitFloat((Node->FirstChildElement("reflectance")->GetText()), ",")};
+            spectralXml.transmittance = {
+                    myFunction::mySplitFloat((Node->FirstChildElement("transmittance")->GetText()), ",")};
+//红外波段只取一个值
+            if (tick_mode == Mode::eVoxelEB || tick_mode == Mode::eVoxelRT){
+                spectralXml.tau_tir = stof(Node->FirstChildElement("tau_TIR")->GetText());
+                spectralXml.refl_tir = stof(Node->FirstChildElement("ref_TIR")->GetText());
+            }
+
+            spectralXml.bsm = {
+                    stof(Node->FirstChildElement("SMC")->GetText()),
+                    stof(Node->FirstChildElement("BSMBrightness")->GetText()),
+                    stof(Node->FirstChildElement("BSMlat")->GetText()),
+                    stof(Node->FirstChildElement("BSMlon")->GetText())
+            };
+        }
+        spectralxmls.push_back(spectralXml);
+    }
 
     return spectralxmls;
 }
 
-
-std::vector<ThermalXml> FileIO::readThermal(TiXmlNode *node, Mode mode) {
-
-    std::vector<ThermalXml> thermalxmls;
+std::vector<ThermalXml> FileIO::readThermalXML(TiXmlNode *node, Mode mode) {
 
 
-    return thermalxmls;
+
+    std::vector<ThermalXml> thermalXmls;
+    TiXmlElement* thermalNode = node->FirstChildElement("Thermal");
+    for (TiXmlElement* Node = thermalNode->FirstChildElement("thermal"); Node != NULL; Node = Node->NextSiblingElement()){
+        ThermalXml thermalxml;
+        thermalxml = {
+                Node->Attribute("name"),
+                stof(Node->FirstChildElement("sunlitTemperature")->GetText()),
+                stof(Node->FirstChildElement("shadedTemperature")->GetText())
+        };
+        thermalXmls.push_back(thermalxml);
+    }
+    return thermalXmls;
 }
 
+std::vector<CanopyXml> FileIO::readCanopyXML(TiXmlNode *node, Mode mode) {
 
-SensorXml FileIO::readSensor(TiXmlNode *node, Mode mode){
+    std::vector<CanopyXml> CanopyXmls;
+    TiXmlElement* canopyNode = node->FirstChildElement("Canopy");
+    for (TiXmlElement* Node = canopyNode->FirstChildElement("canopy"); Node != NULL; Node = Node->NextSiblingElement()){
+        CanopyXml canopyXml;
+        canopyXml.canopyName = Node->Attribute("name");
+        canopyXml.canopy = {
+                stof(Node ->FirstChildElement("lai")->GetText()),
+                stof(Node ->FirstChildElement("density")->GetText()),
+                stof(Node ->FirstChildElement("hc")->GetText()),
+                1,
+                stof(Node ->FirstChildElement("G")->GetText()),
+                stof(Node ->FirstChildElement("LIDFa")->GetText()),
+                stof(Node ->FirstChildElement("LIDFb")->GetText()),
+                stof(Node ->FirstChildElement("hspot")->GetText()),
+                stof(Node ->FirstChildElement("leafwidth")->GetText())
+        };
+        CanopyXmls.push_back(canopyXml);
+    }
+//    CanopyXml canopyXml = {"crown", {1, 1, 1, 1, 0.5, -0.35, -0.15, 0.2, 0.2}};
+//    CanopyXmls ={canopyXml};
+
+    return CanopyXmls;
+}
+
+//ThermalXml FileIO::readThermal(TiXmlNode *node, Mode mode) {
+//
+//    ThermalXml thermalxmls;
+//    if (sonExists("Thermal", node->ToElement()))
+//    {
+//        TiXmlElement* thermalEle = node->FirstChildElement("Thermal");
+//        for (TiXmlElement* pEle = thermalEle->FirstChildElement(); pEle != NULL; pEle = pEle->NextSiblingElement())
+//        {
+////            ThermalStruct temp;
+//
+//            thermalxmls.thermalName = pEle->Attribute("name");
+//            thermalxmls.sunlitTemperature = std::stof(pEle->FirstChildElement("sunlitTemperature")->GetText());
+//            thermalxmls.shadedTemperature = std::stof(pEle->FirstChildElement("shadedTemperature")->GetText());
+////            thermalDatasets.push_back(temp);
+//        }
+//    }
+//
+//    return thermalxmls;
+//}
+
+
+SensorXml FileIO::readSensorXML(TiXmlNode *node, Mode mode){
+
     SensorXml sensorxml;
+    TiXmlElement* sensorEle = node->FirstChildElement("Sensor");
+//赋值
+    for (TiXmlElement* pEle = sensorEle->FirstChildElement(); pEle != NULL; pEle = pEle->NextSiblingElement())
+    {
+//        SensorStruct temp;
+        sensorxml.name = pEle->Attribute("name");
+//        sensorxml.projection = pEle->FirstChildElement("projWay")->GetText();
+        sensorxml.projection = Projection::PARALLAL;
+        if (sonExists("FOV", pEle))
+        {
+//            temp.FOV = std::stoi(pEle->FirstChildElement("FOV")->GetText());
+        }
+        else
+        {
+//            temp.FOV = -1;
+        }
+        sensorxml.resolution = {std::stof(pEle->FirstChildElement("pixelResolutionX")->GetText()),
+                                std::stof(pEle->FirstChildElement("pixelResolutionY")->GetText())};
+//        temp.pixelResolutionX = std::stof(pEle->FirstChildElement("pixelResolutionX")->GetText());
+//        temp.pixelResolutionY = std::stof(pEle->FirstChildElement("pixelResolutionY")->GetText());
+
+        sensorxml.waves = myFunction::mySplitFloat(pEle->FirstChildElement("controlBand")->GetText(), ",");
+
+        TiXmlElement* allViewAngleEle = pEle->FirstChildElement("viewAngle");
+        for (TiXmlElement* subEle = allViewAngleEle->FirstChildElement(); subEle != NULL; subEle = subEle->NextSiblingElement())
+        {
+            std::string type = subEle->Attribute("type");
+            if (type == "custom")
+            {
+                glm::vec2 viewanglesk;
+                for (TiXmlElement* viewAngleIter = subEle->FirstChildElement(); viewAngleIter != NULL; viewAngleIter = viewAngleIter->NextSiblingElement())
+                {
+                    nvmath::vec2f viewAngleTemp = { myFunction::mySplitFloat(viewAngleIter->GetText(), ",")[0],
+                                                    myFunction::mySplitFloat(viewAngleIter->GetText(), ",")[1] };
+                    viewanglesk = {viewAngleTemp[0],
+                                   viewAngleTemp[1]};
+                    sensorxml.viewAngles.push_back(viewanglesk);
+//                    temp.viewZenith.push_back(viewAngleTemp[0]);
+//                    temp.viewAzimuth.push_back(viewAngleTemp[1]);
+                }
+            }
+            else if (type == "BRF")
+            {
+                if (stoi(subEle->FirstChildElement("SPP")->GetText()) == 1){
+                    int VzaMax = stoi(subEle->FirstChildElement("vzaMax")->GetText());
+                    int vzaStep = stoi(subEle->FirstChildElement("vzaStep")->GetText());
+                    for (int k = 0; k<=VzaMax; k += vzaStep){
+                        nvmath::vec2f viewAngleTemp = {k, 0};
+                        glm::vec2 viewanglesk = {viewAngleTemp[0],
+                                                 viewAngleTemp[1]};
+                        sensorxml.viewAngles.push_back(viewanglesk);
+                    }
+
+                }
+            }
+            else if (type == "albedo")
+            {
+                int isHemisphere = stoi(subEle->FirstChildElement("enabled")->GetText());
+                int hemiAngleNum = stoi(subEle->FirstChildElement("angleNum")->GetText());
+            }
+        }
+
+//        sensorDatasets.push_back(temp);
+    }
+// 补充，sensorxml里面的bool isImage{true};
+//    bool isAlbedo{false};
+//    bool isTemperature{true};
+//    bool isDisplay{false};属性------------------------------------------------------------------------------
+
+//    sensorxml.viewAngles = {{0, 0}};
+
+    TiXmlNode *controlnode = RootElement1->FirstChild("Control");
+    if (sonExists("isAlbedo", controlnode->ToElement()))
+    {
+        sensorxml.isAlbedo = stoi(controlnode->FirstChildElement("isAlbedo")->GetText());
+    }
+    if (sonExists("isImage", controlnode->ToElement()))
+    {
+        sensorxml.isImage = stoi(controlnode->FirstChildElement("isImage")->GetText());
+    }
+    if (sonExists("isTemperature", controlnode->ToElement()))
+    {
+        sensorxml.isTemperature = stoi(controlnode->FirstChildElement("isTemperature")->GetText());
+    }
+
+    if (sonExists("isDisplay", controlnode->ToElement()))
+    {
+        sensorxml.isDisplay = stoi(controlnode->FirstChildElement("isDisplay")->GetText());
+    }
 
     return sensorxml;
+
+
 }
-LightXml FileIO::readLight(TiXmlNode *node, Mode mode){
+LightXml FileIO::readLightXML(TiXmlNode *geometryNode, Mode mode){
+
     LightXml lightxml;
+    AtomCondXml atomCondXml;
+    TiXmlElement* lightEle = geometryNode->FirstChildElement("Light");
+    for (TiXmlElement* pEle = lightEle->FirstChildElement(); pEle != NULL; pEle = pEle->NextSiblingElement())
+    {
+
+//        LightStruct temp;
+
+        lightxml.name = pEle->Attribute("name");
+
+//        temp.isSun = stoi(pEle->FirstChildElement("isSun")->GetText());
+//        glm::vec2 sunAnglesk;
+        TiXmlElement* lightAngleEle = pEle->FirstChildElement("lightAngle");
+        for (TiXmlElement* lightAngleIter = lightAngleEle->FirstChildElement(); lightAngleIter != NULL; lightAngleIter = lightAngleIter->NextSiblingElement())
+        {
+
+            nvmath::vec2f lightAngleTemp = { myFunction::mySplitFloat(lightAngleIter->GetText(), ",")[0],
+                                             myFunction::mySplitFloat(lightAngleIter->GetText(), ",")[1] };
+            lightxml.solarAngle = {lightAngleTemp[0], lightAngleTemp[1]};
+
+        }
+
+        lightxml.skyTemperature = stof(pEle->FirstChildElement("skyTemperature")->GetText());
+        if (sonExists("directScatteringRatio", pEle->ToElement())){
+            if (tick_mode == Mode::eVoxelEB) {
+                m_pVoxelebXml->atomcondxml.rinfile = pEle->FirstChildElement("esunFileName")->GetText();
+                m_pVoxelebXml->atomcondxml.rlifile = pEle->FirstChildElement("eskyFileName")->GetText();
+            }
+            float k;
+            k = stof(pEle->FirstChildElement(("directScatteringRatio"))->GetText());
+            lightxml.direct = k;
+            lightxml.diffuse = 1 - lightxml.direct;
+            lightxml.solarTemperature = 6000;
+        }
+        else{
+            if (tick_mode == Mode::eRaytracing){
+//                break;
+            }
+            else if (tick_mode == Mode::eVoxelEB){
+                m_pVoxelebXml->atomcondxml.rinfile = pEle->FirstChildElement("esunFileName")->GetText();
+                m_pVoxelebXml->atomcondxml.rlifile = pEle->FirstChildElement("eskyFileName")->GetText();
+            }
+
+        }
+    }
+//-----------------------------------------x+y = 1, x/y = k,y = x=k-kx,x/(1+k) =k,x=k(1+k)
+//-----------------------------------------
+
 
     return lightxml;
 }
 
-SettingXml FileIO::readSetting(TiXmlNode *node, Mode mode){
-    SettingXml settingxml;
+SettingXml FileIO::readSettingXML(TiXmlNode *controlNode, Mode mode){
 
+    SettingXml settingxml;
+    settingxml.maxDepth = stoi(controlNode->FirstChildElement("rayTracingDepth")->GetText());
+    settingxml.theGPU = stoi(controlNode->FirstChildElement("GPU")->GetText());
+    settingxml.n_sample=32;
+    if (sonExists("isUAVtrave", controlNode->ToElement())){
+        settingxml.isUAVtrave = stoi(controlNode->FirstChildElement("isUAVtrave")->GetText());
+    }
     return settingxml;
 }
 
-SceneXml FileIO::readScene(TiXmlNode *node, Mode mode){
+SceneXml FileIO::readSceneXML(TiXmlNode *sceneNode, Mode mode) {
 
     SceneXml sceneXml;
+    sceneXml.background.sceneSize = {
+            stof(sceneNode->FirstChildElement("sceneSizeX")->GetText()),
+            stof(sceneNode->FirstChildElement("sceneSizeY")->GetText()),
+            stof(sceneNode->FirstChildElement("Height")->GetText())
+    };
+//    sceneSizeDatasets.sceneSizeX = stof(sceneNode->FirstChildElement("sceneSizeX")->GetText());
+//    sceneSizeDatasets.sceneSizeY = stof(sceneNode->FirstChildElement("sceneSizeY")->GetText());
+// ------------------------------------------------------
+    sceneXml.background.sceneOrigin = {0, 0, 0};
+// ------------------------------------------------------
+    if (sonExists("voxelSize", sceneNode->ToElement()))
+    {
+        sceneXml.background.stepsize_surface = stof(sceneNode->FirstChildElement("voxelSize")->GetText());
+        sceneXml.background.stepsize_height = stof(sceneNode->FirstChildElement("voxelSize")->GetText());
+    }
+    else
+    {
+        sceneXml.background.stepsize_surface = 1;
+        sceneXml.background.stepsize_height = 1;
+    }
+
+    if (sonExists("bgBioType", sceneNode->ToElement())) {
+//        sceneXml.background.bgPropName = sceneNode->FirstChildElement("bgBioName")->GetText();
+        sceneXml.background.bgPropName = sceneNode->FirstChildElement("bgBioName")->GetText();
+    }
+    else
+    {
+        sceneXml.background.bgPropName = "soilset";
+    }
+
+
+    if (sceneXml.background.bgPropName == "soilSet") {
+        sceneXml.background.bgPropName = "soilset";
+    }
+
+    if (sonExists("bgSpectral", sceneNode->ToElement())) {
+        sceneXml.background.bgSpectralName = sceneNode->FirstChildElement("bgSpectral")->GetText();
+    }
+
+//-------------------------------------------------------
+    if (sonExists("bgThermal", sceneNode->ToElement())) {
+        if(sceneNode->FirstChildElement("bgThermal")->GetText() != NULL){
+            sceneXml.background.bgThermalName = sceneNode->FirstChildElement("bgThermal")->GetText();
+        }
+    }
+//-------------------------------------------------------
+
+//暂时没有dem这个功能，设置为false
+    sceneXml.background.isDEM = {false};
+    sceneXml.background.DEMFile = "";
+
+// 添加一个meteo的经纬度信息-----------------------------------------
+    if (sonExists("Meteorology", RootElement1->ToElement()))
+    {
+        TiXmlNode *MeteorologyNode = RootElement1->FirstChild("Meteorology");
+        if (sonExists("Latitude", MeteorologyNode->ToElement())) {
+            sceneXml.background.lat = stof(MeteorologyNode->FirstChildElement("Latitude")->GetText());
+        }
+        if (sonExists("Longitude", MeteorologyNode->ToElement())) {
+            sceneXml.background.lon = stof(MeteorologyNode->FirstChildElement("Longitude")->GetText());
+        }
+    }
+//// obj文件和位置-----------------------
+    if (tick_mode == Mode::eVoxelEB)
+    {
+        sceneXml.objEntities = {};
+//    PrimEntity treeEntity;
+//    PrimEntity buildingEntity;
+        std::vector<PrimEntity> PrimEntitys;
+// 获取position
+        if (sonExists("Object", sceneNode->ToElement())) {
+            TiXmlElement *obj = sceneNode->FirstChildElement("Object");
+            for (TiXmlElement *node = obj->FirstChildElement(); node != NULL; node = node->NextSiblingElement()) {
+                PrimEntity entity;
+                entity.primitiveName = node->FirstChildElement("meshNames")->GetText();
+                entity.meshNames = {node->FirstChildElement("canopyNames")->GetText()};
+                std::string name = node->FirstChildElement("types")->GetText();
+
+                if (name == "building") {
+                    entity.meshNames = {"wall", "roof"};
+                    entity.spectralNames = {"wall", "roof"};
+//                    entity.thermalNames = {"wall", "roof"};
+                    entity.canopyNames = {node->FirstChildElement("canopyNames")->GetText(),
+                                          node->FirstChildElement("canopyNames")->GetText()};
+                    entity.propNames = {node->FirstChildElement("bioNames")->GetText(),
+                                        node->FirstChildElement("bioNames")->GetText()};
+                    entity.type = Type::BUILDING;
+                    entity.isshapeFromFile = false;
+                    entity.shapefile = " ";
+                    entity.isheightFromFile = true;
+                    entity.heightfile = m_pVoxelebXml->projectDir + "\\height.tif";
+//                entity.isdisFromFile = false;
+//                entity.distributefile = " ";
+                } else if (name == "vegetation") {
+                    entity.canopyNames = {node->FirstChildElement("canopyNames")->GetText()};
+                    entity.propNames = {node->FirstChildElement("bioNames")->GetText()};
+                    entity.spectralNames = {node->FirstChildElement("spectralNames")->GetText()};
+
+                    if (sonExists("thermalNames", node)){
+                        entity.thermalNames = {node->FirstChildElement("thermalNames")->GetText()};
+                    }
+                    entity.type = Type::VEGETATION;
+                    entity.isshapeFromFile = false;
+                    entity.shapefile = " ";
+                    entity.isheightFromFile = false;
+                    entity.heightfile = "";
+                    entity.isdisFromFile = true;
+                    entity.distributefile = node->FirstChildElement("objectPosition")->GetText();
+                }
+
+
+                std::string shapetype = node->FirstChildElement("shapeTypes")->GetText();
+                cout << shapetype << endl;
+                if (shapetype == "ellipsoid") {
+                    entity.shape = {ShapeType::ELLIPSOID,
+                                    myFunction::mySplitFloat(node->FirstChildElement("shapes")->GetText(), ",")[2],
+                                    myFunction::mySplitFloat(node->FirstChildElement("shapes")->GetText(), ",")[1],
+                                    myFunction::mySplitFloat(node->FirstChildElement("shapes")->GetText(), ",")[0],
+                                    glm::vec3(0, 0, 0)};
+                } else if (shapetype == "cube") {
+                    entity.shape = {ShapeType::CUBE,
+                                    myFunction::mySplitFloat(node->FirstChildElement("shapes")->GetText(), ",")[2],
+                                    myFunction::mySplitFloat(node->FirstChildElement("shapes")->GetText(), ",")[1],
+                                    myFunction::mySplitFloat(node->FirstChildElement("shapes")->GetText(), ",")[0],
+                                    glm::vec3(0, 0, 0)};
+                }
+                PrimEntitys.push_back(entity);
+            }
+        }
+        sceneXml.primEntities = PrimEntitys;
+    }
 
 
 
+    if (mode == Mode::eRaytracing)
+    {
+        std::vector<ObjEntity> ObjEntities;
+        TiXmlElement* objNode = sceneNode->FirstChildElement("Object");
+        for (TiXmlElement* node = objNode->FirstChildElement(); node != NULL; node = node->NextSiblingElement())
+        {
+            ObjEntity objEntity;
+            objEntity.objName = node->Attribute("objName");
+            objEntity.filePath = node->FirstChildElement("fileName")->GetText();
+//            objEntity.filePath = "D:\\work\\data\\field_aoyunlst\\field_data\\aoyun\\single_tree_a2_b3_q0.3_lai2.7.obj";
+            objEntity.meshNames = {"Crown"};
+//            objEntity.types = {Type::SOIL, Type::VEGETATION, Type::VEGETATION};
+            objEntity.types = {Type::VEGETATION};
+            objEntity.spectralNames = {myFunction::mySplitStr(node->FirstChildElement("spectralNames")->GetText(), ",")};
+//            objEntity.spectralNames = {"leaf"};
+            if (sonExists("thermalNames", node)){
+                objEntity.thermalNames = {myFunction::mySplitStr(node->FirstChildElement("thermalNames")->GetText(), ",")};
+            }
+
+//            objEntity.thermalNames = {"leaf"};
+            if(sonExists("objectPosition", node))
+            {
+                objEntity.isFromFile = {true};
+                objEntity.file = node->FirstChildElement("objectPosition")->GetText();
+            }
+
+//            objEntity.isFromFile = true;
+//            objEntity.file = "D:/work/gray_rt/1/entity_0_position.txt";
+            objEntity.objDistributions = {};
+            objEntity.scales = {};
+            objEntity.rotations = {};
+            ObjEntities.push_back(objEntity);
+        }
+        sceneXml.objEntities = ObjEntities;
+    }
+
+    if (tick_mode == Mode::eVoxelRT)
+    {
+        sceneXml.objEntities = {};
+//    PrimEntity treeEntity;
+//    PrimEntity buildingEntity;
+        std::vector<PrimEntity> PrimEntitys;
+// 获取position
+        if (sonExists("Object", sceneNode->ToElement())) {
+            TiXmlElement *obj = sceneNode->FirstChildElement("Object");
+            for (TiXmlElement *node = obj->FirstChildElement(); node != NULL; node = node->NextSiblingElement()) {
+                PrimEntity entity;
+                entity.primitiveName = node->FirstChildElement("meshNames")->GetText();
+                entity.meshNames = {node->FirstChildElement("canopyNames")->GetText()};
+                std::string name = node->FirstChildElement("types")->GetText();
+
+                if (name == "building") {
+                    entity.meshNames = {"wall", "roof"};
+                    entity.spectralNames = {"wall", "roof"};
+//                    entity.thermalNames = {"wall", "roof"};
+                    entity.canopyNames = {node->FirstChildElement("canopyNames")->GetText(),
+                                          node->FirstChildElement("canopyNames")->GetText()};
+                    entity.propNames = {node->FirstChildElement("bioNames")->GetText(),
+                                        node->FirstChildElement("bioNames")->GetText()};
+                    entity.type = Type::BUILDING;
+                    entity.isshapeFromFile = false;
+                    entity.shapefile = " ";
+                    entity.isheightFromFile = true;
+                    entity.heightfile = m_pVoxelebXml->projectDir + "\\height.tif";
+//                entity.isdisFromFile = false;
+//                entity.distributefile = " ";
+                } else if (name == "vegetation") {
+                    entity.canopyNames = {node->FirstChildElement("canopyNames")->GetText()};
+                    entity.propNames = {node->FirstChildElement("bioNames")->GetText()};
+                    entity.spectralNames = {node->FirstChildElement("spectralNames")->GetText()};
+
+                    if (sonExists("thermalNames", node)){
+                        entity.thermalNames = {node->FirstChildElement("thermalNames")->GetText()};
+                    }
+                    entity.type = Type::VEGETATION;
+                    entity.isshapeFromFile = false;
+                    entity.shapefile = " ";
+                    entity.isheightFromFile = false;
+                    entity.heightfile = "";
+                    entity.isdisFromFile = true;
+                    entity.distributefile = node->FirstChildElement("objectPosition")->GetText();
+                }
+
+
+                std::string shapetype = node->FirstChildElement("shapeTypes")->GetText();
+                cout << shapetype << endl;
+                if (shapetype == "ellipsoid") {
+                    entity.shape = {ShapeType::ELLIPSOID,
+                                    myFunction::mySplitFloat(node->FirstChildElement("shapes")->GetText(), ",")[2],
+                                    myFunction::mySplitFloat(node->FirstChildElement("shapes")->GetText(), ",")[1],
+                                    myFunction::mySplitFloat(node->FirstChildElement("shapes")->GetText(), ",")[0],
+                                    glm::vec3(0, 0, 0)};
+                } else if (shapetype == "cube") {
+                    entity.shape = {ShapeType::CUBE,
+                                    myFunction::mySplitFloat(node->FirstChildElement("shapes")->GetText(), ",")[2],
+                                    myFunction::mySplitFloat(node->FirstChildElement("shapes")->GetText(), ",")[1],
+                                    myFunction::mySplitFloat(node->FirstChildElement("shapes")->GetText(), ",")[0],
+                                    glm::vec3(0, 0, 0)};
+                }
+                PrimEntitys.push_back(entity);
+            }
+        }
+        sceneXml.primEntities = PrimEntitys;
+    }
     return sceneXml;
-
 }
 
 
 void FileIO::readDefined(std::shared_ptr<DefinedIO> & definedio) {
 
-    std::string optfile = "D:\\work\\field\\field\\defined\\optipar.txt";
+    std::string optfile = "..\\..\\field\\defined\\optipar.txt";
+    if (tick_mode = Mode::eVoxelRT){
+        definedio->definedDir = m_pVoxelrtXml->definedDir;
 
-    definedio->definedDir = m_pVoxelebXml->definedDir;
-    std::string predifineDir = definedio->definedDir+"/defined/";
+    }
+    else {
+        definedio->definedDir = m_pVoxelebXml->definedDir;
+
+    }
+    std::string predifineDir = definedio->definedDir + "\\defined\\";
     std::string infileName = predifineDir + "optipar.txt";
     int num = 1;
     Utils::readascfileinout(infileName,0,0,definedio->m_fluspectCoeff.wl_,num);
@@ -132,7 +873,7 @@ void FileIO::readMeteo(std::shared_ptr<DefinedIO> &defineio,int & n_node,
     auto & meteofile = m_pVoxelebXml->meteoxml.meteofile;
 
 
-    
+
     std::ifstream infile(meteofile);
     std::vector<std::string> fields;
     std::string deli(" "), line;
@@ -142,14 +883,14 @@ void FileIO::readMeteo(std::shared_ptr<DefinedIO> &defineio,int & n_node,
     n_node = std::stoi(fields[0].c_str());
 
     int meteoNum = 0;
-    float z = 15;
-    float sm = 0.25;
-    float ea = 15;
-    float Ca = 380;
-    float Oa = 209;
-    float Tsold = 25;
-    float SatWater = 0.45;
-    float dTime = 1800;
+    float z = m_meteoXml.meta.z;//15;
+    float sm = m_meteoXml.meta.sm;//0.25;
+    float ea = m_meteoXml.meta.ea;//15;
+    float Ca = m_meteoXml.meta.Ca;//380
+    float Oa = m_meteoXml.meta.Oa;//209
+    float Tsold = m_meteoXml.meta.Tsold;//
+    float SatWater = m_meteoXml.meta.SatWater;//0.45;
+    float dTime = m_meteoXml.meta.dTime;//1800;
 
     for (int i = 0; i < n_node; i++)
     {
@@ -166,7 +907,7 @@ void FileIO::readMeteo(std::shared_ptr<DefinedIO> &defineio,int & n_node,
         mi.Rli = std::atof(fields[6].c_str());
         mi.sm = sm;
         mi.z = z;
-        mi.ea = ea;
+//        mi.ea = ea;
         mi.Ca = Ca;
         mi.Oa = Oa;
         mi.dTime = dTime;
@@ -255,60 +996,138 @@ void FileIO::readMeteo(std::shared_ptr<DefinedIO> &defineio,int & n_node,
 
 
 
-void FileIO::writeENVIdata(std::string projectDir, float *pData, int width, int height, int band,
-                           Angle &angle, float t) {
+//void FileIO::writeENVIdata(std::string projectDir, float *pData, int width, int height, int band,
+//                           Angle &angle, float t) {
+//
+//    std::ostringstream  oss_x;
+//    oss_x << std::fixed << std::setprecision(2)<<std::setfill('0')<<angle.vza;
+//    std::ostringstream  oss_y;
+//    oss_y << std::fixed << std::setprecision(2)<<std::setfill('0')<<angle.vaa;
+//    std::ostringstream  oss_z;
+//    oss_z << std::fixed << std::setprecision(2)<<std::setfill('0')<<angle.sza;
+//    std::ostringstream  oss_w;
+//    oss_w << std::fixed << std::setprecision(2)<<std::setfill('0')<<angle.saa;
+//    std::ostringstream  oss_t;
+//    oss_t << std::fixed << std::setprecision(2)<<std::setfill('0')<<t;
+//
+////    std::string outPath = projectDir + "/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
+////                          "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".tif";
+//    std::string tifName,hdrName;
+//    if(t > 0){
+//        tifName = projectDir + "/results/t=" + oss_t.str() +"_VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
+//                  "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".img";
+//        hdrName = projectDir + "/results/t=" + oss_t.str() +"_VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
+//                  "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".hdr";
+//    }else {
+//        tifName = projectDir +"/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
+//                  "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".img";
+//        hdrName = projectDir +"/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
+//                  "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".hdr";
+//    }
+//    std::ofstream outfilet1(tifName.c_str(), std::ios::binary);
+//    outfilet1.write(reinterpret_cast<const char*>(pData), sizeof(float) * width * height * band);
+//    outfilet1.close();
+//
+//    std::ofstream outfile(hdrName);
+//    if (outfile.is_open())
+//    {
+//        outfile << "ENVI" << std::endl;
+//        outfile << "description = {" << std::endl;
+//        outfile << " File Imported into ENVI.} " << std::endl;
+//        outfile << "samples = " << width << std::endl;
+//        outfile << "lines   = " << height << std::endl;
+//        outfile << "bands   =  " << band << std::endl;
+//        outfile << "header offset = 0" << std::endl;
+//        outfile << "file type = ENVI Standard" << std::endl;
+//        outfile << "data type = 4" << std::endl;
+//        outfile << "interleave = bsp" << std::endl;
+//        outfile << "sensor type = unknown" << std::endl;
+//        outfile << "byte order = 0" << std::endl;
+//        outfile << "wavelength units = Unknown" << std::endl;
+//        outfile.close();
+//    }
+//    outfile.close();
+//
+//
+//}
 
-    std::ostringstream  oss_x;
-    oss_x << std::fixed << std::setprecision(2)<<std::setfill('0')<<angle.vza;
-    std::ostringstream  oss_y;
-    oss_y << std::fixed << std::setprecision(2)<<std::setfill('0')<<angle.vaa;
-    std::ostringstream  oss_z;
-    oss_z << std::fixed << std::setprecision(2)<<std::setfill('0')<<angle.sza;
-    std::ostringstream  oss_w;
-    oss_w << std::fixed << std::setprecision(2)<<std::setfill('0')<<angle.saa;
-    std::ostringstream  oss_t;
-    oss_t << std::fixed << std::setprecision(2)<<std::setfill('0')<<t;
-
-//    std::string outPath = projectDir + "/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
-//                          "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".tif";
-    std::string tifName,hdrName;
-    if(t > 0){
-        tifName = projectDir + "/results/t=" + oss_t.str() +"_VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
-                              "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".img";
-        hdrName = projectDir + "/results/t=" + oss_t.str() +"_VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
-                               "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".hdr";
-    }else {
-        tifName = projectDir +"/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
-                              "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".img";
-        hdrName = projectDir +"/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
-                              "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".hdr";
-    }
-    std::ofstream outfilet1(tifName.c_str(), std::ios::binary);
-    outfilet1.write(reinterpret_cast<const char*>(pData), sizeof(float) * width * height * band);
-    outfilet1.close();
-
-    std::ofstream outfile(hdrName);
-    if (outfile.is_open())
-    {
-        outfile << "ENVI" << std::endl;
-        outfile << "description = {" << std::endl;
-        outfile << " File Imported into ENVI.} " << std::endl;
-        outfile << "samples = " << width << std::endl;
-        outfile << "lines   = " << height << std::endl;
-        outfile << "bands   =  " << band << std::endl;
-        outfile << "header offset = 0" << std::endl;
-        outfile << "file type = ENVI Standard" << std::endl;
-        outfile << "data type = 4" << std::endl;
-        outfile << "interleave = bsp" << std::endl;
-        outfile << "sensor type = unknown" << std::endl;
-        outfile << "byte order = 0" << std::endl;
-        outfile << "wavelength units = Unknown" << std::endl;
-        outfile.close();
-    }
-    outfile.close();
+//void FileIO::readCustomSpectral(TiXmlElement* pEle)
+//{
+//    ManualSpectralStruct temp;
+//    temp.name = pEle->Attribute("name");;
+//
+//    std::vector<float> reflectanceVec = myFunction::mySplitFloat(pEle->FirstChildElement("reflectance")->GetText(), ",");
+//    std::vector<float> transmittanceVec = myFunction::mySplitFloat(pEle->FirstChildElement("transmittance")->GetText(), ",");
+//    for (int iter = 0; iter < reflectanceVec.size(); iter++)
+//    {
+//        OpticalMaterial optical;
+//        optical.band = sensorDatasets[0].controlBand[iter];
+//        optical.reflectance = reflectanceVec[iter];
+//        optical.transmittance = transmittanceVec[iter];
+//        temp.m_opticalMaterials.push_back(optical);
+//    }
+//    manualSpectralDatasets.push_back(temp);
+//}
 
 
-}
+
+
+
+
+//void FileIO::writeENVIdata(std::string projectDir, float *pData, int width, int height, int band,
+//                           Angle &angle, float t) {
+//
+//    std::ostringstream  oss_x;
+//    oss_x << std::fixed << std::setprecision(2)<<std::setfill('0')<<angle.vza;
+//    std::ostringstream  oss_y;
+//    oss_y << std::fixed << std::setprecision(2)<<std::setfill('0')<<angle.vaa;
+//    std::ostringstream  oss_z;
+//    oss_z << std::fixed << std::setprecision(2)<<std::setfill('0')<<angle.sza;
+//    std::ostringstream  oss_w;
+//    oss_w << std::fixed << std::setprecision(2)<<std::setfill('0')<<angle.saa;
+//    std::ostringstream  oss_t;
+//    oss_t << std::fixed << std::setprecision(2)<<std::setfill('0')<<t;
+//
+////    std::string outPath = projectDir + "/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
+////                          "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".tif";
+//    std::string tifName,hdrName;
+//    if(t > 0){
+//        tifName = projectDir + "/results/t=" + oss_t.str() +"_VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
+//                              "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".img";
+//        hdrName = projectDir + "/results/t=" + oss_t.str() +"_VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
+//                               "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".hdr";
+//    }else {
+//        tifName = projectDir +"/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
+//                              "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".img";
+//        hdrName = projectDir +"/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
+//                              "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".hdr";
+//    }
+//    std::ofstream outfilet1(tifName.c_str(), std::ios::binary);
+//    outfilet1.write(reinterpret_cast<const char*>(pData), sizeof(float) * width * height * band);
+//    outfilet1.close();
+//
+//    std::ofstream outfile(hdrName);
+//    if (outfile.is_open())
+//    {
+//        outfile << "ENVI" << std::endl;
+//        outfile << "description = {" << std::endl;
+//        outfile << " File Imported into ENVI.} " << std::endl;
+//        outfile << "samples = " << width << std::endl;
+//        outfile << "lines   = " << height << std::endl;
+//        outfile << "bands   =  " << band << std::endl;
+//        outfile << "header offset = 0" << std::endl;
+//        outfile << "file type = ENVI Standard" << std::endl;
+//        outfile << "data type = 4" << std::endl;
+//        outfile << "interleave = bsp" << std::endl;
+//        outfile << "sensor type = unknown" << std::endl;
+//        outfile << "byte order = 0" << std::endl;
+//        outfile << "wavelength units = Unknown" << std::endl;
+//        outfile.close();
+//    }
+//    outfile.close();
+
+
+//}
 
 void FileIO::writeENVIdata(std::string projectDir, float *pData, int width, int height, int band,
                            Angle &angle, float t, int k) {

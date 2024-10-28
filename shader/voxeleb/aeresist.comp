@@ -174,6 +174,7 @@ void main()
         hcmax = aeroConds[aeroId].hc_veg;
         laimax = aeroConds[aeroId].lai;
         leafwidth = aeroConds[aeroId].leafwidth;
+        rbs = 10; 
 
         //------------------------------------------
         // variable parameters, these are from defined data
@@ -257,7 +258,7 @@ void main()
             // aerodynamic resistance
             aeroConds[aeroId].ustar = ustar;
             raa = (1.0 / (kappa * ustar)*(log((z-d)/z0m)-ph_z + ph_zr));
-            if(isnan(raa)) raa = 140;
+            if(isnan(raa)) raa = 50;
             voxelRaas[bufferId0].raa = raa;
             // voxelRaas[bufferId0].raa = surf1DId;
             // return;
@@ -336,7 +337,9 @@ void main()
                 rwcs = hcmax*sinh(n) / (n*kh0) * 
                         (log((exp(n*(y1) / hcmax) - 1) / (exp(n*(y1) / hcmax) + 1)) -
                         log((exp(n*(y2) / hcmax) - 1) / (exp(n*(y2) / hcmax) + 1))); 
-                raa = rai + rar + rac+ rwcs + rbs;
+                raa = rai + rar + rac + rwcs + rbs;
+
+                // raa =  n;
                 if(isnan(raa)) raa = 50;
                 voxelRaas[bufferId0].raa = raa;  
 

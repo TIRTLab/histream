@@ -71,11 +71,15 @@ bool Voxel_raytracing(Ray ray, NanoVDBLink nanoVDBLink)
     float phase = gammaValue / gammaMaxValue;
     phase = clamp(phase,0,1);
     ivec3 voxelRes = ivec3(setting.voxelSize);
+
+    float canopyTSum = 0.0;
+    float canopyTNum = 0;
     
     for(int kstep = 0;kstep<=setting.maxStep;kstep++)
+    // for(int kstep = 0;kstep<=100;kstep++)
     {
         alpha_voxel = 1.0;
-        ClosestHit(ray);
+        ClosestHit(ray, 0.001);
 
         ///////////////////////////////////////////////////
 		/// sky case (sky -> sensor).
@@ -98,6 +102,15 @@ bool Voxel_raytracing(Ray ray, NanoVDBLink nanoVDBLink)
         voxelId = getVoxelIdSemi(sstate.position,semiRange,setting.scale,normalize(ray.direction),alignVoxelId);
 		bufferId = nanovdbGet(nanoVDBLink, voxelId);
         alignBufferId = nanovdbGet(nanoVDBLink, alignVoxelId);
+
+
+        // LST = sstate.position.y;
+        // LST = bufferId;
+        // LST = alignBufferId;
+        // LST = alignVoxelId.y;
+        // LST = voxelId.y;
+        // return false;
+        
    
         if(bufferId >= 0)
 		{
@@ -123,13 +136,14 @@ bool Voxel_raytracing(Ray ray, NanoVDBLink nanoVDBLink)
             // LST = voxelDirs[bufferId].solar;
             // LST = voxelHeatFlux[bufferId].Gsunlit;
             // LST =  voxelRsss[bufferId].sunlit;
+            // LST = alpha_toSensor;
             // return true;
 
 
 			if(typeId == TYPE_VEGETATION)
 			{
-                // LST = 2;
-                // return false;
+                // LST = voxelDirs[bufferId].solar;
+                // return true;
 
                 G = canopies[canopyId].G;
                 lai = canopies[canopyId].lai;
@@ -144,7 +158,20 @@ bool Voxel_raytracing(Ray ray, NanoVDBLink nanoVDBLink)
                 alpha_voxel = exp(-density * G * pathLength * scale);
 				alpha_toSolar = voxelDirs[bufferId].solar;
 
-				if(alpha_toSensor < 0.001) break;
+                // // LST = alpha_voxel;
+                // // // return true;
+                // float sunlitTemperature1 = voxelTempes[bufferId].sunlit;
+                // LST =  Planck(wavelength, sunlitTemperature1);
+                // LST = voxelNetRads[bufferId].directVrad;
+                // // LST = voxelRsss[bufferId].sunlit;
+                // // LST = voxelRaas[bufferId].raa;
+                // // LST = sunlitTemperature1;
+                // return true;
+                
+				if(alpha_toSensor < 0.001) {
+                    
+                    break;
+                }
 				// this is used for the hotspot effect
 				if(alpha_toSolar < 0.0001) pl_toSolar = 10000.0;
 				else pl_toSolar = -log(alpha_toSolar) / G / DENSITY;
@@ -161,8 +188,17 @@ bool Voxel_raytracing(Ray ray, NanoVDBLink nanoVDBLink)
                 {
                     hotspot = 0.0;
                 }
-                float fhotspot = hotspot / alpha_toSensor * phase;
 
+                float alpha_ = alpha_toSensor;
+                if (kstep==1){
+                    alpha_ = min(alpha_toSolar, alpha_toSensor);
+                }
+                float fhotspot = hotspot / alpha_ * phase;
+
+                // float fhotspot = hotspot / alpha_toSensor * phase;
+
+                if (fhotspot > 1) fhotspot = 1.0;
+                if (fhotspot < 0.0) fhotspot = 0.0;
 
                 float refl = spectralMaterials[spectralBase + NUM_VNIR].reflectance;
                 float trans = spectralMaterials[spectralBase + NUM_VNIR].transmittance;
@@ -176,15 +212,24 @@ bool Voxel_raytracing(Ray ray, NanoVDBLink nanoVDBLink)
                 float radianceDirect = 0.0;
                 float thermalRadiance = Planck(wavelength, sunlitTemperature) * fhotspot * alpha_toSensor
                                     + Planck(wavelength, shadedTemperature) * (alpha_toSensor * (1 - fhotspot));
+
+// canopyTSum += sunlitTemperature;
+// canopyTNum ++;
+// // // LST = Planck(wavelength, sunlitTemperature) - Planck(wavelength, shadedTemperature);
+// // return true;
                 // self collipsion;
                 float p = calReCor(lai);
                 float w = refl + trans;
                 float s = (w - p* w) / (1 - p* w);
                 float a = (1-w) / (1 - p *w); 
-                //radianceDirect = thermalRadiance * (1 - refl - trans) * (1 - alpha_voxel);
+                // radianceDirect = thermalRadiance * (1 - refl - trans) * (1 - alpha_voxel);
                 radianceDirect = thermalRadiance * (a) * (1 - alpha_voxel);
                                 
-                LST += radianceDirect; // debug
+                // LST += radianceDirect; // debug
+                if (radianceDirect > 0){
+                    LST += radianceDirect;
+                }
+
                 // LST += Planck(wavelength, envTemp) * (1 - alpha_voxel) * (refl) * alpha_toSensor;
                 LST += Planck(wavelength, envTemp) * (1 - alpha_voxel) * (s) * alpha_toSensor;
 
@@ -196,11 +241,25 @@ bool Voxel_raytracing(Ray ray, NanoVDBLink nanoVDBLink)
 
         if(alignBufferId >= 0)
 		{
+// if (canopyTNum > 0){
+//     LST = Planck(wavelength, canopyTSum / canopyTNum);
+//     return false;
+// }
+            // LST = 55;
+            // return false;
+            instanceId = voxelLinks[alignBufferId].instanceId;
+            meshId = instanceLinks[instanceId].meshId;
+            typeId = meshLinks[meshId].type;
+            canopyId = meshLinks[meshId].canopyId;
+            spectralId = meshLinks[meshId].spectralId;
+            thermalId = meshLinks[meshId].thermalId;
+            uint spectralBase = spectralId * NUM_BAND;
+            float envTemp = Inv_Stefen_Boltzmann(voxelNetRads[alignBufferId].diffuseTrad, 1);
 
-            if((sstate.typeId == TYPE_BUILDING) || (sstate.typeId == TYPE_SOIL)){
+            if((typeId == TYPE_BUILDING) || (typeId == TYPE_SOIL)){
             
                 int faceId = 0;
-                if(sstate.typeId == TYPE_BUILDING)
+                if(typeId == TYPE_BUILDING)
                 {
                     faceId  = getFaceIdSimple(sstate.position,semiRange,alignVoxelId);
                     alignBufferId = alignBufferId + faceId;
@@ -212,16 +271,7 @@ bool Voxel_raytracing(Ray ray, NanoVDBLink nanoVDBLink)
                 // LST = 0;
                 // return true;
 
-                instanceId = voxelLinks[alignBufferId].instanceId;
-                meshId = instanceLinks[instanceId].meshId;
-                typeId = meshLinks[meshId].type;
-                canopyId = meshLinks[meshId].canopyId;
-                spectralId = meshLinks[meshId].spectralId;
-                thermalId = meshLinks[meshId].thermalId;
-                uint spectralBase = spectralId * NUM_BAND;
-                float envTemp = Inv_Stefen_Boltzmann(voxelNetRads[alignBufferId].diffuseTrad, 1);
-
-                // LST = voxelNetRads[bufferId].directVrad;
+                // LST = voxelNetRads[alignBufferId].directVrad;
                 // LST = voxelNetRads[bufferId].diffuseVrad;
                 // LST = voxelNetRads[bufferId].directTrad;
                 // LST = voxelNetRads[bufferId].diffuseTrad;
@@ -231,9 +281,12 @@ bool Voxel_raytracing(Ray ray, NanoVDBLink nanoVDBLink)
                 // LST = voxelRaas[bufferId].raa;
                 // LST = voxelHeatFlux[bufferId].Gsunlit;
                 // break;
-                // LST =  voxelRaas[bufferId].raa;
+                // float sunlitTemperature1 = voxelTempes[alignBufferId].sunlit;
+                // LST =  Planck(wavelength, sunlitTemperature1);
+                // // LST = sunlitTemperature1;
                 // return true;
-                // LST = spectralId;
+                // LST = voxelDirs[alignBufferId].solar;//voxelNetRads[alignBufferId].diffuseTrad;;
+                // LST = alpha_toSensor;
                 // return true;
 
 
@@ -244,16 +297,22 @@ bool Voxel_raytracing(Ray ray, NanoVDBLink nanoVDBLink)
 				else pl_toSolar = -log(alpha_toSolar) / LEAFG / DENSITY;
 				if(alpha_toSensor < 0.0001) pl_toSensor = 10000.0;
 				else pl_toSensor = -log(alpha_toSensor) / LEAFG / DENSITY;
+
+                float flag = 0;
 				float hotspot =  Hotspot_Kuusk(normalize(lightSet.direction), normalize(sensorMatrix.direction), pl_toSolar, pl_toSensor, DENSITY, HSPOT);
                 if (checkSameDirection(normalize(lightSet.direction), normalize(sensorMatrix.direction)) && abs(alpha_toSolar - alpha_toSensor) < EPSION_2)
                 {
                     alpha_toSolar = alpha_toSensor;
                     hotspot = alpha_toSensor;
+                    flag = 1;
                 }
                 if ((pl_toSensor > 999) || (pl_toSolar>999))
                 {
                     hotspot = 0.0;
+                    flag = 2;
                 }
+                // float alpha_ = min(alpha_toSolar, alpha_toSensor);
+                // float fhotspot = hotspot / alpha_ ;
 
                 float refl = spectralMaterials[spectralBase + NUM_VNIR].reflectance;
                 float trans = spectralMaterials[spectralBase + NUM_VNIR].transmittance;
@@ -268,20 +327,24 @@ bool Voxel_raytracing(Ray ray, NanoVDBLink nanoVDBLink)
                 // hotspot
                 float thermalRadiance = Planck(wavelength, sunlitTemperature) * hotspot 
                                         + Planck(wavelength, shadedTemperature) * (alpha_toSensor - hotspot);
+                // float thermalRadiance = Planck(wavelength, sunlitTemperature) * fhotspot *  alpha_toSensor
+                //                         + Planck(wavelength, shadedTemperature) * (alpha_toSensor * (1 - fhotspot));
 
+// LST = Planck(wavelength, sunlitTemperature);
+// return false;
 
-
+                // LST += hotspot;
 
                 radianceDirect = thermalRadiance * (1 - refl - trans);
                 
                 //LST = canopy.G;
-                LST += radianceDirect;
+                if (radianceDirect > 0){
+                    LST += radianceDirect;
+                }
+                
                 LST += Planck(wavelength, envTemp)  * refl * alpha_toSensor;
-                // LST = 1;
-             //   LST = voxelDirs[bufferId].solar;
-                //               uint instanceId = voxelLinks[bufferId].instanceId;
-                // uint meshId = instanceLinks[instanceId].meshId;
-                // LST = meshLinks[meshId].type;
+
+               
 				break;
             }
 			

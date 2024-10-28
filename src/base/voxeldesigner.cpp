@@ -245,19 +245,19 @@ PrimMesh VoxelDesigner::createTriCube(Shape shape, float stepSize)
             glm::vec3 points[4];
             points[0].x = i;
             points[0].y = j ;
-            points[0].z = shape.height ;
+            points[0].z = round(shape.height /stepSize);
 
             points[1].x = (i);
             points[1].y = (j + 1);
-            points[1].z = shape.height;
+            points[1].z = round(shape.height/stepSize);
 
             points[2].x = (i + 1);
             points[2].y = (j + 1);
-            points[2].z = shape.height;
+            points[2].z = round(shape.height/stepSize);
 
             points[3].x = (i + 1);
             points[3].y = (j);
-            points[3].z = shape.height;
+            points[3].z = round(shape.height/stepSize);
 
             int list[] = {0, 1, 2, 0, 2, 3};
             for (int kk = 0; kk < 6; kk++)
@@ -280,19 +280,19 @@ PrimMesh VoxelDesigner::createTriCube(Shape shape, float stepSize)
             for (int j = 0; j < shape.width / stepSize; j++)
             {
                 glm::vec3 points[4];
-                points[0].x = shape.length;
+                points[0].x = round(shape.length/stepSize);
                 points[0].y = j;
                 points[0].z = k;
 
-                points[1].x = shape.length;
+                points[1].x = round(shape.length/stepSize);
                 points[1].y = (j + 1);
                 points[1].z = k;
 
-                points[2].x = shape.length;
+                points[2].x = round(shape.length/stepSize);
                 points[2].y = (j + 1);
                 points[2].z = (k + 1);
 
-                points[3].x = shape.length;
+                points[3].x = round(shape.length/stepSize);
                 points[3].y = j;
                 points[3].z = (k + 1);
 
@@ -318,19 +318,19 @@ PrimMesh VoxelDesigner::createTriCube(Shape shape, float stepSize)
         {
                 glm::vec3 points[4];
                 points[0].x = i;
-                points[0].y = shape.width;
+                points[0].y = round(shape.width/stepSize);
                 points[0].z = k;
 
                 points[1].x = (i + 1);
-                points[1].y = shape.width;
+                points[1].y = round(shape.width/stepSize);
                 points[1].z = k;
 
                 points[2].x = (i + 1);
-                points[2].y = shape.width;
+                points[2].y = round(shape.width/stepSize);
                 points[2].z = (k + 1);
 
                 points[3].x = i;
-                points[3].y = shape.width;
+                points[3].y = round(shape.width/stepSize);
                 points[3].z = (k + 1);
 
                 int list[] = {0, 1, 2, 0, 2, 3};
@@ -616,6 +616,28 @@ PrimMesh VoxelDesigner::createTriCube_roof(Shape shape, float stepSize)
     voxelTriModel.meshcenter = glm::vec3(shape.length / 2.0, shape.width / 2.0, 0 / 2.0);
 
     return voxelTriModel;
+}
+
+bool VoxelDesigner::outputPrimMesh(std::string path, PrimMesh mesh)
+{
+    std::ofstream outfile(path);
+    if (outfile.is_open())
+    {
+        for(int kk=0;kk< mesh.vertices.size();kk++)
+            outfile << "v "<<mesh.vertices[kk].pos.x <<  " "
+                    <<mesh.vertices[kk].pos.z << " "
+                    <<mesh.vertices[kk].pos.y << " "<<std::endl;
+
+        uint32_t m_indicesBase = 0;
+        for (int kk = 0; kk < mesh.indices.size(); kk=kk+3)
+            outfile << "f " << mesh.indices[kk]+1+ m_indicesBase << " "
+                    << mesh.indices[kk+1]+1+ m_indicesBase << " "
+                    << mesh.indices[kk+2]+1+ m_indicesBase << " " << std::endl;
+        m_indicesBase += mesh.nVertices;
+        outfile.close();
+        return true;
+    }
+    return false;
 }
 
 
@@ -911,6 +933,7 @@ std::vector<glm::ivec3> VoxelDesigner::createBackground(float sceneLength, float
 /// \param sceneLength
 /// \param sceneWidth
 /// \param stepSize
+/// create mesh on upper face, voxelId is left-down point
 /// \return a mesh with XYZ coordinate;
 PrimMesh VoxelDesigner::createTriBackground(float sceneLength, float sceneWidth, float stepSize)
 {
@@ -919,6 +942,8 @@ PrimMesh VoxelDesigner::createTriBackground(float sceneLength, float sceneWidth,
     mesh.nVertices = 0;
     mesh.nIndices = 0;
     float bgZ = -1;
+    // float bgZ = 0;
+
 
     for (int i = 0; i < sceneLength/stepSize; i++)
     {
@@ -927,19 +952,19 @@ PrimMesh VoxelDesigner::createTriBackground(float sceneLength, float sceneWidth,
             glm::vec3 points[4];
             points[0].x = i ;
             points[0].y = j ;
-            points[0].z = bgZ ;
+            points[0].z = bgZ +1;
 
             points[1].x = (i) ;
             points[1].y = (j + 1) ;
-            points[1].z = bgZ ;
+            points[1].z = bgZ +1;
 
             points[2].x = (i + 1) ;
             points[2].y = (j + 1) ;
-            points[2].z = bgZ ;
+            points[2].z = bgZ +1;
 
             points[3].x = (i + 1) ;
             points[3].y = (j) ;
-            points[3].z = bgZ ;
+            points[3].z = bgZ +1;
 
             int list[] = {0, 1, 2, 0, 2, 3};
             for (int k = 0;k < 6; k++)

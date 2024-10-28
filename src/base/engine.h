@@ -20,7 +20,7 @@ class Engine {
 public:
     Engine(){};
 
-    void input(std::string path);
+    void input(std::string path, std::string V);
     void init(Mode mode);
     void create();
     void run();

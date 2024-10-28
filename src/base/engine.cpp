@@ -25,12 +25,12 @@ void Engine::init(Mode mode)
 }
 
 
-void Engine::input(std::string path){
+void Engine::input(std::string path, std::string V){
 
 
  //   m_pRaytracingio->input(path);
     m_pFileio = std::make_shared<FileIO>();
-    m_pFileio->readXml(path);
+    m_pFileio->readXml(path, V);
     m_mode = m_pFileio->m_mode;
     init(m_pFileio->m_mode);
 

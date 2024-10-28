@@ -1,5 +1,6 @@
 
 *.cmake
+cmake-build-debug-visual-studio/*.*
 *.ninja
 *.txt
 *.bin
@@ -176,3 +177,27 @@ cmake-build-debug-visual-studio/nvpro_core/third_party/glfw/src/glfw_config.h
 cmake-build-debug-visual-studio/nvpro_core/third_party/imgui.lib
 cmake-build-debug-visual-studio/nvpro_core/third_party/implot.lib
 cmake-build-debug-visual-studio/Testing/Temporary/LastTest.log
+cmake-build-debug-visual-studio/CMakeFiles/field.dir/F_/work/nvpro_core/nvp/perproject_globals.cpp.obj
+cmake-build-debug-visual-studio/CMakeFiles/field.dir/F_/work/nvpro_core/nvp/resources.i
+cmake-build-debug-visual-studio/CMakeFiles/field.dir/F_/work/nvpro_core/nvp/resources.rc.res
+cmake-build-debug-visual-studio/CMakeFiles/field.dir/F_/work/nvpro_core/nvvk/nsight_aftermath_vk.cpp.obj
+cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/base/createVoxelFromHeightTif.cpp.obj
+cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/thirdparty/spa.cpp.obj
+cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/buffer.cpp.obj
+cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/command.cpp.obj
+cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/descriptor.cpp.obj
+cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/pipeline.cpp.obj
+cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/voxeleb.cpp.obj
+cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/voxelebio.cpp.obj
+cmake-build-debug-visual-studio/CMakeFiles/field.dir/F_/work/nvpro_core/nvp/perproject_globals.cpp.obj
+cmake-build-debug-visual-studio/CMakeFiles/field.dir/F_/work/nvpro_core/nvp/resources.i
+cmake-build-debug-visual-studio/CMakeFiles/field.dir/F_/work/nvpro_core/nvp/resources.rc.res
+cmake-build-debug-visual-studio/CMakeFiles/field.dir/F_/work/nvpro_core/nvvk/nsight_aftermath_vk.cpp.obj
+cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/base/createVoxelFromHeightTif.cpp.obj
+cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/thirdparty/spa.cpp.obj
+cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/buffer.cpp.obj
+cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/command.cpp.obj
+cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/descriptor.cpp.obj
+cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/pipeline.cpp.obj
+cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/voxeleb.cpp.obj
+cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/voxelebio.cpp.obj

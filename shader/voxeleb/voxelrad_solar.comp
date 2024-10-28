@@ -78,10 +78,11 @@ bool TraversalDirection(vec3 lightDirection)
                           voxelId0.y,
                           voxelId0.z -semiRange.z); 
 
-    if(typeId0 == TYPE_BUILDING)
-    {
-       getFacetIdPos(faceId,  voxelPos0);
-    }
+    // if(typeId0 == TYPE_BUILDING)
+    // {
+    //    getFacetIdPos(faceId,  voxelPos0);
+    // }
+    getFacetIdPos(faceId,  voxelPos0);
 
     ivec3 voxelId, alignVoxelId;                      // current passed voxel
     int bufferId,meshId,alignBufferId;                       // passed voxel Id
@@ -168,6 +169,7 @@ void main()
     // ts = 0 if solar direction is down
     voxelDirs[bufferId0].solar = 0.0;
   }else{
+    voxelDirs[bufferId0].solar = 0.0;
     TraversalDirection(directions);
   }
 }

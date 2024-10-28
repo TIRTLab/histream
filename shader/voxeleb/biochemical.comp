@@ -63,7 +63,8 @@ void main()
     float Rd;
     float stressfactor,Q, hcmax,xl,kV;
     float rss;
-    double ppm2bar,Cs,Ci,Es;
+    // double ppm2bar,Cs,Ci,Es;
+    float ppm2bar,Cs,Ci,Es;
     int Tcor;
     vec3 voxelId;
     Canopy canopy;
@@ -114,6 +115,9 @@ void main()
         xl = -(hcmax - voxelPos.y*scale)/hcmax;
         xl = clamp(xl,-1,0);
         // issunlit = 0 for shaded, issunlit = 1 for sunlit
+
+
+
 
         for(int issunlit=0; issunlit<2; issunlit++)
         {
@@ -186,7 +190,14 @@ void main()
 
             // convert all to bar: CO2 was supplied in ppm, O2 in permil, and pressure in mBar
             ppm2bar = 1E-6 * (p * 1E-3);
+
+
+// float a = float(int(ppm2bar * Cs * 1E9 + 0.00001));
+// highp float a = int(p * Cs) * 0.1;
+// atomicStore(voxelRsss[bufferId0].sunlit, a, gl_ScopeDevice,gl_StorageSemanticsBuffer,gl_SemanticsRelaxed);
+// return;
             Cs  = Cs * ppm2bar;
+
             O   = (O * 1E-3) * (p * 1E-3);
             if(Type > 3.5) O = 0;
             Kc25 = Kc25 * 1e-6;
@@ -281,19 +292,27 @@ void main()
             // stomatal conductance (gs)
             float gs = float(1.6 * A * ppm2bar /(Cs-Ci));
             // tomatal resistance (rcw)
-
+// float a = float(Cs);
+// atomicStore(voxelRsss[bufferId0].sunlit, a, gl_ScopeDevice,gl_StorageSemanticsBuffer,gl_SemanticsRelaxed);
+// return;
 
             float rcw = (rhoa/(Mair*1E-3))/(gs);
+
+
             if (A< 0) rcw =  0.625*1E6;
             if(isnan(rcw)) rcw = 0.625*1E6;
+
+
 
             // save back 
             if(issunlit==0) voxelRsss[bufferId0].shaded = rcw;
             else voxelRsss[bufferId0].sunlit = rcw;
             if(!isnan(Ci)) voxelAirs[bufferId0].ci = float(Ci/ppm2bar);
-        }
 
-    }
+            
+        }// if issunlit or not
+
+    }// if vegetation
 
 
 }

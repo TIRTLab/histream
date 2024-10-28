@@ -163,7 +163,8 @@ void ClosestHitT(Ray r)
 
 void ClosestHit(Ray r,float minLength)
 {
-  uint rayFlags = gl_RayFlagsTerminateOnFirstHitEXT; //gl_RayFlagsNoneEXT;  // gl_RayFlagsNoneEXT
+  uint rayFlags = gl_RayFlagsNoneEXT | gl_RayFlagsOpaqueEXT;
+  // uint rayFlags = gl_RayFlagsTerminateOnFirstHitEXT | gl_RayFlagsOpaqueEXT;
   prd.hitT      = INFINITY;
 
   // Initializes a ray query object but does not start traversal

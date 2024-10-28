@@ -16,7 +16,8 @@ message(STATUS "Processing Project ${PROJNAME}:")
 # C++ target and defines
 set(CMAKE_CXX_STANDARD 17)
 add_executable(${PROJNAME}
-        src/voxeleb/voxeleb.cpp)
+        src/voxeleb/voxeleb.cpp
+        src/base/myfunction.cpp)
 
 
 

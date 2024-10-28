@@ -5,7 +5,7 @@
 #define POROSITY 1 //土壤的孔隙度因子
 #define SSA 0.25 // single scattering albedo
 #define GST 0.35
-#define DENSITY 0.5
+#define DENSITY 1
 
 #define PI 3.14159265358979323
 #define TWO_PI 6.28318530717958648
@@ -41,7 +41,7 @@ const float InvPI = 0.318309886183790671538;
 
 #define EPSION 0.00000001
 #define GLEAF 0.5
-#define HSPOT 0.1
+#define HSPOT 0.5
 
 #define GROUP_SIZEXY 8
 #define GROUP_SIZEX 64

@@ -76,8 +76,8 @@ struct alignas(32)  VoxelLstSetting
 
     int frame{0};
     int maxIteration{3};
-    int maxDepth{16};
-    int maxStep{10};
+    int maxDepth{32};
+    int maxStep{64};
     int n_sample{16};
     int n_wave{5};
     int n_jump{10};

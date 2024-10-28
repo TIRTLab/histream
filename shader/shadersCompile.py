@@ -3,10 +3,11 @@ import os
 import glob
 import subprocess
 
-versionName = r'F:\work\field_aoyunlst\field\shader\voxelrt\\'
+versionName = r'D:\code\filed_newest\shader\voxelet\\'
 # versionName = 'RayTracing_Lambert'
 # versionName = 'VoxelTracing'
 # versionName = 'VoxelTriTracing'
+versionName = "voxeleb"
 
 inPath = os.path.join(os.path.dirname(__file__),versionName)
 outPath = os.path.join(os.path.dirname(__file__),versionName)

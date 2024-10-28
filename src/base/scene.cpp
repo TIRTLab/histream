@@ -282,6 +282,9 @@ bool Scene::createPrimObj_Crown(PrimEntity & voxelEntity,nanovdb::GridBuilder<in
     PrimMesh currentVoxelModelXYZ1;
     currentVoxelModelXYZ1 = loader.createTriEntity(shape, modelio->stepsize_surface);
     PrimMesh currentVoxelModel1 = XYZ2XZY(currentVoxelModelXYZ1, 0); // (1,1,0) => (1,0,1) with  height = 0
+
+    // bool a = loader.outputPrimMesh("D:/data/field_data/Sim_homo_LAI_0.0_timeSeries/crown.obj", currentVoxelModel1);
+
     currentVoxelModel1.meshId = n_modelmesh;
     meshio->primMeshes.emplace_back(currentVoxelModel1); //xzy
     std::string meshName1 = voxelEntity.meshNames[0];

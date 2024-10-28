@@ -59,7 +59,7 @@ void main()
     uint typeId = meshLinks[meshId].type;
     uint spectralId = meshLinks[meshId].spectralId;
     uint spectralIdBase = spectralId * NUM_BAND;
-
+    uint canopyId = meshLinks[meshId].canopyId;
     voxelNetRads[bufferId0].directVrad = 0.0;
 
     //---------------------------------------------------
@@ -80,13 +80,28 @@ void main()
         //---------------------------------
         // Attention: there is no alpha_solar
         //---------------------------------
-        float rad =  (Rin * atomConds[kband].direct * 0.001) * absorb; 
+        float rad =  (Rin * atomConds[kband].direct * 0.001);// * absorb;// * voxelDirs[bufferId0].solar;
+
+        // rad = atomConds[kband].direct * 0.001;
+        // rad = spectralMaterials[spectralIdBase + kband].reflectance;
         // vegetation projection correction;
         if(typeId == TYPE_VEGETATION){
             rad = rad / cosSolar;
+
+            float lai = canopies[canopyId].lai;
+            float p = calReCor(lai);
+            float refl = spectralMaterials[spectralIdBase + kband].reflectance;
+            float trans = spectralMaterials[spectralIdBase + kband].transmittance;
+            float w = refl + trans;
+            float s = (w - p* w) / (1 - p* w);
+            float a = (1-w) / (1 - p *w); 
+            // absorb = a;
         }
+
+
+        rad = rad * absorb;
         // save direct VNIR radiance
-      //  rad = spectralMaterials[spectralIdBase + kband].reflectance;
+        //  rad = spectralMaterials[spectralIdBase + kband].reflectance;
         atomicAdd(voxelNetRads[bufferId0].directVrad, rad, gl_ScopeDevice,gl_StorageSemanticsBuffer,gl_SemanticsRelaxed);
 
         // only for band from 400 nm to 700 nm 

@@ -76,6 +76,8 @@ void main()
     bioId = meshLink0.bioId;
     typeId = meshLink0.type;
 
+	canopy = canopies[canopyId];
+
 
     if(typeId == TYPE_SOIL)
     {
@@ -357,7 +359,6 @@ void main()
 														// [g mol-1]      molecular mass of dry air
 
 			rss = 0.625*(cs - Ci) / A *rhoa / Mair*1E3    * 1e6 / p * 1E5;
-
 
 			if (A <= 0) rss = 0.625*1E6;
 

@@ -309,16 +309,16 @@ struct Background
 struct MeteoMeta
 {
     float t;
-    float Oa;
-    float Ca;
-    float ea;
-    float dTime;
-    float z;
+    float Oa{209};
+    float Ca{380};
+    float ea{15} ;
+    float dTime{1800};
+    float z{15};
     float RIn;
     float Rli;
-    float Tsold;
-    float SatWater;
-    float sm;
+    float Tsold{25};
+    float SatWater{0.45};
+    float sm{0.25};
     float u;
     float p;
     int startYear;
@@ -489,6 +489,8 @@ struct MeteoXml
     MeteoMeta meta;
     std::string meteofile;
     //std::vector<Meteo> meteos;
+    int startTimeNode{0};
+    int endTimeNode{1};
 };
 
 struct AtomCondXml

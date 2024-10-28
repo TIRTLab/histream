@@ -125,6 +125,13 @@ void main()
         H = (RHOA * CP) / raa * (Tc-273.15 - Ta);
         LE = RHOA / (raa + rss) * lambda * (qi - qa);
 
+        // 含水量少则没有潜热通量（通过水分相态变化影响的部分）
+        if (soilSets[bioId].SMC < 0.03)
+        {
+            LE = 0;
+        }
+
+
         //-------------------------
         // update es and cs
         //-------------------------
