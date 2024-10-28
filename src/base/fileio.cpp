@@ -123,6 +123,7 @@ bool FileIO::readXml(std::string Path, std::string V) {
         m_pVoxelrtXml->propxmls = readPropertyXML(RootElement->FirstChild("Attribute"), modeInd);
 //        m_pVoxelrtXml->thermalxmls = readThermalXML(RootElement->FirstChild("Attribute"), modeInd);
 
+
     }
     return true;
 
