@@ -14,53 +14,9 @@
 
 using namespace std;
 
-TiXmlElement *RootElement1;
-Mode tick_mode;
+bool FileIO::readXml(std::string Path, Mode mode) {
+    m_mode = mode;
 
-bool FileIO::readXml(std::string Path, std::string V) {
-
-
-    Mode modeInd;
-//    Mode m_mode;
-//    m_mode = Mode::eVoxelEB;
-//    modeInd = Mode::eVoxelEB;
-//
-//    m_pVoxelebXml = std::move(xmlexamples.m_pVoxelebXml);
-//    return true;
-//
-//
-    if (V == "eRaytracing")
-    {
-        modeInd = Mode::eRaytracing;
-        m_mode = Mode::eRaytracing;
-    }
-    else if (V == "eVoxelEB")
-    {
-        modeInd = Mode::eVoxelEB;
-        m_mode = Mode::eVoxelEB;
-    }
-
-    else if(V == "eVoxelRT"){
-        modeInd = Mode::eVoxelRT;
-        m_mode = Mode::eVoxelRT;
-    }
-    else {
-        return false;
-    }
-////    modeInd = Mode::eRaytracing;
-////    m_mode = Mode::eRaytracing;
-////    m_pRaytracingXml = std::move(xmlexamples.m_pRaytracingXml);
-////    return false;
-//
-//
-//
-////    Mode  modeInd = Mode::eVoxelRT;
-////    m_mode = Mode::eVoxelRT;
-////    m_pVoxelrtXml = std::move(xmlexamples.m_pVoxelrtXml);
-////    return false;
-//
-//
-////    return false;
     std::string filePath = Path + "\\Input.xml";
     TiXmlDocument mydoc(filePath.c_str()); // tinyxml.h
     bool isloadOk = mydoc.LoadFile();
@@ -69,61 +25,55 @@ bool FileIO::readXml(std::string Path, std::string V) {
         std::cout << "could not load the test file.Error:" << mydoc.ErrorDesc() << std::endl;
         exit(1);
     }
-    TiXmlElement *RootElement = mydoc.RootElement(); // root node of xml
-////    TiXmlNode *modeNode = RootElement->FirstChild("Mode");
-////    TiXmlElement *rayTracingDepthEle = modeNode->FirstChildElement("rendermode");
-////    Mode  modeInd = (Mode)std::stoi(rayTracingDepthEle->GetText());
-////    Mode  modeInd = Mode::eVoxelET;
-    RootElement1 = RootElement;
-    tick_mode = modeInd;
-    if(modeInd == Mode::eRaytracing)
+    RootElement = mydoc.RootElement(); // root node of xml
+
+    if(m_mode == Mode::eRaytracing)
     {
         m_mode = Mode::eRaytracing;
         m_pRaytracingXml = std::make_shared<RaytracingXml>();
         m_pRaytracingXml->projectDir = Path;
         m_pRaytracingXml->definedDir = "..\\..\\field";
-        m_pRaytracingXml->settingxml = readSettingXML(RootElement->FirstChild("Control"), modeInd);
-        m_pRaytracingXml->lightxml = readLightXML(RootElement->FirstChild("Geometry"), modeInd);
-        m_pRaytracingXml->sensorxml = readSensorXML(RootElement->FirstChild("Geometry"), modeInd);
-        m_pRaytracingXml->spectralxmls = readSpectralXML(RootElement->FirstChild("Attribute"), modeInd);
-        m_pRaytracingXml->thermalxmls = readThermalXML(RootElement->FirstChild("Attribute"), modeInd);
-        m_pRaytracingXml->scenexml = readSceneXML(RootElement->FirstChild("Scene"), modeInd);
-
-    }else if(modeInd == Mode::eVoxelEB){
+        m_pRaytracingXml->settingxml = readSettingXML(RootElement->FirstChild("Control"), m_mode);
+        m_pRaytracingXml->lightxml = readLightXML(RootElement->FirstChild("Geometry"), m_mode);
+        m_pRaytracingXml->sensorxml = readSensorXML(RootElement->FirstChild("Geometry"), m_mode);
+        m_pRaytracingXml->spectralxmls = readSpectralXML(RootElement->FirstChild("Attribute"), m_mode);
+        m_pRaytracingXml->thermalxmls = readThermalXML(RootElement->FirstChild("Attribute"), m_mode);
+        m_pRaytracingXml->scenexml = readSceneXML(RootElement->FirstChild("Scene"), m_mode);
+    }else if(m_mode == Mode::eVoxelEB){
 
         m_mode = Mode::eVoxelEB;
         m_pVoxelebXml = std::make_shared<VoxelEBXml>();
         m_pVoxelebXml->projectDir = Path;
         m_pVoxelebXml->definedDir = "..\\..\\field";
-        m_pVoxelebXml->settingxml = readSettingXML(RootElement->FirstChild("Control"), modeInd);
-        m_pVoxelebXml->lightxml = readLightXML(RootElement->FirstChild("Geometry"), modeInd);
-        m_pVoxelebXml->sensorxml = readSensorXML(RootElement->FirstChild("Geometry"), modeInd);
-        m_pVoxelebXml->scenexml = readSceneXML(RootElement->FirstChild("Scene"), modeInd);
-        m_pVoxelebXml->spectralxmls = readSpectralXML(RootElement->FirstChild("Attribute"), modeInd);
-//        m_pVoxelebXml->thermalxmls = readThermalXML(RootElement->FirstChild("Attribute"), modeInd);
-        m_pVoxelebXml->canopyxmls = readCanopyXML(RootElement->FirstChild("Attribute"), modeInd);
-        m_pVoxelebXml->propxmls = readPropertyXML(RootElement->FirstChild("Attribute"), modeInd);
-//        m_pVoxelebXml->atomcondxml = readAtomCondXML(RootElement->FirstChild("Geometry"), modeInd);
-        m_pVoxelebXml->meteoxml = readMeteoXML(RootElement->FirstChild("Meteorology"), modeInd);
-        m_pVoxelebXml->aerocondxml= readAeroXML(RootElement->FirstChild("Attribute"), modeInd);
 
+        // m_pVoxelebXml->definedDir = "D:\\code\\field";
+
+        m_pVoxelebXml->settingxml = readSettingXML(RootElement->FirstChild("Control"), m_mode);
+        m_pVoxelebXml->lightxml = readLightXML(RootElement->FirstChild("Geometry"), m_mode);
+        m_pVoxelebXml->sensorxml = readSensorXML(RootElement->FirstChild("Geometry"), m_mode);
+        m_pVoxelebXml->scenexml = readSceneXML(RootElement->FirstChild("Scene"), m_mode);
+        m_pVoxelebXml->spectralxmls = readSpectralXML(RootElement->FirstChild("Attribute"), m_mode);
+        // m_pVoxelebXml->thermalxmls = readThermalXML(RootElement->FirstChild("Attribute"), m_mode);
+        m_pVoxelebXml->canopyxmls = readCanopyXML(RootElement->FirstChild("Attribute"), m_mode);
+        m_pVoxelebXml->propxmls = readPropertyXML(RootElement->FirstChild("Attribute"), m_mode);
+        // m_pVoxelebXml->atomcondxml = readAtomCondXML(RootElement->FirstChild("Geometry"), m_mode);
+        m_pVoxelebXml->meteoxml = readMeteoXML(RootElement->FirstChild("Meteorology"), m_mode);
+        m_pVoxelebXml->aerocondxml= readAeroXML(RootElement->FirstChild("Attribute"), m_mode);
     }
 
-    else if(modeInd == Mode::eVoxelRT){
+    else if(m_mode == Mode::eVoxelRT){
         m_mode = Mode::eVoxelRT;
         m_pVoxelrtXml = std::make_shared<VoxelRTXml>();
         m_pVoxelrtXml->projectDir = Path;
         m_pVoxelrtXml->definedDir = "..\\..\\field";
-        m_pVoxelrtXml->settingxml = readSettingXML(RootElement->FirstChild("Control"), modeInd);
-        m_pVoxelrtXml->lightxml = readLightXML(RootElement->FirstChild("Geometry"), modeInd);
-        m_pVoxelrtXml->sensorxml = readSensorXML(RootElement->FirstChild("Geometry"), modeInd);
-        m_pVoxelrtXml->scenexml = readSceneXML(RootElement->FirstChild("Scene"), modeInd);
-        m_pVoxelrtXml->spectralxmls = readSpectralXML(RootElement->FirstChild("Attribute"), modeInd);
-        m_pVoxelrtXml->canopyxmls = readCanopyXML(RootElement->FirstChild("Attribute"), modeInd);
-        m_pVoxelrtXml->propxmls = readPropertyXML(RootElement->FirstChild("Attribute"), modeInd);
-//        m_pVoxelrtXml->thermalxmls = readThermalXML(RootElement->FirstChild("Attribute"), modeInd);
-
-
+        m_pVoxelrtXml->settingxml = readSettingXML(RootElement->FirstChild("Control"), m_mode);
+        m_pVoxelrtXml->lightxml = readLightXML(RootElement->FirstChild("Geometry"), m_mode);
+        m_pVoxelrtXml->sensorxml = readSensorXML(RootElement->FirstChild("Geometry"), m_mode);
+        m_pVoxelrtXml->scenexml = readSceneXML(RootElement->FirstChild("Scene"), m_mode);
+        m_pVoxelrtXml->spectralxmls = readSpectralXML(RootElement->FirstChild("Attribute"), m_mode);
+        m_pVoxelrtXml->canopyxmls = readCanopyXML(RootElement->FirstChild("Attribute"), m_mode);
+        m_pVoxelrtXml->propxmls = readPropertyXML(RootElement->FirstChild("Attribute"), m_mode);
+        // m_pVoxelrtXml->thermalxmls = readThermalXML(RootElement->FirstChild("Attribute"), m_mode);
     }
     return true;
 
@@ -262,12 +212,6 @@ std::vector<PropertyXml> FileIO::readPropertyXML(TiXmlNode *node, Mode mode) {
 
 }
 
-
-
-
-
-
-
 bool FileIO::sonExists(std::string sonName, TiXmlElement* parentEle)
 {
     //根据节点名称进行查询
@@ -300,15 +244,15 @@ std::vector<SpectralXml> FileIO::readSpectralXML(TiXmlNode *node, Mode mode) {
         spectralXml.spectralName = nameAttribute;
 
         if (Node->Attribute("type") == std::string("custom")) {
-            if (tick_mode == Mode::eRaytracing || tick_mode == Mode::eVoxelRT){
+            if (m_mode == Mode::eRaytracing || m_mode == Mode::eVoxelRT){
                 spectralXml.type = spectralType::CUSTOM;
             }
-            else if (tick_mode == Mode::eVoxelEB){
+            else if (m_mode == Mode::eVoxelEB){
                 spectralXml.type = spectralType::OTHER;
             }
             spectralXml.reflectances = {myFunction::mySplitFloat(Node->FirstChildElement("reflectance")->GetText(), ",")};
             spectralXml.transmittance = {myFunction::mySplitFloat(Node->FirstChildElement("transmittance")->GetText(), ",")};
-            if (tick_mode == Mode::eVoxelEB || tick_mode == Mode::eVoxelRT){
+            if (m_mode == Mode::eVoxelEB || m_mode == Mode::eVoxelRT){
                 spectralXml.tau_tir = stof(Node->FirstChildElement("tau_TIR")->GetText());
                 spectralXml.refl_tir = stof(Node->FirstChildElement("ref_TIR")->GetText());
             }
@@ -320,7 +264,7 @@ std::vector<SpectralXml> FileIO::readSpectralXML(TiXmlNode *node, Mode mode) {
             spectralXml.reflectances = {myFunction::mySplitFloat((Node->FirstChildElement("reflectance")->GetText()), ",")};
             spectralXml.transmittance = {myFunction::mySplitFloat((Node->FirstChildElement("transmittance")->GetText()), ",")};
 //红外波段只取一个值
-            if (tick_mode == Mode::eVoxelEB || tick_mode == Mode::eVoxelRT){
+            if (m_mode == Mode::eVoxelEB || m_mode == Mode::eVoxelRT){
                 spectralXml.tau_tir = stof(Node->FirstChildElement("tau_TIR")->GetText());
                 spectralXml.refl_tir = stof(Node->FirstChildElement("ref_TIR")->GetText());
             }
@@ -341,7 +285,7 @@ std::vector<SpectralXml> FileIO::readSpectralXML(TiXmlNode *node, Mode mode) {
             spectralXml.transmittance = {
                     myFunction::mySplitFloat((Node->FirstChildElement("transmittance")->GetText()), ",")};
 //红外波段只取一个值
-            if (tick_mode == Mode::eVoxelEB || tick_mode == Mode::eVoxelRT){
+            if (m_mode == Mode::eVoxelEB || m_mode == Mode::eVoxelRT){
                 spectralXml.tau_tir = stof(Node->FirstChildElement("tau_TIR")->GetText());
                 spectralXml.refl_tir = stof(Node->FirstChildElement("ref_TIR")->GetText());
             }
@@ -402,26 +346,6 @@ std::vector<CanopyXml> FileIO::readCanopyXML(TiXmlNode *node, Mode mode) {
 
     return CanopyXmls;
 }
-
-//ThermalXml FileIO::readThermal(TiXmlNode *node, Mode mode) {
-//
-//    ThermalXml thermalxmls;
-//    if (sonExists("Thermal", node->ToElement()))
-//    {
-//        TiXmlElement* thermalEle = node->FirstChildElement("Thermal");
-//        for (TiXmlElement* pEle = thermalEle->FirstChildElement(); pEle != NULL; pEle = pEle->NextSiblingElement())
-//        {
-////            ThermalStruct temp;
-//
-//            thermalxmls.thermalName = pEle->Attribute("name");
-//            thermalxmls.sunlitTemperature = std::stof(pEle->FirstChildElement("sunlitTemperature")->GetText());
-//            thermalxmls.shadedTemperature = std::stof(pEle->FirstChildElement("shadedTemperature")->GetText());
-////            thermalDatasets.push_back(temp);
-//        }
-//    }
-//
-//    return thermalxmls;
-//}
 
 
 SensorXml FileIO::readSensorXML(TiXmlNode *node, Mode mode){
@@ -498,7 +422,7 @@ SensorXml FileIO::readSensorXML(TiXmlNode *node, Mode mode){
 
 //    sensorxml.viewAngles = {{0, 0}};
 
-    TiXmlNode *controlnode = RootElement1->FirstChild("Control");
+    TiXmlNode *controlnode = RootElement->FirstChild("Control");
     if (sonExists("isAlbedo", controlnode->ToElement()))
     {
         sensorxml.isAlbedo = stoi(controlnode->FirstChildElement("isAlbedo")->GetText());
@@ -547,7 +471,7 @@ LightXml FileIO::readLightXML(TiXmlNode *geometryNode, Mode mode){
 
         lightxml.skyTemperature = stof(pEle->FirstChildElement("skyTemperature")->GetText());
         if (sonExists("directScatteringRatio", pEle->ToElement())){
-            if (tick_mode == Mode::eVoxelEB) {
+            if (m_mode == Mode::eVoxelEB) {
                 m_pVoxelebXml->atomcondxml.rinfile = pEle->FirstChildElement("esunFileName")->GetText();
                 m_pVoxelebXml->atomcondxml.rlifile = pEle->FirstChildElement("eskyFileName")->GetText();
             }
@@ -558,10 +482,10 @@ LightXml FileIO::readLightXML(TiXmlNode *geometryNode, Mode mode){
             lightxml.solarTemperature = 6000;
         }
         else{
-            if (tick_mode == Mode::eRaytracing){
+            if (m_mode == Mode::eRaytracing){
 //                break;
             }
-            else if (tick_mode == Mode::eVoxelEB){
+            else if (m_mode == Mode::eVoxelEB){
                 m_pVoxelebXml->atomcondxml.rinfile = pEle->FirstChildElement("esunFileName")->GetText();
                 m_pVoxelebXml->atomcondxml.rlifile = pEle->FirstChildElement("eskyFileName")->GetText();
             }
@@ -642,9 +566,9 @@ SceneXml FileIO::readSceneXML(TiXmlNode *sceneNode, Mode mode) {
     sceneXml.background.DEMFile = "";
 
 // 添加一个meteo的经纬度信息-----------------------------------------
-    if (sonExists("Meteorology", RootElement1->ToElement()))
+    if (sonExists("Meteorology", RootElement->ToElement()))
     {
-        TiXmlNode *MeteorologyNode = RootElement1->FirstChild("Meteorology");
+        TiXmlNode *MeteorologyNode = RootElement->FirstChild("Meteorology");
         if (sonExists("Latitude", MeteorologyNode->ToElement())) {
             sceneXml.background.lat = stof(MeteorologyNode->FirstChildElement("Latitude")->GetText());
         }
@@ -653,7 +577,7 @@ SceneXml FileIO::readSceneXML(TiXmlNode *sceneNode, Mode mode) {
         }
     }
 //// obj文件和位置-----------------------
-    if (tick_mode == Mode::eVoxelEB)
+    if (m_mode == Mode::eVoxelEB)
     {
         sceneXml.objEntities = {};
 //    PrimEntity treeEntity;
@@ -760,7 +684,7 @@ SceneXml FileIO::readSceneXML(TiXmlNode *sceneNode, Mode mode) {
         sceneXml.objEntities = ObjEntities;
     }
 
-    if (tick_mode == Mode::eVoxelRT)
+    if (m_mode == Mode::eVoxelRT)
     {
         sceneXml.objEntities = {};
 //    PrimEntity treeEntity;
@@ -835,13 +759,11 @@ SceneXml FileIO::readSceneXML(TiXmlNode *sceneNode, Mode mode) {
 void FileIO::readDefined(std::shared_ptr<DefinedIO> & definedio) {
 
     std::string optfile = "..\\..\\field\\defined\\optipar.txt";
-    if (tick_mode = Mode::eVoxelRT){
+    if (m_mode == Mode::eVoxelRT){
         definedio->definedDir = m_pVoxelrtXml->definedDir;
-
     }
     else {
         definedio->definedDir = m_pVoxelebXml->definedDir;
-
     }
     std::string predifineDir = definedio->definedDir + "\\defined\\";
     std::string infileName = predifineDir + "optipar.txt";

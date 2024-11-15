@@ -18,14 +18,12 @@
 #include "src/base/utils.h"
 #include "src/base/defined.h"
 
-extern TiXmlElement *RootElement1;
-
 class FileIO {
 
 public:
     FileIO(){};
 
-    bool readXml(std::string path, std::string V);
+    bool readXml(std::string path, Mode mode);
 
     //bool readRayTracingXML(std::string inputPath){ return true;};
     //void writeTif(std::string outDir,void *images,glm::vec4 angles, std::vector<float> bands, glm::vec2 resolution);
@@ -57,7 +55,7 @@ public:
     void writeENVIdata(std::string projectDir,float * pData, int width, int height, int band, Angle &angle, float t = -1);
     void writeENVIdata(std::string projectDir,float * pData, int width, int height, int band, Angle &angle, float t = -1,int k = -1);
 
-//    XmlExamples xmlexamples;
+    TiXmlElement *RootElement;
     Mode m_mode;
 
 

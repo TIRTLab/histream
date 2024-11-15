@@ -13,7 +13,6 @@ void Engine::init(Mode mode)
     if(mode == Mode::eRaytracing) {
         m_pRaytracing = std::make_shared<Raytracing>();
         m_pRaytracingio = std::make_shared<RaytracingIO>();
-
     }else if(mode == Mode::eVoxelEB) {
         m_pVoxeleb = std::make_shared<Voxeleb>();
         m_pVoxelebio = std::make_shared<VoxelebIO>();
@@ -21,20 +20,26 @@ void Engine::init(Mode mode)
         m_pVoxelrt = std::make_shared<Voxelrt>();
         m_pVoxelrtio = std::make_shared<VoxelrtIO>();
     }
-
 }
 
 
 void Engine::input(std::string path, std::string V){
 
+    if (V == "eRaytracing")
+    {
+        m_mode = Mode::eRaytracing;
+    }
+    else if (V == "eVoxelEB")
+    {
+        m_mode = Mode::eVoxelEB;
+    }
+    else if(V == "eVoxelRT"){
+        m_mode = Mode::eVoxelRT;
+    }
 
- //   m_pRaytracingio->input(path);
     m_pFileio = std::make_shared<FileIO>();
-    m_pFileio->readXml(path, V);
-    m_mode = m_pFileio->m_mode;
-    init(m_pFileio->m_mode);
-
-
+    m_pFileio->readXml(path, m_mode);
+    init(m_mode);
 
     if(m_mode == Mode::eRaytracing) {
         m_pRaytracing->setup(appSetting, m_pRaytracingio);
