@@ -32,7 +32,6 @@ bool FileIO::readXml(std::string Path, Mode mode) {
         m_mode = Mode::eRaytracing;
         m_pRaytracingXml = std::make_shared<RaytracingXml>();
         m_pRaytracingXml->projectDir = Path;
-        m_pRaytracingXml->definedDir = "..\\..\\field";
         m_pRaytracingXml->settingxml = readSettingXML(RootElement->FirstChild("Control"), m_mode);
         m_pRaytracingXml->lightxml = readLightXML(RootElement->FirstChild("Geometry"), m_mode);
         m_pRaytracingXml->sensorxml = readSensorXML(RootElement->FirstChild("Geometry"), m_mode);
@@ -44,9 +43,6 @@ bool FileIO::readXml(std::string Path, Mode mode) {
         m_mode = Mode::eVoxelEB;
         m_pVoxelebXml = std::make_shared<VoxelEBXml>();
         m_pVoxelebXml->projectDir = Path;
-        m_pVoxelebXml->definedDir = "..\\..\\field";
-
-        // m_pVoxelebXml->definedDir = "D:\\code\\field";
 
         m_pVoxelebXml->settingxml = readSettingXML(RootElement->FirstChild("Control"), m_mode);
         m_pVoxelebXml->lightxml = readLightXML(RootElement->FirstChild("Geometry"), m_mode);
@@ -65,7 +61,6 @@ bool FileIO::readXml(std::string Path, Mode mode) {
         m_mode = Mode::eVoxelRT;
         m_pVoxelrtXml = std::make_shared<VoxelRTXml>();
         m_pVoxelrtXml->projectDir = Path;
-        m_pVoxelrtXml->definedDir = "..\\..\\field";
         m_pVoxelrtXml->settingxml = readSettingXML(RootElement->FirstChild("Control"), m_mode);
         m_pVoxelrtXml->lightxml = readLightXML(RootElement->FirstChild("Geometry"), m_mode);
         m_pVoxelrtXml->sensorxml = readSensorXML(RootElement->FirstChild("Geometry"), m_mode);
@@ -73,7 +68,7 @@ bool FileIO::readXml(std::string Path, Mode mode) {
         m_pVoxelrtXml->spectralxmls = readSpectralXML(RootElement->FirstChild("Attribute"), m_mode);
         m_pVoxelrtXml->canopyxmls = readCanopyXML(RootElement->FirstChild("Attribute"), m_mode);
         m_pVoxelrtXml->propxmls = readPropertyXML(RootElement->FirstChild("Attribute"), m_mode);
-        // m_pVoxelrtXml->thermalxmls = readThermalXML(RootElement->FirstChild("Attribute"), m_mode);
+        m_pVoxelrtXml->thermalxmls = readThermalXML(RootElement->FirstChild("Attribute"), m_mode);
     }
     return true;
 
@@ -304,9 +299,6 @@ std::vector<SpectralXml> FileIO::readSpectralXML(TiXmlNode *node, Mode mode) {
 }
 
 std::vector<ThermalXml> FileIO::readThermalXML(TiXmlNode *node, Mode mode) {
-
-
-
     std::vector<ThermalXml> thermalXmls;
     TiXmlElement* thermalNode = node->FirstChildElement("Thermal");
     for (TiXmlElement* Node = thermalNode->FirstChildElement("thermal"); Node != NULL; Node = Node->NextSiblingElement()){
@@ -508,6 +500,20 @@ SettingXml FileIO::readSettingXML(TiXmlNode *controlNode, Mode mode){
     if (sonExists("isUAVtrave", controlNode->ToElement())){
         settingxml.isUAVtrave = stoi(controlNode->FirstChildElement("isUAVtrave")->GetText());
     }
+
+    if (mode == Mode::eRaytracing)
+    {
+        m_pRaytracingXml->definedDir = controlNode->FirstChildElement("defineDir")->GetText();
+    }
+    if (mode == Mode::eVoxelRT)
+    {
+        m_pVoxelrtXml->definedDir = controlNode->FirstChildElement("defineDir")->GetText();
+    }
+    if (mode == Mode::eVoxelEB)
+    {
+        m_pVoxelebXml->definedDir = controlNode->FirstChildElement("defineDir")->GetText();
+    }
+
     return settingxml;
 }
 
@@ -758,11 +764,10 @@ SceneXml FileIO::readSceneXML(TiXmlNode *sceneNode, Mode mode) {
 
 void FileIO::readDefined(std::shared_ptr<DefinedIO> & definedio) {
 
-    std::string optfile = "..\\..\\field\\defined\\optipar.txt";
     if (m_mode == Mode::eVoxelRT){
         definedio->definedDir = m_pVoxelrtXml->definedDir;
     }
-    else {
+    if (m_mode == Mode::eVoxelEB) {
         definedio->definedDir = m_pVoxelebXml->definedDir;
     }
     std::string predifineDir = definedio->definedDir + "\\defined\\";

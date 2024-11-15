@@ -19,9 +19,9 @@ class XmlExamples{
 
 public:
     XmlExamples(){
-        createRaytracingxml();
-        createVoxelebxml();
-        createVoxelrtxml();
+        // createRaytracingxml();
+        // createVoxelebxml();
+        // createVoxelrtxml();
      //   createEcolstxml();
     }
     std::shared_ptr<RaytracingXml> m_pRaytracingXml;

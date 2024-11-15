@@ -10,7 +10,7 @@ bool Command::create(std::shared_ptr<VoxelrtIO> &modelio){
     // for the firest init
     VkFenceCreateInfo fci = {VK_STRUCTURE_TYPE_FENCE_CREATE_INFO};
     vkCreateFence(modelio->m_device, &fci, nullptr, &modelio->m_fence);
-//    vkWaitForFences(modelio->m_device, 1, &(modelio->m_fence), VK_TRUE, UINT64_MAX);
+    // vkWaitForFences(modelio->m_device, 1, &(modelio->m_fence), VK_TRUE, UINT64_MAX);
     vkResetFences(modelio->m_device, 1,  &(modelio->m_fence));
 
     // Here 4 means number of pipelines + 1
@@ -58,79 +58,6 @@ bool Command::runRT(std::shared_ptr<VoxelrtIO> &modelio){
 
     return true;
 }
-
-//bool Command::run(std::shared_ptr<VoxelrtIO> &modelio){
-//
-//    modelio->m_currentSemaphore = 1;
-//
-//    glm::ivec3 voxelSize1D = glm::ivec3((modelio->n_voxel + (GROUP_SIZEX - 1)) / GROUP_SIZEX, 1, 1);
-//    auto & descSet = modelio->m_descSet;
-//    auto & setting = modelio->setting;
-//
-//
-//    auto & piplineLayout_rt = modelio->m_pipelineLayout_rt;
-//    auto & piplines_rt = modelio->m_pipelines_rt;
-//    auto & piplineLayout_eb = modelio->m_pipelineLayout_eb;
-//    auto & piplines_eb = modelio->m_pipelines_eb;
-//    auto & piplineLayout_et = modelio->m_pipelineLayout_et;
-//    auto & piplines_et = modelio->m_pipelines_et;
-//    auto & piplineLayout_bio = modelio->m_pipelineLayout_bio;
-//    auto & pipline_bio = modelio->m_pipeline_bio;
-//    auto & piplineLayout_aero = modelio->m_pipelineLayout_aero;
-//    auto & pipline_aero = modelio->m_pipeline_aero;
-//    //--------------------------------------------------
-//
-//    int stageInt = 0;
-//
-//    stageInt = (int)VoxelRadStage::gap;
-//    submit(modelio, voxelSize1D,descSet,piplineLayout_rt,piplines_rt[stageInt],setting,nullptr, nullptr);
-//    waitFence(modelio);
-//
-//    stageInt = (int)VoxelRadStage::directVNIR;
-//    submit(modelio, voxelSize1D,descSet,piplineLayout_rt,piplines_rt[stageInt],setting,nullptr, nullptr);
-//    waitFence(modelio);
-//
-//    stageInt = (int)VoxelRadStage::diffuseVNIR;
-//    submit(modelio, voxelSize1D,descSet,piplineLayout_rt,piplines_rt[stageInt],setting,nullptr, nullptr);
-//    waitFence(modelio);
-//
-//
-//
-//
-//    //--------------------------------------------------
-//
-//
-//    submit(modelio, voxelSize1D,descSet,piplineLayout_bio,pipline_bio,setting,nullptr, nullptr);
-//    waitFence(modelio);
-//
-//    //--------------------------------------------------
-//
-//    submit(modelio, voxelSize1D,descSet,piplineLayout_aero,pipline_aero,setting,nullptr, nullptr);
-//    waitFence(modelio);
-//
-//
-//    //--------------------------------------------------
-//
-//
-//    stageInt = (int)ETStage::evapo;
-//    submit(modelio, voxelSize1D,descSet,piplineLayout_et,piplines_et[stageInt],setting,nullptr, nullptr);
-//    waitFence(modelio);
-//
-//    //--------------------------------------------------
-//
-//    stageInt = (int)EBStage::budget;
-//    submit(modelio, voxelSize1D,descSet,piplineLayout_eb,piplines_eb[stageInt],setting,nullptr, nullptr);
-//    waitFence(modelio);
-//
-//
-//    //--------------------------------------------------
-//
-//
-//
-//
-//
-//    return true;
-//}
 
 
 void Command::submit(std::shared_ptr<VoxelrtIO> &modelio, VoxelRTStage stage, glm::ivec3 dispatchSize,

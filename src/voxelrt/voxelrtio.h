@@ -95,7 +95,7 @@ VoxelrtIO(){
 
 
     // setting infor
-    int n_pipeline = 12;
+    int n_pipeline = 3;
     int n_wave;
     int n_angle;
     int n_pos;

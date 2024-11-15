@@ -254,6 +254,9 @@ struct SettingXml
     int n_sample{32};
     int maxDepth{5};
     int isUAVtrave{false};
+
+
+
 //    bool isTemperature{false};
 //    bool isDisplay{false};
 //    bool isImage{false};

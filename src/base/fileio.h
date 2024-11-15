@@ -62,6 +62,7 @@ public:
     std::vector<float> outImage1;
     std::vector<std::vector<float>> outImage;
     std::vector<std::vector<float>> outImage_orth;
+
     XmlExamples xmlexamples;
 
 private:
