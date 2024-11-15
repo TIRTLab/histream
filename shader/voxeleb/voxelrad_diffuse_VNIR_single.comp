@@ -147,7 +147,7 @@ bool voxel_raytracing_diffuse(vec3 voxelPos0, uint bufferId0, NanoVDBLink nanoVD
         // sky contribution: lightSet.Rli*waveSets[kband].diffuse*0.001
         if(directioni0.y >= 0)
         {
-           float skyrad = alpha_toVoxel*Esky;
+           float skyrad = alpha_toVoxel*Esky / PI;
            //skyrad = 1000;
           //skyrad = 0.5;
           uint index = bufferId0*DIFFUSE_ANGLE_NUM+iangle;
@@ -224,25 +224,7 @@ bool voxel_raytracing_diffuse(vec3 voxelPos0, uint bufferId0, NanoVDBLink nanoVD
             float gamma = (gammart.x)*(refl + trans) + (gammart.y)*trans;  
             gamma = clamp(gamma,0,1);
             float radiance = 0;
-            //////////////////////////////
-            /// Multiple case
-            /////////////////////////////
-            // float radianceD = 0;
-            // if(kiter > 0)
-            // {
-            //   for(int jangle=0;jangle<DIFFUSE_ANGLE_NUM;jangle++)
-            //   {
-            //       float radiancej = abs(voxelRads[bufferId*DIFFUSE_ANGLE_NUM+iangle].cumulated);
-            //       directionj0 = (DIFFUSE_DIRECTIONS[jangle]);
-            //       gammart.x = GammaR[iangle*DIFFUSE_ANGLE_NUM+jangle];
-            //       gammart.y = GammaT[iangle*DIFFUSE_ANGLE_NUM+jangle];
-            //       gamma =   abs(gammart.x)*(refl + trans)+ abs(gammart.y)*trans;  
-            //       gamma = clamp(gamma,0,1);
-            //       radianceD= radianceD + abs(radiancej * gamma* alpha_toVoxel*abs(1-alpha_voxel));  
-            //   }
-            //   radianceD = (radianceD / DIFFUSE_ANGLE_NUM);
-            // }
-            // radiance += radianceD;
+           
             //////////////////////////////
             // emitter
             /////////////////////////////
@@ -254,6 +236,30 @@ bool voxel_raytracing_diffuse(vec3 voxelPos0, uint bufferId0, NanoVDBLink nanoVD
             /////////////////////////////
             radiance += (alpha_toSolar * gamma * Esun/cosSolar * alpha_toVoxel *(1-alpha_voxel));  
             // radiance += (alpha_toSolar * gamma * Esun * alpha_toVoxel *(1-alpha_voxel));  
+            //////////////////////////////
+            /// Multiple case
+            /////////////////////////////
+            float radianceD = 0;
+            if(kiter > 0)
+            {
+              int effeNum = 0;
+              for(int jangle=0;jangle<DIFFUSE_ANGLE_NUM;jangle++)
+              {
+                  float radiancej = abs(voxelRads[bufferId*DIFFUSE_ANGLE_NUM+iangle].cumulated);
+                  if(radiancej<EPSION_3) continue;
+                  directionj0 = (DIFFUSE_DIRECTIONS[jangle]);
+                  gammart.x = GammaR[iangle*DIFFUSE_ANGLE_NUM+jangle];
+                  gammart.y = GammaT[iangle*DIFFUSE_ANGLE_NUM+jangle];
+                  gamma =   (gammart.x)*(refl + trans)+ (gammart.y)*trans;  
+                  gamma = clamp(gamma,0,1);
+                  radianceD= radianceD + abs(radiancej * gamma* alpha_toVoxel*abs(1-alpha_voxel));  
+                  effeNum ++;
+              }
+              if (effeNum ==0) effeNum = 1;
+              radianceD = (radianceD / effeNum);
+              // radianceD = (radianceD / DIFFUSE_ANGLE_NUM);
+            }
+            radiance += radianceD;
             //////////////////////////////
             /// Save back
             /////////////////////////////
@@ -315,25 +321,35 @@ bool voxel_raytracing_diffuse(vec3 voxelPos0, uint bufferId0, NanoVDBLink nanoVD
           //////////////////////////////
           /// Multiple case
           /////////////////////////////
-          // if(kiter > 0)
-          // {
-          //   for(int jangle=0;jangle<DIFFUSE_ANGLE_NUM;jangle++)
-          //   {
-          //       directionj0 = (DIFFUSE_DIRECTIONS[jangle]);
-          //       bool inSameSide = IsSameSide(directioni,directionj0,ffnormal);
-          //       if(!inSameSide) continue;
-          //       float radiancej = abs(voxelRads[alignBufferId*DIFFUSE_ANGLE_NUM+iangle].cumulated);
-          //       radiance= radiance + radiancej * refl* abs(alpha_toVoxel);  
-          //   }
-          //   radiance = abs(radiance/DIFFUSE_ANGLE_NUM/2.0);
-          // }
+          if(kiter > 0)
+          {
+            int effeNum = 0;
+            float pdf = 0.0;
+            for(int jangle=0;jangle<DIFFUSE_ANGLE_NUM;jangle++)
+            {
+                directionj0 = (DIFFUSE_DIRECTIONS[jangle]);
+                bool inSameSide = IsSameSide(directioni,directionj0,ffnormal);
+                if(!inSameSide) continue;
+                float radiancej = abs(voxelRads[alignBufferId*DIFFUSE_ANGLE_NUM+iangle].cumulated);
+                if(radiancej < EPSION_3) continue;
+
+                directionj = normalize(directionj0);
+                radiance= radiance + radiancej * abs(directionj.y) * refl * abs(alpha_toVoxel); 
+                pdf += abs(directionj.y);
+                effeNum ++;
+            }
+            if (effeNum ==0) effeNum = 1;
+            if (pdf ==0) pdf = effeNum;
+            radiance = radiance / pdf;
+            // radiance = abs(radiance/DIFFUSE_ANGLE_NUM/2.0);
+          }
           
           ////////////////////////////////
           // SOLAR CASE
           ///////////////////////////////
           if(inSameSides)
           {
-            radiance += (refl * Esun * alpha_toSolar * alpha_toVoxel);
+            radiance += (refl/ PI * Esun  * alpha_toSolar * alpha_toVoxel);
           }
           // ////////////////////////////////
           // //emitter
@@ -360,7 +376,7 @@ bool voxel_raytracing_diffuse(vec3 voxelPos0, uint bufferId0, NanoVDBLink nanoVD
 
     if((kstep >= setting.maxStep) && (alpha_toVoxel > EPSION_2))
     {
-        float skyrad = alpha_toVoxel*Esky;
+        float skyrad = alpha_toVoxel*Esky/PI;
         //skyrad = 0.5;
         uint index = bufferId0*DIFFUSE_ANGLE_NUM+iangle;
         atomicAdd(voxelRads[index].induced,
@@ -445,7 +461,7 @@ void main()
               temp = temp +1;
           }
 
-          for(int kiter=0;kiter< 3;kiter++)
+          for(int kiter=0;kiter< 5;kiter++)
           {
               voxel_raytracing_diffuse(voxelPos0, bufferId0, nanoVDBLink, kiter,kband_center,Esun,Esky,kstep);
               groupMemoryBarrier();  
@@ -460,19 +476,7 @@ void main()
 
     
           float rads = 0, radtemp = 0, absorb = 1.0;
-          // iteration in diffuse
-          int effeNum = 0;
-          for(int iangle = 0; iangle < DIFFUSE_ANGLE_NUM; iangle++)
-          {
-              uint loc = bufferId0*DIFFUSE_ANGLE_NUM+iangle;
-              radtemp = voxelRads[loc].cumulated;
-              if(radtemp>0.01)
-              {
-                  effeNum = effeNum + 1;
-                  rads = rads + radtemp;
-              }
-          }
-          if (effeNum < 1) effeNum=1;
+          
           //-------------------------------------------------------
           // for twince receive and twince emit, but it not work
           // using effeNum replace this function
@@ -482,14 +486,57 @@ void main()
 
           if (typeId0 == TYPE_SOIL || typeId0 == TYPE_BUILDING)
           {
-              rads = rads / effeNum;
-              // rads = rads/(DIFFUSE_ANGLE_NUM / 2);
+              // iteration in diffuse
+              int effeNum = 0;
+              float pdf = 0;
+              for(int iangle = 0; iangle < DIFFUSE_ANGLE_NUM; iangle++)
+              {
+                  uint loc = bufferId0*DIFFUSE_ANGLE_NUM+iangle;
+                  vec3 directioni = normalize(DIFFUSE_DIRECTIONS[iangle]);
+                  radtemp = voxelRads[loc].cumulated;
+                  if(radtemp>0.05)
+                  {
+                      effeNum = effeNum + 1;
+                      // rads = rads + radtemp;
+                      rads = rads + radtemp * abs((directioni.y));
+                      pdf = pdf + abs((directioni.y));
+
+                  }
+              }
+              if (effeNum == 0) effeNum=1;
+              if (pdf < EPSION_3) pdf = effeNum;
+              rads = rads/pdf * PI;
+              // rads = rads / effeNum * PI;
+              // // rads = rads/(DIFFUSE_ANGLE_NUM / 2) * PI;
               
           }
           else
           {
-            rads = rads / effeNum;
-            // rads = rads/DIFFUSE_ANGLE_NUM;
+            // iteration in diffuse
+            int effeNum = 0;
+            // float pdf = 0;
+            for(int iangle = 0; iangle < DIFFUSE_ANGLE_NUM; iangle++)
+            {
+                uint loc = bufferId0*DIFFUSE_ANGLE_NUM+iangle;
+                vec3 directioni = normalize(DIFFUSE_DIRECTIONS[iangle]);
+                radtemp = voxelRads[loc].cumulated;
+                if(radtemp>0.05)
+                {
+                    effeNum = effeNum + 1;
+                    rads = rads + radtemp;
+                    // rads = rads + radtemp * abs(cos(directioni.y));
+                    // pdf += abs(cos(directioni.y));
+
+                }
+            }
+            if (effeNum == 0) effeNum=1;
+
+            // rads = rads/pdf * 2 * PI;
+            rads = rads / effeNum * 2 *PI;
+
+
+
+            // rads = rads/DIFFUSE_ANGLE_NUM * 2 *PI * 0.5;
             // rads = rads/(DIFFUSE_ANGLE_NUM / 2);
 
             float lai = canopies[canopyId].lai;
@@ -505,7 +552,7 @@ void main()
           rads = rads * absorb;
   
           // radSum = 100;
-        // rads = 0;
+        // rads = effeNum;
           atomicAdd(voxelNetRads[bufferId0].diffuseVrad, rads, gl_ScopeDevice,gl_StorageSemanticsBuffer,gl_SemanticsRelaxed);
       }
 // atomicStore(voxelNetRads[bufferId0].directVrad, radSum, gl_ScopeDevice,gl_StorageSemanticsBuffer,gl_SemanticsRelaxed);

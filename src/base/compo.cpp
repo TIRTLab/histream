@@ -182,7 +182,7 @@ void Compo::fluspect(OptCoeff fluspectCoeff, FluspectParam fluspectParam, std::v
         denom       = a2*bN2_g-1;
         Rsub        = a*(bN2_g-1)/denom;
         Tsub        = bNm1*(a2-1)/denom;
-//cout<<b<<endl;
+
         s           = r/tt;                             // Conservative scattering (CS)
         if(Kall>0) s        = 2*a/(a*a-1)*log(b);   // Normal case overwrites CS case
 
@@ -208,8 +208,6 @@ bool Compo::createCompProperty(std::shared_ptr<FileIO> &fileio, std::shared_ptr<
     auto & meshio = modelio->m_meshio;
     auto & definedio = modelio->m_defined;
     int num = 0;
-
-
 
     int id = 0;
     for(auto &spectralxml: fileio->m_pVoxelebXml->spectralxmls ){
@@ -277,6 +275,7 @@ bool Compo::createCompProperty(std::shared_ptr<FileIO> &fileio, std::shared_ptr<
             //m_soilRefl_ = Utils::readascfile(infileName, 0, 1, num);
             //std::vector<float> refl_;
             //Utils::readascfileinout(infileName1,0,1,refl_,num);
+
             for(int k = 0;k<N1;k++){
                 Spectral spectral{spectralxml.reflectances[0],spectralxml.transmittance[0]};
                 meshio->fixedSpectrals.push_back(spectral);
@@ -285,16 +284,12 @@ bool Compo::createCompProperty(std::shared_ptr<FileIO> &fileio, std::shared_ptr<
 
         }
 
-
-
         meshio->spectralNames.insert({spectralxml.spectralName,id});
         id++;
     }
 
     id = 0;
     for(auto &canopyxml: fileio->m_pVoxelebXml->canopyxmls){
-
-;
         meshio->canopies.push_back(canopyxml.canopy);
         meshio->canopyNames.insert({canopyxml.canopyName,id});
         id++;
@@ -315,8 +310,6 @@ bool Compo::createCompProperty(std::shared_ptr<FileIO> &fileio, std::shared_ptr<
         }
     }
 
-
-
     return false;
 }
 
@@ -329,7 +322,6 @@ void Compo::bsm(OptCoeff bsmCoeff,BSMParam bsm,std::vector<Spectral>& spectrals)
     std::vector<float> &gsv3_ = bsmCoeff.gsv3_;
     std::vector<float> &kw_ = bsmCoeff.kw_;
     std::vector<float> &nw_ = bsmCoeff.nw_;
-
 
     float B = bsm.BSMBrightness;
     float lat = bsm.BSMlat;
@@ -348,7 +340,6 @@ void Compo::bsm(OptCoeff bsmCoeff,BSMParam bsm,std::vector<Spectral>& spectrals)
         rdry_.push_back(gsv1_[k]*f1+gsv2_[k]*f2+gsv3_[k]*f3);
     }
 
-
     for(int k =0;k<gsv1_.size();k++) {
         float rdry = rdry_[k];
         float tw = exp(-kw_[k] * film);
@@ -363,14 +354,6 @@ void Compo::bsm(OptCoeff bsmCoeff,BSMParam bsm,std::vector<Spectral>& spectrals)
      //   rwet_.push_back(rwet);
          Spectral spectral{rwet,0};
          spectrals.push_back(spectral);
-
     }
 
-
 }
-
-
-
-
-
-

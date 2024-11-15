@@ -151,7 +151,7 @@ struct VoxelLink
 struct VoxelDir
 {
     float solar;
-    float emitter;
+    float solar_last;
 };
 
 struct VoxelTempe

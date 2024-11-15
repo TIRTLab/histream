@@ -124,6 +124,8 @@ void main()
 
 			RH = voxelAirs[bufferId0].es / es_fun(Tc-273.15);
 			cs = voxelAirs[bufferId0].cs * p * 1e-11;
+
+			O = ubom.meteo.Oa;
 			O = O * p * 1e-8;
 			Q = voxelPnets[bufferId0].directPnet;
 

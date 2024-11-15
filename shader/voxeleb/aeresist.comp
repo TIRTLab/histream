@@ -343,6 +343,9 @@ void main()
                 if(isnan(raa)) raa = 50;
                 voxelRaas[bufferId0].raa = raa;  
 
+                // voxelRaas[bufferId0].raa = sinh(n) / (n*kh0);
+                // voxelRaas[bufferId0].raa = kh0;
+
             }else if (typeId == TYPE_VEGETATION) {
                 // for vegetation under overstory vegetation 
                 // information for other layer 

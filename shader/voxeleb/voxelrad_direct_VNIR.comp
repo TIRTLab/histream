@@ -80,13 +80,19 @@ void main()
         //---------------------------------
         // Attention: there is no alpha_solar
         //---------------------------------
-        float rad =  (Rin * atomConds[kband].direct * 0.001);// * absorb;// * voxelDirs[bufferId0].solar;
+        float rad =  (Rin * atomConds[kband].direct * 0.001);
 
         // rad = atomConds[kband].direct * 0.001;
         // rad = spectralMaterials[spectralIdBase + kband].reflectance;
         // vegetation projection correction;
         if(typeId == TYPE_VEGETATION){
-            rad = rad / cosSolar;
+            if (cosSolar > 0.05){ //
+                rad = rad / cosSolar;
+            }
+            else{
+                rad = rad / 0.05;
+            }
+            
 
             float lai = canopies[canopyId].lai;
             float p = calReCor(lai);
@@ -96,12 +102,15 @@ void main()
             float s = (w - p* w) / (1 - p* w);
             float a = (1-w) / (1 - p *w); 
             // absorb = a;
+            rad = rad * 0.5;
         }
 
 
         rad = rad * absorb;
+        // rad = cosSolar;
         // save direct VNIR radiance
         //  rad = spectralMaterials[spectralIdBase + kband].reflectance;
+
         atomicAdd(voxelNetRads[bufferId0].directVrad, rad, gl_ScopeDevice,gl_StorageSemanticsBuffer,gl_SemanticsRelaxed);
 
         // only for band from 400 nm to 700 nm 

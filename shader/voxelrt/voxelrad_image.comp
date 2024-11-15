@@ -368,7 +368,12 @@ void main()
         // float test = 10;
         // atomicStore(outImage[bufferId], test, gl_ScopeDevice, gl_StorageSemanticsBuffer, gl_SemanticsRelease);
     }
-    
 
 
+
+    // int a = 100;
+    // for(int kwave = 0;kwave < setting.n_wave; kwave++){
+    // int bufferId = int((n_pixel * kwave) + (imageCoords.y * imageRes.x + imageCoords.x ));
+    // atomicStore(outImage[bufferId], a, gl_ScopeDevice, gl_StorageSemanticsBuffer, gl_SemanticsRelease);
+    // }
 }

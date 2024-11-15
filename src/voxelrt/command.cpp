@@ -40,9 +40,8 @@ bool Command::runRT(std::shared_ptr<VoxelrtIO> &modelio){
 
 
     //--------------------------------------------------
-
-//    nvmath::vec3i size = nvmath::vec3i((m_setting.size.x + (GROUP_SIZEXY - 1)) / GROUP_SIZEXY,
-//                                       (m_setting.size.y + (GROUP_SIZEXY - 1)) / GROUP_SIZEXY, 1);
+    // nvmath::vec3i size = nvmath::vec3i((m_setting.size.x + (GROUP_SIZEXY - 1)) / GROUP_SIZEXY,
+    //                                    (m_setting.size.y + (GROUP_SIZEXY - 1)) / GROUP_SIZEXY, 1);
 
 
     submit(modelio, VoxelRTStage::gap, voxelSize1D, std::nullopt, std::nullopt);
@@ -74,11 +73,11 @@ void Command::submit(std::shared_ptr<VoxelrtIO> &modelio, VoxelRTStage stage, gl
     // Preparing for the compute shader
     VkCommandBuffer cmdBuf = modelio->m_genCmdBuf.createCommandBuffer();
 
-//    VkCommandBufferBeginInfo beginInfo{VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO};
-//    beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-//    beginInfo.pNext = nullptr;
-//    beginInfo.pInheritanceInfo = nullptr;
-//    vkBeginCommandBuffer(cmdBuf, &beginInfo);
+    // VkCommandBufferBeginInfo beginInfo{VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO};
+    // beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+    // beginInfo.pNext = nullptr;
+    // beginInfo.pInheritanceInfo = nullptr;
+    // vkBeginCommandBuffer(cmdBuf, &beginInfo);
 
     // Dispatching the shader only for the other;
     recordCommandBuffer(cmdBuf, descSet, pipelineLayout, pipeline, setting );
@@ -90,11 +89,11 @@ void Command::submit(std::shared_ptr<VoxelrtIO> &modelio, VoxelRTStage stage, gl
     VkSubmitInfo submitInfoCompute{VK_STRUCTURE_TYPE_SUBMIT_INFO};
     submitInfoCompute.commandBufferCount = 1;
     submitInfoCompute.pCommandBuffers = &cmdBuf;
-//    submitInfoCompute.waitSemaphoreCount =  static_cast<uint32_t>(1);
-//    submitInfoCompute.pWaitSemaphores =  inSemaphores.has_value() ? inSemaphores->data() : &semaphores[m_currentSemaphore-1];
-//    submitInfoCompute.pWaitDstStageMask = waitStages.data();
-//    submitInfoCompute.signalSemaphoreCount = 1;
-//    submitInfoCompute.pSignalSemaphores = outSemaphore.has_value() ? &outSemaphore.value() : & semaphores[m_currentSemaphore];
+    // submitInfoCompute.waitSemaphoreCount =  static_cast<uint32_t>(1);
+    // submitInfoCompute.pWaitSemaphores =  inSemaphores.has_value() ? inSemaphores->data() : &semaphores[m_currentSemaphore-1];
+    // submitInfoCompute.pWaitDstStageMask = waitStages.data();
+    // submitInfoCompute.signalSemaphoreCount = 1;
+    // submitInfoCompute.pSignalSemaphores = outSemaphore.has_value() ? &outSemaphore.value() : & semaphores[m_currentSemaphore];
 
 
     vkEndCommandBuffer(cmdBuf);

@@ -9,6 +9,14 @@ LightSet Geometry::createLight(float sza, float saa, float direct, float diffuse
 {
     LightSet light;
     if (sza == 0.0 || sza == 45.0) sza = sza + ANGLE_COR;
+
+    // if (abs(saa - int((saa +ANGLE_COR)/ 45.0) * 45.0) < 0.05) saa = saa + ANGLE_COR;
+    if ((saa - int((saa +ANGLE_COR) / 45.0) * 45.0) < 0.05 && (saa - int((saa +ANGLE_COR) / 45.0) * 45.0) > 0)// saa比45的倍数大一点
+        saa = saa + ANGLE_COR * 2;
+    if ((saa - int((saa +ANGLE_COR) / 45.0) * 45.0) > -0.05 && (saa - int((saa +ANGLE_COR) / 45.0) * 45.0) < 0)// saa比45的倍数小一点
+        saa = saa - ANGLE_COR * 2;
+
+
     float r = SENSOR_HEIGHT;
     float rd = DEG2RAD;
     glm::vec3 origin = glm::vec3(0, 0, 0);
@@ -32,6 +40,10 @@ SensorMatrix Geometry::createSensor(glm::vec3 size, glm::vec3 origen, float vza,
     SensorMatrix sensor;
     if (vza == 0.0 || vza == 45.0) vza = vza + ANGLE_COR;
 
+    if ((vaa - int((vaa +ANGLE_COR) / 45.0) * 45.0) < 0.05 && (vaa - int((vaa +ANGLE_COR) / 45.0) * 45.0) > 0)// vaa比45的倍数大一点
+        vaa = vaa + ANGLE_COR * 2;
+    if ((vaa - int((vaa +ANGLE_COR) / 45.0) * 45.0) > -0.05 && (vaa - int((vaa +ANGLE_COR) / 45.0) * 45.0) < 0)// vaa比45的倍数小一点
+        vaa = vaa - ANGLE_COR * 2;
 
     glm::vec3 semi = { size.x / 2.0, 0, size.z / 2.0 };
     glm::vec3 dimensionMin = -semi + glm::vec3{ origen.x, 0, origen.z };

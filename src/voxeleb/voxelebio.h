@@ -38,10 +38,6 @@ typedef nvvk::ResourceAllocatorVma Allocator;
 typedef nvvk::ResourceAllocatorDedicated Allocator;
 #endif
 
-
-
-
-
 class VoxelebIO {
 public:
 VoxelebIO(){
@@ -52,9 +48,7 @@ VoxelebIO(){
     m_pAccelStruct = std::make_shared<AccelStruct>();  // method and resource, have to make
     m_defined = std::make_shared<DefinedIO>();
     m_voxelio = std::make_shared<VoxelIO>();
-
 };
-
 
     // system info
     std::string projectDir;
@@ -68,8 +62,8 @@ VoxelebIO(){
     float stepsize_surface;
     float stepsize_height;
     float stepsize_atmosphere;
-/*    glm::vec3 sMin;
-    glm::vec3 sMax;*/
+    // glm::vec3 sMin;
+    // glm::vec3 sMax;
     int m_year = 2019;
     int n_modelmesh = 0;
     int n_instance = 0;
@@ -78,7 +72,6 @@ VoxelebIO(){
     int n_surface = 0;
 
     //Meteo Info
-
     std::vector<Meteo> meteos;
     Meteo meteo;
     int startTimeNode;
@@ -95,7 +88,6 @@ VoxelebIO(){
     std::vector<AtomCond> atomconds;
     std::vector<AeroCond>  aeroconds;
 
-
     // setting infor
     int n_pipeline = 12;
     int n_wave;
@@ -111,7 +103,6 @@ VoxelebIO(){
     bool isDisplay;
     bool isImage;
     bool isAlbedo;
-
 
     std::shared_ptr<MeshIO> m_meshio;
     std::shared_ptr<InstanceIO> m_instanceio;
@@ -130,8 +121,6 @@ VoxelebIO(){
     std::shared_ptr<AccelStruct>  m_pAccelStruct;
     std::shared_ptr<nvvk::Buffer> m_pBufferAero;
 
-    //std::shared_ptr<
-
     // initialization
     VkDevice                       m_device;
     VkPhysicalDevice               m_physicalDevice;
@@ -145,7 +134,6 @@ VoxelebIO(){
     int m_currentSemaphore;
     std::vector<VkSemaphore> m_semaphores;
     int semaphoresNum{ 0 };
-
 
     // create
     nvvk::CommandPool   m_genCmdBuf;
@@ -171,7 +159,6 @@ VoxelebIO(){
     VkPipeline m_pipeline_aero;
     VkPipeline m_pipeline_bio;
 
-
     bool useSBTWrapper{ true };
     bool useDeferred{ false };
     nvvk::SBTWrapper m_sbtWrapper;
@@ -183,10 +170,6 @@ VoxelebIO(){
     VkStridedDeviceAddressRegionKHR m_hitRegion{};
     VkStridedDeviceAddressRegionKHR m_callRegion{};
     VkPhysicalDeviceRayTracingPipelinePropertiesKHR m_rtProperties{ VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PIPELINE_PROPERTIES_KHR };
-
-
-
-
 };
 
 

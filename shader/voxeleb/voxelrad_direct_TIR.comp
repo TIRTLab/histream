@@ -85,7 +85,14 @@ void main()
         float rad = Rli * atomConds[kband].direct * 0.001 * bandwidth;//  * absorb;
 
         if (typeId == TYPE_VEGETATION){
-            rad =  rad / cosSolar;
+            if (cosSolar > 0.05){ //
+                rad = rad / cosSolar;
+            }
+            else{
+                rad = rad / 0.05;
+            }
+            
+
             float lai = canopies[canopyId].lai;
             float p = calReCor(lai);
             float refl = spectralMaterials[spectralIdBase + kband].reflectance;
@@ -94,6 +101,7 @@ void main()
             float s = (w - p* w) / (1 - p* w);
             float a = (1-w) / (1 - p *w); 
             // absorb = a;
+            rad = rad * 0.5;
         }
         // else{
         //     rad = Rli * curDirect / effectWave * absorb;

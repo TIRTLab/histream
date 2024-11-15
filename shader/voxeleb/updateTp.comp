@@ -61,6 +61,25 @@ void main()
     bool type = (abs(typeId*1.0 - TYPE_SOIL*1.0) < 0.1) || (abs(typeId*1.0 - TYPE_BUILDING*1.0) < 0.1);
     if(type)
     {
+        /// 对温度进行真实的赋值，使得其是缓慢变化的
+        /// 如果 alpha_toSolar 增大，光照组分提升，阴影组分不变
+        /// 如果 alpha_toSolar 减小，光照组分不变，阴影组分提升
+        if (voxelDirs[bufferId].solar_last > -0.5){
+            if (voxelDirs[bufferId].solar > voxelDirs[bufferId].solar_last){
+                float sunlitTemperature = voxelTempes[bufferId].sunlit;
+                float shadedTemperature = voxelTempes[bufferId].shaded;
+                sunlitTemperature = sunlitTemperature + (voxelDirs[bufferId].solar - voxelDirs[bufferId].solar_last) * (shadedTemperature - sunlitTemperature);
+                voxelTempes[bufferId].sunlit = sunlitTemperature;
+            }
+
+            if ((voxelDirs[bufferId].solar < voxelDirs[bufferId].solar_last)){
+                float sunlitTemperature = voxelTempes[bufferId].sunlit;
+                float shadedTemperature = voxelTempes[bufferId].shaded;
+                shadedTemperature = shadedTemperature + (shadedTemperature - sunlitTemperature) * (voxelDirs[bufferId].solar - voxelDirs[bufferId].solar_last) / (1 - voxelDirs[bufferId].solar);
+                voxelTempes[bufferId].shaded = shadedTemperature;
+            }
+        }
+
         if(abs(soilSets[bioId].method-1)<0.1)
         {
             for(int i =TLASTNUM-1; i>0; i--)
@@ -85,7 +104,7 @@ void main()
             voxelTlasts[TlastId].sunlit = Tsunlit-273.15;
             voxelTlasts[TlastId].shaded = Tshaded-273.15;
         }
-        if(soilSets[bioId].method ==1){
+        if(soilSets[bioId].method ==2){ //廓线计算
 
              for(int issunlit = 0;issunlit < 2;issunlit++)
             {

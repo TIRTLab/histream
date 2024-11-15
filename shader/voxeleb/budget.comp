@@ -82,11 +82,11 @@ void main()
     float netSunlitRad,netShadedRad;
     if(typeId == TYPE_VEGETATION)
     { 
-        float lai = canopies[canopyId].lai;
-        float p = calReCor(lai);
-        float w = refl + trans;
-        float s = (w - p* w) / (1 - p* w);
-        float a = (1-w) / (1 - p *w); 
+        // float lai = canopies[canopyId].lai;
+        // float p = calReCor(lai);
+        // float w = refl + trans;
+        // float s = (w - p* w) / (1 - p* w);
+        // float a = (1-w) / (1 - p *w); 
         // emis = a;
         outShadedRad = Stefen_Boltzmann(TshadedOld,emis);
         outSunlitRad = Stefen_Boltzmann(TsunlitOld,emis);
@@ -107,62 +107,74 @@ void main()
     if(abs(voxelHeatFlux[bufferId].Gshaded - GST)<0.01) Gshaded = netShadedRad * GST;
     else Gshaded = voxelHeatFlux[bufferId].Gshaded; 
 
-    // float Gsunlit=0,Gshaded=0;
-    // Gsunlit = voxelHeatFlux[bufferId].Gsunlit;
-    // Gshaded = voxelHeatFlux[bufferId].Gshaded; 
     //-------------------------------------------------------
     //  Update surface temperature : old
     //-------------------------------------------------------
-    float Tsunlit,Tshaded;
-    float Ta = ubom.meteo.Ta;
-    float innovation1 = 0,innovation2 = 0;
-    float wc = 0.1;  // update coefficient 
-    float raa = voxelRaas[bufferId].raa ;
-    float diffHeatfluxSunlit =  voxelHeatFlux[bufferId].LEsunlit + Gsunlit;
-    float diffHeatfluxShaded =  voxelHeatFlux[bufferId].LEshaded + Gshaded;
-    innovation1 = raa/ (RHOA * CP) * (netSunlitRad - diffHeatfluxSunlit);
-    Tsunlit = ubom.meteo.Ta +273.15+  wc* innovation1 +(1-wc) * (TsunlitOld-273.15 - ubom.meteo.Ta);
-    innovation2 = raa / (RHOA * CP) * (netShadedRad - diffHeatfluxShaded);
-    Tshaded = ubom.meteo.Ta +273.15+ wc * innovation2 +(1-wc) * (TshadedOld-273.15 - ubom.meteo.Ta);
-    int count = 0;
-    if (abs(innovation1) > RAD_THRESHOLD) count = count + 1;
-    if( abs(innovation2) > RAD_THRESHOLD) count = count + 1;
+    // float Tsunlit,Tshaded;
+    // float Ta = ubom.meteo.Ta;
+    // float innovation1 = 0,innovation2 = 0;
+    // float wc = 0.1;  // update coefficient 
+    // // wc = 0.2;
+    // float raa = voxelRaas[bufferId].raa ;
+    // float diffHeatfluxSunlit =  voxelHeatFlux[bufferId].LEsunlit + Gsunlit;
+    // float diffHeatfluxShaded =  voxelHeatFlux[bufferId].LEshaded + Gshaded;
+    // innovation1 = raa/ (RHOA * CP) * (netSunlitRad - diffHeatfluxSunlit);
+    // Tsunlit = ubom.meteo.Ta +273.15+  wc* innovation1 +(1-wc) * (TsunlitOld-273.15 - ubom.meteo.Ta);
+    // innovation2 = raa / (RHOA * CP) * (netShadedRad - diffHeatfluxShaded);
+    // Tshaded = ubom.meteo.Ta +273.15+ wc * innovation2 +(1-wc) * (TshadedOld-273.15 - ubom.meteo.Ta);
+    // int count = 0;
+    // if (abs(innovation1) > RAD_THRESHOLD) count = count + 1;
+    // if( abs(innovation2) > RAD_THRESHOLD) count = count + 1;
 
     //-------------------------------------------------------
     //  Update surface temperature : new
     //-------------------------------------------------------
-    // float Tsunlit,Tshaded;
-    // float Ta = ubom.meteo.Ta;
-    // float e_to_q = MH20 / MAIR / ubom.meteo.p;
-    // float ei_sunlit = es_fun(TsunlitOld);
-    // float s_sunlit = s_fun(ei_sunlit, TsunlitOld);
-    // float ei_shaded = es_fun(TshadedOld);
-    // float s_shaded = s_fun(ei_shaded, TshadedOld);
-    // float innovation1 = 0,innovation2 = 0;
-    // float raa = voxelRaas[bufferId].raa ;
-    // float rss_sunlit = voxelRsss[bufferId].sunlit;
-    // float rss_shaded = voxelRsss[bufferId].shaded;
+    float Tsunlit,Tshaded;
+    float Ta = ubom.meteo.Ta;
+    float e_to_q = MH20 / MAIR / ubom.meteo.p;
+    float ei_sunlit = es_fun(TsunlitOld);
+    float s_sunlit = s_fun(ei_sunlit, TsunlitOld);
+    float ei_shaded = es_fun(TshadedOld);
+    float s_shaded = s_fun(ei_shaded, TshadedOld);
+    float innovation1 = 0,innovation2 = 0;
+    float raa = voxelRaas[bufferId].raa ;
+    float rss_sunlit = voxelRsss[bufferId].sunlit;
+    float rss_shaded = voxelRsss[bufferId].shaded;
+    float diffSunlitRad, diffShadedRad;
     // float diffSunlitRad = netSunlitRad - (voxelHeatFlux[bufferId].LEsunlit + Gsunlit + voxelHeatFlux[bufferId].Hsunlit);
     // float diffShadedRad = netShadedRad - (voxelHeatFlux[bufferId].LEshaded + Gshaded + voxelHeatFlux[bufferId].Hshaded);
-    // float lambdas_sunlit = (2.501-0.002361*TsunlitOld)*1E6;
-    // float lambdas_shaded = (2.501-0.002361*TshadedOld)*1E6;
-    // float wc = 0.5;
-    // // if(setting.theIteration>5) wc = 0.3;
-    // // if(setting.theIteration>10) wc = 0.2;
-    // // if(setting.theIteration>30) wc = 0.1;
-    // // Tsunlit = TsunlitOld + diffSunlitRad * wc / ((RHOA*CP)/raa+
-    // //     RHOA*lambdas_sunlit*e_to_q*s_sunlit/(raa+rss_sunlit)+4*SIGMASB*pow(TsunlitOld,3));
-    // // Tshaded = TshadedOld + diffShadedRad * wc / ((RHOA*CP)/raa+
-    // //     RHOA*lambdas_shaded*e_to_q*s_shaded/(raa+rss_shaded)+4*SIGMASB*pow(TshadedOld,3));
-    // //    分母第二项太大了，导致温度修正量很小很小
-    // // 暂时先用下列近似情况
+    float lambdas_sunlit = (2.501-0.002361*TsunlitOld)*1E6;
+    float lambdas_shaded = (2.501-0.002361*TshadedOld)*1E6;
+    float wc = 0.2;
+    // if(setting.theIteration>5) wc = 0.3;
+    // if(setting.theIteration>10) wc = 0.2;
+    // if(setting.theIteration>30) wc = 0.1;
+    // Tsunlit = TsunlitOld + diffSunlitRad * wc / ((RHOA*CP)/raa+
+    //     RHOA*lambdas_sunlit*e_to_q*s_sunlit/(raa+rss_sunlit)+4*SIGMASB*pow(TsunlitOld,3));
+    // Tshaded = TshadedOld + diffShadedRad * wc / ((RHOA*CP)/raa+
+    //     RHOA*lambdas_shaded*e_to_q*s_shaded/(raa+rss_shaded)+4*SIGMASB*pow(TshadedOld,3));
+    //    分母第二项太大了，导致温度修正量很小很小
+    // 暂时先用下列近似情况
     // Tsunlit = TsunlitOld + diffSunlitRad * wc / ((RHOA*CP)/raa + (RHOA*CP)/raa + 4*SIGMASB*pow(TsunlitOld,3));
     // Tshaded = TshadedOld + diffShadedRad * wc / ((RHOA*CP)/raa + (RHOA*CP)/raa + 4*SIGMASB*pow(TshadedOld,3));
-    // // Tsunlit = TsunlitOld + diffSunlitRad * wc / ((RHOA*CP)/raa + 4*SIGMASB*pow(TsunlitOld,3));
-    // // Tshaded = TshadedOld + diffShadedRad * wc / ((RHOA*CP)/raa + 4*SIGMASB*pow(TshadedOld,3));
-    // int count=0;
-    // if (abs(diffSunlitRad) > RAD_THRESHOLD) count = count + 1;
-    // if (abs(diffShadedRad) > RAD_THRESHOLD) count = count + 1;
+    // Tsunlit = TsunlitOld + diffSunlitRad * wc / ((RHOA*CP)/raa + 4*SIGMASB*pow(TsunlitOld,3));
+    // Tshaded = TshadedOld + diffShadedRad * wc / ((RHOA*CP)/raa + 4*SIGMASB*pow(TshadedOld,3));
+    if(typeId == TYPE_VEGETATION)
+    { 
+        diffSunlitRad = netSunlitRad - (voxelHeatFlux[bufferId].LEsunlit + voxelHeatFlux[bufferId].Hsunlit);
+        diffShadedRad = netShadedRad - (voxelHeatFlux[bufferId].LEshaded + voxelHeatFlux[bufferId].Hshaded);
+        Tsunlit = TsunlitOld + diffSunlitRad * wc / ((RHOA*CP)/raa + 4*SIGMASB*pow(TsunlitOld,3));
+        Tshaded = TshadedOld + diffShadedRad * wc / ((RHOA*CP)/raa + 4*SIGMASB*pow(TshadedOld,3));
+    }else if(typeId == TYPE_SOIL || typeId == TYPE_BUILDING)
+    {
+        diffSunlitRad = netSunlitRad - (voxelHeatFlux[bufferId].LEsunlit + Gsunlit + voxelHeatFlux[bufferId].Hsunlit);
+        diffShadedRad = netShadedRad - (voxelHeatFlux[bufferId].LEshaded + Gshaded + voxelHeatFlux[bufferId].Hshaded);
+        Tsunlit = TsunlitOld + diffSunlitRad * wc / ((RHOA*CP)/raa + (RHOA*CP)/raa + 4*SIGMASB*pow(TsunlitOld,3));
+        Tshaded = TshadedOld + diffShadedRad * wc / ((RHOA*CP)/raa + (RHOA*CP)/raa + 4*SIGMASB*pow(TshadedOld,3));
+    }// IF TYPE
+    int count=0;
+    if (abs(diffSunlitRad) > RAD_THRESHOLD) count = count + 1;
+    if (abs(diffShadedRad) > RAD_THRESHOLD) count = count + 1;
 
 
 
@@ -184,6 +196,8 @@ void main()
     //-------------------------------------------
     // SAVE BACK
     //------------------------------------------- 
+
+    
     voxelTempes[bufferId].sunlit = Tsunlit;
     voxelTempes[bufferId].shaded = Tshaded;
     atomicAdd(ebState.count,count,gl_ScopeDevice,gl_StorageSemanticsBuffer,gl_SemanticsRelaxed);

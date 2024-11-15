@@ -53,7 +53,7 @@ bool Command::runEB(std::shared_ptr<VoxelebIO> &modelio){
     waitFence(modelio);
 
 
-    for(int kiter = 0;kiter < 25; kiter++) {
+    for(int kiter = 0;kiter < 50; kiter++) {
 
         submit(modelio, VoxelEBStage::directTIR, voxelSize1D, std::nullopt, std::nullopt);
         waitFence(modelio);

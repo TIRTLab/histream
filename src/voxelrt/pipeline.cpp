@@ -10,15 +10,10 @@
 void Pipeline::createShaderBindingTable(std::shared_ptr<VoxelrtIO> &modelio)
 {
 
-
-
-
 }
 
 bool Pipeline::createPipeline(std::shared_ptr<VoxelrtIO> &modelio)
 {
-
-
     auto & m_device = modelio->m_device;
     auto & m_pipelineLayout = modelio->m_pipelineLayout;
     auto & m_pipelines = modelio->m_pipelines;
@@ -30,7 +25,6 @@ bool Pipeline::createPipeline(std::shared_ptr<VoxelrtIO> &modelio)
     auto & m_rtSBTBuffer = modelio->m_rtSBTBuffer;
     auto & m_debug = modelio->m_debug;
 
-
     vkDestroyPipelineLayout(m_device, m_pipelineLayout, nullptr);
 
     VkPushConstantRange pushConstant{VK_SHADER_STAGE_COMPUTE_BIT,
@@ -41,7 +35,6 @@ bool Pipeline::createPipeline(std::shared_ptr<VoxelrtIO> &modelio)
     pipelineLayoutCreateInfo.setLayoutCount = static_cast<uint32_t>(1);
     pipelineLayoutCreateInfo.pSetLayouts = &m_descSetLayout;
     vkCreatePipelineLayout(m_device, &pipelineLayoutCreateInfo, nullptr, &m_pipelineLayout);
-
 
     std::string baseDirectory = modelio->definedDir;
     std::map<VoxelRTStage, std::string> VoxelrtPaths{
@@ -300,20 +293,19 @@ bool Pipeline::createPipeline(std::shared_ptr<VoxelrtIO> &modelio)
 void Pipeline::destroy(std::shared_ptr<VoxelrtIO> &modelio) {
 
     // modelio->m_sbtWrapper.destroy();
-   // modelio->m_pAlloc->destroy((modelio->m_rtSBTBuffer));
-
-//    vkDestroyPipeline(modelio->m_device, modelio->m_pipeline_aero, nullptr);
-//    vkDestroyPipelineLayout(modelio->m_device, modelio->m_pipelineLayout_aero, nullptr);
-//    vkDestroyPipeline(modelio->m_device, modelio->m_pipeline_bio, nullptr);
-//    vkDestroyPipelineLayout(modelio->m_device, modelio->m_pipelineLayout_bio, nullptr);
-//
-//    for (auto &stage : magic_enum::enum_values<EBStage>())
-//    {
-//        int stageInt = (int)stage;
-//        vkDestroyPipeline(modelio->m_device, modelio->m_pipelines_eb[stageInt], nullptr);
-//        modelio->m_pipelines_eb[stageInt] =  VkPipeline();
-//    }
-//    modelio->m_pipelineLayout_eb = VkPipelineLayout();
+    // modelio->m_pAlloc->destroy((modelio->m_rtSBTBuffer));
+    // vkDestroyPipeline(modelio->m_device, modelio->m_pipeline_aero, nullptr);
+    // vkDestroyPipelineLayout(modelio->m_device, modelio->m_pipelineLayout_aero, nullptr);
+    // vkDestroyPipeline(modelio->m_device, modelio->m_pipeline_bio, nullptr);
+    // vkDestroyPipelineLayout(modelio->m_device, modelio->m_pipelineLayout_bio, nullptr);
+    //
+    // for (auto &stage : magic_enum::enum_values<EBStage>())
+    // {
+    //     int stageInt = (int)stage;
+    //     vkDestroyPipeline(modelio->m_device, modelio->m_pipelines_eb[stageInt], nullptr);
+    //     modelio->m_pipelines_eb[stageInt] =  VkPipeline();
+    // }
+    // modelio->m_pipelineLayout_eb = VkPipelineLayout();
 
 
     for (auto &stage : magic_enum::enum_values<VoxelRTStage>()) {
@@ -324,23 +316,23 @@ void Pipeline::destroy(std::shared_ptr<VoxelrtIO> &modelio) {
     modelio->m_pipelineLayout = VkPipelineLayout();
 
 
-//
-//    for (auto &stage : magic_enum::enum_values<ETStage>())
-//    {
-//        int stageInt = (int)stage;
-//        vkDestroyPipeline(modelio->m_device, modelio->m_pipelines_et[stageInt], nullptr);
-//        modelio->m_pipelines_et[stageInt] =  VkPipeline();
-//    }
-//    modelio->m_pipelineLayout_et = VkPipelineLayout();
-//
-//
-//    for (auto &stage : magic_enum::enum_values<VoxelRadStage>())
-//    {
-//        int stageInt = (int)stage;
-//        vkDestroyPipeline(modelio->m_device, modelio->m_pipelines_rt[stageInt], nullptr);
-//        modelio->m_pipelines_rt[stageInt] =  VkPipeline();
-//    }
-//    modelio->m_pipelineLayout_rt = VkPipelineLayout();
+    //
+    // for (auto &stage : magic_enum::enum_values<ETStage>())
+    // {
+    //     int stageInt = (int)stage;
+    //     vkDestroyPipeline(modelio->m_device, modelio->m_pipelines_et[stageInt], nullptr);
+    //     modelio->m_pipelines_et[stageInt] =  VkPipeline();
+    // }
+    // modelio->m_pipelineLayout_et = VkPipelineLayout();
+    //
+    //
+    // for (auto &stage : magic_enum::enum_values<VoxelRadStage>())
+    // {
+    //     int stageInt = (int)stage;
+    //     vkDestroyPipeline(modelio->m_device, modelio->m_pipelines_rt[stageInt], nullptr);
+    //     modelio->m_pipelines_rt[stageInt] =  VkPipeline();
+    // }
+    // modelio->m_pipelineLayout_rt = VkPipelineLayout();
 
 
 

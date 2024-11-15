@@ -1069,7 +1069,7 @@ void FileIO::writeENVIdata(std::string projectDir, float *pData, int width, int 
     std::ostringstream  oss_w;
     oss_w << std::fixed << std::setprecision(2)<<std::setfill('0')<<angle.saa;
     std::ostringstream  oss_t;
-    oss_t << std::fixed << std::setprecision(2)<<std::setfill('0')<<t;
+    oss_t << std::fixed << std::setprecision(3)<<std::setfill('0')<<t;
     std::ostringstream  oss_k;
     oss_k << std::fixed << std::setprecision(0)<<std::setfill('0')<<k;
 
