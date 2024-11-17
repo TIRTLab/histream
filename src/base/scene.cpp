@@ -979,11 +979,12 @@ bool Scene::createPrimObj_Crown(PrimEntity & voxelEntity,nanovdb::GridBuilder<in
     meshio->primMeshes.emplace_back(currentVoxelModel1); //xzy
     std::string meshName1 = voxelEntity.meshNames[0];
     std::string spectralName1 = voxelEntity.spectralNames[0];
+    std::string thermalName1 = voxelEntity.thermalNames[0];
     std::string canopyName1 = voxelEntity.canopyNames[0];
     std::string propName1 = voxelEntity.propNames[0];
     MeshLink meshlink1;
     meshlink1.spectralId = meshio->spectralNames.find(spectralName1)->second;
-    meshlink1.thermalId = 0;
+    meshlink1.thermalId = meshio->thermalNames.find(thermalName1)->second;
     meshlink1.canopyId = meshio->canopyNames.find(canopyName1)->second;
 //    if (type == Type::VEGETATION) {
 //        // meshlink1.leafbioId = meshio->leafbioNames.find(propName)->second;
@@ -1499,7 +1500,8 @@ bool Scene::createPrimObj_Background(Background & background,nanovdb::GridBuilde
 
     // background model link
     MeshLink bgMeshLink;
-    bgMeshLink.thermalId = 0;
+    std::string bgThermalName = background.bgThermalName;
+    bgMeshLink.thermalId =  meshio->thermalNames.find(bgThermalName)->second;
     bgMeshLink.canopyId = 0;
     std::string bgSpectralName = background.bgSpectralName;
     bgMeshLink.spectralId = meshio->spectralNames.find(bgSpectralName)->second;
