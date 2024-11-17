@@ -272,11 +272,7 @@ bool voxel_raytracing_diffuse(vec3 voxelPos0, uint bufferId0, NanoVDBLink nanoVD
         /// facet case
         /////////////////////////////
        
-        if(sstate.typeId == TYPE_BUILDING)
-        {
-          int faceId = getFaceIdSimple(sstate.position,semiRange,alignVoxelId);
-          alignBufferId = alignBufferId + faceId;
-        }
+        
         instanceId = voxelLinks[alignBufferId].instanceId;
         meshId = instanceLinks[instanceId].meshId;
         typeId = meshLinks[meshId].type;
@@ -284,6 +280,12 @@ bool voxel_raytracing_diffuse(vec3 voxelPos0, uint bufferId0, NanoVDBLink nanoVD
         spectralId = meshLinks[meshId].spectralId;
         thermalId = meshLinks[meshId].thermalId;
         uint spectralIdBase = spectralId*n_wave;
+
+        if(typeId == TYPE_BUILDING)
+        {
+          int faceId = getFaceIdSimple(sstate.position,semiRange,alignVoxelId);
+          alignBufferId = alignBufferId + faceId;
+        }
     
         alpha_toSolar = voxelDirs[alignBufferId].solar;
         vec3 wo = directioni;  // FROM SELECTED VOXEL OUT TO HIT FACET  

@@ -57,12 +57,11 @@ bool Voxel_raytracing(Ray ray, NanoVDBLink nanoVDBLink)
     ivec3 voxelId;
     int bufferId,alignBufferId;
     float scale = setting.scale;			// scale
-    uint instanceId, typeId,meshId;                // passed voxel Id through voxelLink and instanceLink.
+    uint instanceId, typeId,meshId;         // passed voxel Id through voxelLink and instanceLink.
     uint canopyId, thermalId, spectralId;   // passed voxel spectral, thermal, canopy ID.
 	float pl_toSolar, pl_toSensor;			// hotspot parameters.
     Canopy canopy;							// store canopy information
     vec3 semiRange = vec3(floor(setting.voxelSize.x/2.0+0.5),0,floor(setting.voxelSize.z/2.0+0.5));
-    
     
     vec2 gamma = scattering_phase_function_direct_XZY_paper(normalize(lightSet.direction), normalize(-sensorMatrix.direction));
     vec2 gammaMax = scattering_phase_function_direct_XZY_paper(normalize(lightSet.direction), normalize(-lightSet.direction));
@@ -110,13 +109,12 @@ bool Voxel_raytracing(Ray ray, NanoVDBLink nanoVDBLink)
             
 			instanceId = voxelLinks[bufferId].instanceId;
             meshId = instanceLinks[instanceId].meshId;
-
 			typeId = meshLinks[meshId].type;
 			canopyId = meshLinks[meshId].canopyId;
 			spectralId = meshLinks[meshId].spectralId;
 			thermalId = meshLinks[meshId].thermalId;
-
 			canopy = canopies[canopyId];
+
             uint spectralBase = spectralId * n_wave;
             float envTemp = Inv_Stefen_Boltzmann(voxelNetRads[bufferId].diffuseTrad, 1);
 
@@ -130,13 +128,12 @@ bool Voxel_raytracing(Ray ray, NanoVDBLink nanoVDBLink)
             // LST = voxelHeatFlux[bufferId].Gsunlit;
             // LST =  voxelRsss[bufferId].sunlit;
             // return true;
-
-
+// for(int kwave=0;kwave<n_wave;kwave++){
+//     Radiance[kwave] =  wave[kwave];
+// }
+// return true;
 			if(typeId == TYPE_VEGETATION)
 			{
-                // LST = 2;
-                // return false;
-
                 G = canopies[canopyId].G;
                 lai = canopies[canopyId].lai;
                 // density determined by mesh/isntance or pixel scale?
@@ -189,8 +186,14 @@ bool Voxel_raytracing(Ray ray, NanoVDBLink nanoVDBLink)
                     float a = (1-w) / (1 - p *w); 
                     //radianceDirect = thermalRadiance * (1 - refl - trans) * (1 - alpha_voxel);
                     radianceDirect = thermalRadiance * (a) * (1 - alpha_voxel);
+                    
+                    // Radiance[kwave] = refl;
+                    // return false;
                                     
                     Radiance[kwave] += radianceDirect; // debug
+
+// Radiance[kwave] = thermalRadiance;
+// return true;
                     // LST += Planck(wavelength, envTemp) * (1 - alpha_voxel) * (refl) * alpha_toSensor;
                     Radiance[kwave] += Planck(wavelength, envTemp) * (1 - alpha_voxel) * (s) * alpha_toSensor;
             // Radiance[0] += 3;
@@ -203,30 +206,32 @@ bool Voxel_raytracing(Ray ray, NanoVDBLink nanoVDBLink)
 
         if(alignBufferId >= 0)
 		{
+            
+			instanceId = voxelLinks[alignBufferId].instanceId;
+            meshId = instanceLinks[instanceId].meshId;
+			typeId = meshLinks[meshId].type;
+			canopyId = meshLinks[meshId].canopyId;
+			spectralId = meshLinks[meshId].spectralId;
+			thermalId = meshLinks[meshId].thermalId;
+			canopy = canopies[canopyId];
 
-            if((sstate.typeId == TYPE_BUILDING) || (sstate.typeId == TYPE_SOIL)){
+            uint spectralBase = spectralId * n_wave;
+            float envTemp = Inv_Stefen_Boltzmann(voxelNetRads[alignBufferId].diffuseTrad, 1);
+
+            if((typeId == TYPE_BUILDING) || (typeId == TYPE_SOIL)){
+// for(int kwave=0;kwave<setting.n_wave;kwave++){
+// Radiance[kwave] = sstate.typeId;
+// return false;}
+                
             
                 int faceId = 0;
-                if(sstate.typeId == TYPE_BUILDING)
+                if(typeId == TYPE_BUILDING)
                 {
                     faceId  = getFaceIdSimple(sstate.position,semiRange,alignVoxelId);
                     alignBufferId = alignBufferId + faceId;
                     // LST = faceId;
                     // return true;
                 }
-                // LST = voxelHeatFlux[bufferId].Gshaded;
-                // return true;
-                // LST = 0;
-                // return true;
-
-                instanceId = voxelLinks[alignBufferId].instanceId;
-                meshId = instanceLinks[instanceId].meshId;
-                typeId = meshLinks[meshId].type;
-                canopyId = meshLinks[meshId].canopyId;
-                spectralId = meshLinks[meshId].spectralId;
-                thermalId = meshLinks[meshId].thermalId;
-                uint spectralBase = spectralId * n_wave;
-                float envTemp = Inv_Stefen_Boltzmann(voxelNetRads[alignBufferId].diffuseTrad, 1);
 
                 // LST = voxelNetRads[bufferId].directVrad;
                 // LST = voxelNetRads[bufferId].diffuseVrad;
@@ -276,10 +281,16 @@ bool Voxel_raytracing(Ray ray, NanoVDBLink nanoVDBLink)
                                         + Planck(wavelength, shadedTemperature) * (alpha_toSensor - hotspot);
                     // self collipsion;
                     radianceDirect = thermalRadiance * (1 - refl - trans);
+
+// Radiance[kwave] = hotspot;
+// return false;
+// Radiance[kwave] =  thermalRadiance;
+// return true;
                                     
                     Radiance[kwave] += radianceDirect; // debug
                     Radiance[kwave] += Planck(wavelength, envTemp)  * (refl) * alpha_toSensor;
                     // Radiance[kwave] += Planck(wavelength, envTemp) * (1 - alpha_voxel) * (s) * alpha_toSensor;
+
             // Radiance[0] += thermalRadiance;
             // return true;
                 }             
@@ -329,8 +340,6 @@ void SamplePixel(vec2 imageCoords,vec2 sizeImage,int smpl)
 	Ray ray = Ray(origin.xyz, directionv);
 
     Voxel_raytracing(ray, nanoVDBLink);
-    // Radiance[0] = 9;
-   // LST = 1.0;
 }
 
 
