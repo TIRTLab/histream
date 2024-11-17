@@ -440,6 +440,7 @@ void Geometry::updateAngle(std::shared_ptr<VoxelebIO> &modelio, int kangle){
                                              angle.vza, angle.vaa, ratio);
     updateSensor(modelio, sensorMatrix);
 
+    // if (angle.sza >= 85) angle.sza = 85;
     LightSet lightSet = createLight(angle.sza, angle.saa,modelio->light.direct,
                                     modelio->light.diffuse,modelio->light.solarTemperature,
                                     modelio->light.skyTemperature);

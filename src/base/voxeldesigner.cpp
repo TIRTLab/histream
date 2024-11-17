@@ -877,7 +877,7 @@ PrimMesh VoxelDesigner::createTriEllipsoid(Shape shape, float stepSize)
     }
 
 
-    voxelTriModel.meshcenter = glm::vec3(shape.length/stepSize / 2.0, shape.width / 2.0, shape.height / 2.0);
+    voxelTriModel.meshcenter = glm::vec3(shape.length / 2.0, shape.width / 2.0, shape.height / 2.0);
 
     return voxelTriModel;
 }

@@ -173,7 +173,7 @@ bool Buffer::createBuffer(std::shared_ptr<VoxelebIO> &voxellstio){
 
     // dir
     VkCommandBuffer cmdBufDir = cmdGen.createCommandBuffer();
-    std::vector<VoxelDir> voxelDirs(n_voxel, VoxelDir{0, 0});
+    std::vector<VoxelDir> voxelDirs(n_voxel, VoxelDir{0, -1});
     voxelio->m_pDirBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufDir, voxelDirs,
                                                                          VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
                                                                          VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
@@ -276,7 +276,7 @@ bool Buffer::createBuffer(std::shared_ptr<VoxelebIO> &voxellstio){
                                                                           VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
                                                                           VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
     // tLast
-    std::vector<TLAST> tlast(n_voxel * TLASTNUM, TLAST{25, 25});
+    std::vector<TLAST> tlast(n_voxel * TLASTNUM, TLAST{23, 23});
     voxelio->m_pTLASTBuffer = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufEvapo, tlast,
                                                                            VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
                                                                            VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));

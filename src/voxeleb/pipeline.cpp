@@ -56,6 +56,7 @@ bool Pipeline::createPipeline(std::shared_ptr<VoxelebIO> &modelio)
             {VoxelEBStage::updateL,     baseDirectory + "/shader/voxeleb/updateL.comp.spv"},
             {VoxelEBStage::aero,        baseDirectory + "/shader/voxeleb/aeresist.comp.spv"},
             {VoxelEBStage::bio,         baseDirectory + "/shader/voxeleb/biochemical_m12.comp.spv"},
+            // {VoxelEBStage::bio,         baseDirectory + "/shader/voxeleb/biochemical.comp.spv"},
             {VoxelEBStage::out,         baseDirectory + "/shader/voxeleb/voxelrad_image.comp.spv"}};
 
 
