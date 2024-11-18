@@ -195,10 +195,9 @@ void XmlExamples::createVoxelebxml(){
         m_pVoxelebXml->settingxml.maxDepth = 32;
         m_pVoxelebXml->settingxml.theGPU = 0;
 
-        m_pVoxelebXml->settingxml.startTimeNode = 0;
-        m_pVoxelebXml->settingxml.endTimeNode = 144;
-        // m_pVoxelebXml->settingxml.dTime = 600;
-        m_pVoxelebXml->settingxml.dTime = 1800;
+        m_pVoxelebXml->meteoxml.startTimeNode = 0;
+        m_pVoxelebXml->meteoxml.endTimeNode = 144;
+        m_pVoxelebXml->meteoxml.meta.dTime = 1800;
 
 
         m_pVoxelebXml->lightxml.name = "Solar";
@@ -549,9 +548,12 @@ void XmlExamples::createVoxelebxml(){
         m_pVoxelebXml->settingxml.maxDepth = 32;
         m_pVoxelebXml->settingxml.theGPU = 0;
 
-        m_pVoxelebXml->settingxml.startTimeNode = 0;
-        m_pVoxelebXml->settingxml.endTimeNode = 144;
-        m_pVoxelebXml->settingxml.dTime = 600;
+        // m_pVoxelebXml->settingxml.startTimeNode = 0;
+        // m_pVoxelebXml->settingxml.endTimeNode = 144;
+        // m_pVoxelebXml->settingxml.dTime = 600;
+        m_pVoxelebXml->meteoxml.startTimeNode = 0;
+        m_pVoxelebXml->meteoxml.endTimeNode = 144;
+        m_pVoxelebXml->meteoxml.meta.dTime = 600;
 
         m_pVoxelebXml->lightxml.name = "Solar";
         m_pVoxelebXml->lightxml.solarAngle = {40, 30};
@@ -658,9 +660,9 @@ void XmlExamples::createVoxelebxml(){
         m_pVoxelebXml->settingxml.maxDepth = 32;
         m_pVoxelebXml->settingxml.theGPU = 0;
 
-        m_pVoxelebXml->settingxml.startTimeNode = 0;
-        m_pVoxelebXml->settingxml.endTimeNode = 240;
-        m_pVoxelebXml->settingxml.dTime = 1800;
+        m_pVoxelebXml->meteoxml.startTimeNode = 0;
+        m_pVoxelebXml->meteoxml.endTimeNode = 240;
+        m_pVoxelebXml->meteoxml.meta.dTime = 1800;
 
         m_pVoxelebXml->lightxml.name = "Solar";
         m_pVoxelebXml->lightxml.solarAngle = {40, 30};
@@ -1074,13 +1076,10 @@ void XmlExamples::createVoxelebxml(){
 
         m_pVoxelebXml->definedDir = R"(D:\code\filed_newest)";
 
-        m_pVoxelebXml->settingxml.startTimeNode = 0;
-        m_pVoxelebXml->settingxml.endTimeNode = 576;
+        m_pVoxelebXml->meteoxml.startTimeNode = 0;
+        m_pVoxelebXml->meteoxml.endTimeNode = 576;
+        m_pVoxelebXml->meteoxml.meta.dTime = 1800;
 
-        // m_pVoxelebXml->settingxml.startTimeNode = 144;
-        // m_pVoxelebXml->settingxml.endTimeNode = 192;
-
-        m_pVoxelebXml->settingxml.dTime = 1800;
         m_pVoxelebXml->settingxml.n_sample= 32;//32
         m_pVoxelebXml->settingxml.maxDepth = 32;
         m_pVoxelebXml->settingxml.theGPU = 0;
@@ -1455,9 +1454,10 @@ void XmlExamples::createVoxelebxml(){
         m_pVoxelebXml->projectDir = R"(D:\data\field_data\Sim_homo_diff_canopy_height\LAI_2_C3_80_summer_Height_)" + std::to_string(height) + "//";
         m_pVoxelebXml->definedDir = R"(D:\code\filed_newest)";
 
-        m_pVoxelebXml->settingxml.startTimeNode = 0;
-        m_pVoxelebXml->settingxml.endTimeNode = 576;
-        m_pVoxelebXml->settingxml.dTime = 1800;
+        m_pVoxelebXml->meteoxml.startTimeNode = 0;
+        m_pVoxelebXml->meteoxml.endTimeNode = 576;
+        m_pVoxelebXml->meteoxml.meta.dTime = 1800;
+
         m_pVoxelebXml->settingxml.n_sample= 32;
         m_pVoxelebXml->settingxml.maxDepth = 32;
         m_pVoxelebXml->settingxml.theGPU = 0;
@@ -1551,10 +1551,10 @@ void XmlExamples::createVoxelebxml(){
         m_pVoxelebXml->projectDir = R"(D:\data\field_data\Sim_homo_diff_LAI\C3_80_summer_Height_2_LAI_)" + std::to_string(LAI) + "//";
         m_pVoxelebXml->definedDir = R"(D:\code\filed_newest)";
 
-        m_pVoxelebXml->settingxml.startTimeNode = 0;
-        m_pVoxelebXml->settingxml.endTimeNode = 576;
+        m_pVoxelebXml->meteoxml.startTimeNode = 0;
+        m_pVoxelebXml->meteoxml.endTimeNode = 576;
+        m_pVoxelebXml->meteoxml.meta.dTime = 1800;
 
-        m_pVoxelebXml->settingxml.dTime = 1800;
         m_pVoxelebXml->settingxml.n_sample= 32;
         m_pVoxelebXml->settingxml.maxDepth = 32;
         m_pVoxelebXml->settingxml.theGPU = 0;
@@ -1653,10 +1653,10 @@ void XmlExamples::createVoxelebxml(){
         m_pVoxelebXml->projectDir = R"(D:\data\field_data\Sim_homo_diff_SMC\LAI_2_Height_2_C3_80_summer_SMC_)" + std::to_string(SMC) + "//";
         m_pVoxelebXml->definedDir = R"(D:\code\filed_newest)";
 
-        m_pVoxelebXml->settingxml.startTimeNode = 0;
-        m_pVoxelebXml->settingxml.endTimeNode = 576;
+        m_pVoxelebXml->meteoxml.startTimeNode = 0;
+        m_pVoxelebXml->meteoxml.endTimeNode = 576;
+        m_pVoxelebXml->meteoxml.meta.dTime = 1800;
 
-        m_pVoxelebXml->settingxml.dTime = 1800;
         m_pVoxelebXml->settingxml.n_sample= 32;
         m_pVoxelebXml->settingxml.maxDepth = 32;
         m_pVoxelebXml->settingxml.theGPU = 0;
@@ -1782,10 +1782,10 @@ void XmlExamples::createVoxelebxml(){
         m_pVoxelebXml->projectDir = R"(D:\data\field_data\Sim_homo_diff_wind_speed\Height_2_LAI_2_C3_80_diff_wind_speed_)" + std::to_string(windSpeed) + "//";
         m_pVoxelebXml->definedDir = R"(D:\code\filed_newest)";
 
-        m_pVoxelebXml->settingxml.startTimeNode = 0;
-        m_pVoxelebXml->settingxml.endTimeNode = 576;
+        m_pVoxelebXml->meteoxml.startTimeNode = 0;
+        m_pVoxelebXml->meteoxml.endTimeNode = 576;
+        m_pVoxelebXml->meteoxml.meta.dTime = 1800;
 
-        m_pVoxelebXml->settingxml.dTime = 1800;
         m_pVoxelebXml->settingxml.n_sample= 32;
         m_pVoxelebXml->settingxml.maxDepth = 32;
         m_pVoxelebXml->settingxml.theGPU = 0;
