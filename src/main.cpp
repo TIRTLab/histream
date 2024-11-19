@@ -24,13 +24,14 @@ int main(int argc, char **argv) {
     // std::string path = "D:/data/field_app/voxelRT";
     // std::string version = "eVoxelRT";
 
-    // std::string path = "D:/data/field_app/voxelEB";
+    // std::string path = "D:/data/field_app/voxelEB_release";
     // std::string version = "eVoxelEB";
 
-    if (version.empty()){
-        cout << "Wrong version: " << version << endl;
+    if (version.empty() || path.empty()) {
+        cout << "Wrong Input" << endl;
         return false;
     }
+
     Engine engine;
     engine.input(path, version);
     engine.create();
