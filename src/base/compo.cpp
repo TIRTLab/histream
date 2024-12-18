@@ -33,6 +33,14 @@ bool Compo::createCompOptical(std::shared_ptr<FileIO> &fileio, std::shared_ptr<R
         id++;
     }
 
+    //// add none to avoid pass the empty data into the GPU
+    if (!fileio->m_pRaytracingXml->sensorxml.isTemperature)
+    {
+        meshio->thermals.push_back(Thermal{300, 300});
+        meshio->thermalNames.insert({"None",id});
+        id++;
+    }
+
     return true;
 }
 
