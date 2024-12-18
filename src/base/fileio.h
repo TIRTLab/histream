@@ -35,6 +35,7 @@ public:
     std::shared_ptr<RaytracingXml> m_pRaytracingXml;
     std::shared_ptr<VoxelEBXml>   m_pVoxelebXml;
     std::shared_ptr<VoxelRTXml>   m_pVoxelrtXml;
+    std::shared_ptr<BuildingShadowXml> m_pBuildingShadowXml;
 
 //private:
     std::vector<SpectralXml> readSpectralXML(TiXmlNode *node, Mode mode);

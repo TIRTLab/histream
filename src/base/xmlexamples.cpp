@@ -157,16 +157,16 @@ void XmlExamples::createVoxelebxml(){
 
     // 时间序列案例
     std::string caseName = "timeSeries";    /////// 多时相垂直观测模拟
-    // caseName = "multiangle";                /////// 多角度观测模拟
+    caseName = "multiangle";                /////// 多角度观测模拟
     // caseName = "forest";                    /////// 相同LAI情况下，不同植被覆盖度的模拟
     // caseName = "satellite";              /////// 均质场景下的卫星尺度模拟
     // caseName = "forest_satellite";       /////// 离散森林场景下的静止卫星多角度模拟
     // caseName = "forest_TRGMEB";          /////// TRGMEB比较模拟
-    caseName = "diff_season";
-    caseName = "diff_height";
+    // caseName = "diff_season";
+    // caseName = "diff_height";
     // caseName = "diff_LAI";
     // caseName = "diff_SMC";
-    // caseName = "diff_wind";
+    caseName = "diff_wind";
 
     if (caseName == "timeSeries")
     {
@@ -299,7 +299,7 @@ void XmlExamples::createVoxelebxml(){
 
     if (caseName == "multiangle")
    {
-       int LAI = 3;
+       int LAI = 1;
        if (LAI == 1)
        {
            m_pVoxelebXml->projectDir = R"(D:\data\field_data\Sim_homo_LAI_1.0_multiangle\)";
@@ -318,6 +318,10 @@ void XmlExamples::createVoxelebxml(){
         m_pVoxelebXml->settingxml.n_sample= 32;
         m_pVoxelebXml->settingxml.maxDepth = 32;
         m_pVoxelebXml->settingxml.theGPU = 0;
+
+        m_pVoxelebXml->meteoxml.startTimeNode = 74;
+        m_pVoxelebXml->meteoxml.endTimeNode = 75;
+        m_pVoxelebXml->meteoxml.meta.dTime = 600;
 
 
         m_pVoxelebXml->lightxml.name = "Solar";
@@ -348,12 +352,12 @@ void XmlExamples::createVoxelebxml(){
         m_pVoxelebXml->sensorxml.waves = {10500};
         m_pVoxelebXml->sensorxml.projection = Projection::PARALLAL;
 
-        m_pVoxelebXml->scenexml.background.sceneSize={50, 50, 50}; // length, width, height
+        m_pVoxelebXml->scenexml.background.sceneSize={20, 20, 10}; // length, width, height
         m_pVoxelebXml->scenexml.background.sceneOrigin={0, 0, 0};
     /*    m_pVoxelebXml->scenexml.background.sMin={0,0,0};
         m_pVoxelebXml->scenexml.background.sMax={600,600,10};*/
         m_pVoxelebXml->scenexml.background.stepsize_surface=0.5;
-        m_pVoxelebXml->scenexml.background.stepsize_height=0.75;
+        m_pVoxelebXml->scenexml.background.stepsize_height=0.5;
         // m_pVoxelebXml->scenexml.background.stepsize_surface=1;
         // m_pVoxelebXml->scenexml.background.stepsize_height=1;
     //    m_pVoxelebXml->scenexml.stepsize_atmosphere = 1000;
@@ -368,19 +372,6 @@ void XmlExamples::createVoxelebxml(){
         m_pVoxelebXml->scenexml.background.lon = 115.7923;
 
 
-        PrimEntity primEntity1;
-        primEntity1= PrimEntity{"building",
-                                {"wall","roof"},
-                                {"wall","roof"},
-                                {"K300","K300"},
-                                {"crown","crown"},
-                                {"soilset","soilset"},
-                                Type::BUILDING,
-                                {ShapeType::ELLIPSOID,5,5,5,glm::vec3(0,0,0)},
-                                false," ",
-                                true,m_pVoxelebXml->projectDir + "\\height_0_5.tif",
-                                false, " "};
-
         PrimEntity primEntity2;
         primEntity2 = PrimEntity{"tree",
                                  {"crown"},
@@ -389,7 +380,7 @@ void XmlExamples::createVoxelebxml(){
                                {"crown"},
                                {"leafbio"},
                                Type::VEGETATION,
-                               {ShapeType::CUBE,3,20,20,glm::vec3(0,0,0)},
+                               {ShapeType::CUBE,2,15,15,glm::vec3(0,0,0)},
                                false,"",
                                false,"",
                                true,m_pVoxelebXml->projectDir + "\\entity_0_position.txt"};
@@ -1780,7 +1771,7 @@ void XmlExamples::createVoxelebxml(){
     {
          int windSpeed = 6;//2,4,6
         m_pVoxelebXml->projectDir = R"(D:\data\field_data\Sim_homo_diff_wind_speed\Height_2_LAI_2_C3_80_diff_wind_speed_)" + std::to_string(windSpeed) + "//";
-        m_pVoxelebXml->definedDir = R"(D:\code\filed_newest)";
+        m_pVoxelebXml->definedDir = R"(D:\code\field)";
 
         m_pVoxelebXml->meteoxml.startTimeNode = 0;
         m_pVoxelebXml->meteoxml.endTimeNode = 576;

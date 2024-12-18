@@ -90,6 +90,11 @@ struct alignas(32)  VoxelLstSetting
     int dumpyy{0};
 };
 
+struct alignas(32) BuildingShadowSetting
+{
+    float scale{ 1 };
+};
+
 struct alignas(32)  VoxelRTSetting
 {
 
@@ -159,9 +164,9 @@ struct  Instance
 struct VertexAttribute
 {
     glm::vec3 pos;
-    glm::vec3 nrm;
-    glm::vec3 color;
-    glm::vec2 texCoord;
+    // glm::vec3 nrm;
+    // glm::vec3 color;
+    // glm::vec2 texCoord;
 };
 
 ///-----------------------------------------------------
@@ -218,6 +223,12 @@ struct VoxelTempe
 {
     float sunlit;
     float shaded;
+};
+
+struct FacetInfo
+{
+    float faceId{0};
+    float sunlitRatio{0};
 };
 
 struct VoxelNetRad

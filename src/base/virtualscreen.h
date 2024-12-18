@@ -5,6 +5,7 @@
 #ifndef FIELD_VIRTUALSCREEN_H
 #define FIELD_VIRTUALSCREEN_H
 
+#include "BuildingShadow/buildingshadowio.h"
 #include "src/raytracing/raytracingio.h"
 #include "src/voxelrt/voxelrtio.h"
 #include "src/voxeleb/voxelebio.h"
@@ -21,6 +22,9 @@ public:
 
     bool bufferToBuffer(std::shared_ptr<VoxelrtIO> & modelio,
                         const nvvk::Buffer& bufferIn, VkDeviceSize size, const nvvk::Buffer& bufferOut);
+
+    bool bufferToBuffer(std::shared_ptr<BuildingShadowIO> modelio,
+        const nvvk::Buffer& bufferIn, VkDeviceSize size, const nvvk::Buffer& bufferOut);
 
 };
 

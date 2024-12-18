@@ -12,6 +12,7 @@
 #include "src/raytracing/raytracingio.h"
 #include "src/voxeleb/voxelebio.h"
 #include "src/voxelrt/voxelrtio.h"
+#include "src/BuildingShadow/buildingshadowio.h"
 #include "src/thirdparty/NanoVDB.h"
 #include "src/thirdparty/nanoutil/GridBuilder.h"
 #include "src/thirdparty/nanoutil/Primitives.h"
@@ -24,6 +25,8 @@ public:
     Scene(){};
 
     bool createObjScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<RaytracingIO> &raytracingio);
+
+    bool createObjScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<BuildingShadowIO> &modelio);
 
 
     bool createPrimObjScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<VoxelebIO> &voxellstio);

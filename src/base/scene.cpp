@@ -206,6 +206,45 @@ bool Scene::createObjScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<Rayt
     return true;
 }
 
+bool Scene::createObjScene(std::shared_ptr<FileIO>& fileio, std::shared_ptr<BuildingShadowIO>& modelio)
+{
+    auto & meshio = modelio->m_meshio;
+    auto & instanceio = modelio->m_instanceio;
+
+    ObjLoader loader;
+    loader.loadModel(modelio->projectDir + "/building.obj");
+
+    // loader.loadMesh(modelio->projectDir + "/building.obj", "Wall_20");
+    meshio->objMeshes.emplace_back(loader.m_objmesh);
+
+    modelio->n_facet = loader.m_objmesh.nVertices/3;
+
+    MeshLink meshlink1;
+    meshlink1.spectralId = 0;
+    meshlink1.thermalId = 0;
+    meshlink1.canopyId = 0;
+    meshlink1.bioId = 0;
+    meshlink1.type = 0;
+    meshio->meshLinks.emplace_back(meshlink1);
+
+    glm::mat4 unit = glm::mat4(1.0f);
+    glm::vec3 scale = glm::vec3(1.0f);
+    glm::mat4 angle = glm::rotate(unit, glm::radians(0.0f), glm::vec3(0.0,1.0,0.0));
+    glm::vec3 shift = glm::vec3(0.0f);
+    glm::mat4 mat = glm::scale(unit,scale) * glm::translate(unit, shift) * angle;
+    Instance instance{};
+    instance.meshId = 0;
+    instance.object2worldMatrix = mat;
+    instance.world2objectMatrix = glm::transpose(glm::inverse(mat));
+    instanceio->instances.emplace_back(instance);
+
+    // voxel Instance Link
+    InstanceLink instancelink{};
+    instancelink.meshId = instance.meshId;
+    instanceio->instanceLinks.emplace_back(instancelink);
+
+    return false;
+}
 
 
 //-----------------------------------------------------------
@@ -1604,9 +1643,9 @@ PrimMesh Scene::XYZ2XZY(PrimMesh model,int mark){
     for (int i = 0; i< model.nVertices;i++)
     {
         VertexAttribute vertex = {};
-        vertex.color = model.vertices[i].color;
-        vertex.nrm = model.vertices[i].nrm;
-        vertex.texCoord = model.vertices[i].texCoord;
+        // vertex.color = model.vertices[i].color;
+        // vertex.nrm = model.vertices[i].nrm;
+        // vertex.texCoord = model.vertices[i].texCoord;
         vertex.pos = {model.vertices[i].pos.x,
                       model.vertices[i].pos.z,
                       model.vertices[i].pos.y};
@@ -1647,9 +1686,9 @@ ObjMesh Scene::XYZ2XZY(ObjMesh model){
     for (int i = 0; i< model.nVertices;i++)
     {
         VertexAttribute vertex = {};
-        vertex.color = model.vertices[i].color;
-        vertex.nrm = model.vertices[i].nrm;
-        vertex.texCoord = model.vertices[i].texCoord;
+        // vertex.color = model.vertices[i].color;
+        // vertex.nrm = model.vertices[i].nrm;
+        // vertex.texCoord = model.vertices[i].texCoord;
         vertex.pos = {model.vertices[i].pos.x,
                       model.vertices[i].pos.z,
                       model.vertices[i].pos.y};

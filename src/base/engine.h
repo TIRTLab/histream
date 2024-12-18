@@ -12,13 +12,15 @@
 #include "src/voxelrt/voxelrt.h"
 #include "src/base/appsetting.h"
 #include "src/base/fileio.h"
+#include "src/BuildingShadow//buildingshadow.h"
+#include "src/BuildingShadow/buildingshadowio.h"
 
 
 
 
 class Engine {
 public:
-    Engine(){};
+    Engine()= default;
 
     void input(std::string path, std::string V);
     void init(Mode mode);
@@ -35,6 +37,9 @@ public:
     std::shared_ptr<VoxelebIO>  m_pVoxelebio;
     std::shared_ptr<Voxelrt>    m_pVoxelrt;
     std::shared_ptr<VoxelrtIO>  m_pVoxelrtio;
+
+    std::shared_ptr<BuildingShadow> m_pBuildingShadow;
+    std::shared_ptr<BuildingShadowIO> m_pBuildingShadowio;
 
 };
 

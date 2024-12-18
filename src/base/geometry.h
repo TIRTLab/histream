@@ -8,6 +8,7 @@
 #include "src/raytracing/raytracingio.h"
 #include "src/voxeleb/voxelebio.h"
 #include "src/voxelrt/voxelrtio.h"
+#include "src/BuildingShadow/buildingshadowio.h"
 #include "nvh/cameramanipulator.hpp"
 #include "nvmath/nvmath.h"
 #include "utils.h"
@@ -44,12 +45,12 @@ public:
     bool createGeometry(std::shared_ptr<FileIO> &fileio, std::shared_ptr<VoxelrtIO> &modelio);
     void updateAngle(std::shared_ptr<VoxelrtIO> &modelio, int kangle);
     void updateSensorPos(std::shared_ptr<VoxelrtIO> &modelio, int kPos);
-
     void updateSensor(std::shared_ptr<VoxelrtIO> &modelio, SensorMatrix &sensor);
     void updateLight(std::shared_ptr<VoxelrtIO> &modelio, LightSet &light);
     void orthcorrect(std::shared_ptr<VoxelrtIO> &modelio,float vza, float vaa,
                      Eigen::VectorXd & cx, Eigen::VectorXd & cy);
 
+    bool createGeometry(std::shared_ptr<FileIO> &fileio, std::shared_ptr<BuildingShadowIO> &modelio);
 
 };
 

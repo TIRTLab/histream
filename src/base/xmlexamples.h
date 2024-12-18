@@ -20,7 +20,7 @@ class XmlExamples{
 public:
     XmlExamples(){
         // createRaytracingxml();
-        // createVoxelebxml();
+        createVoxelebxml();
         // createVoxelrtxml();
      //   createEcolstxml();
     }

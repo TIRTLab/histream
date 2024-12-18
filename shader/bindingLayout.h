@@ -174,5 +174,30 @@ layout(push_constant) uniform _RtxState
 #endif
 
 
+
+#ifdef BUILDINGSHADOW
+
+#define B_FACETINFO 0
+#define B_TLAS 1
+#define B_ModelLINK 2
+#define B_INSTANCELINK 3
+
+layout(binding = B_FACETINFO) buffer _bufferFacetInfo { FacetInfo facetInfos[]; };
+layout(binding = B_TLAS)		uniform accelerationStructureEXT topLevelAS;
+layout(binding = B_ModelLINK) buffer _bufferMODELLINK { MeshLink meshLinks[]; }; 
+layout(binding = B_INSTANCELINK) buffer _BufferInstanceLink {InstanceLink instanceLinks[];};      // --
+
+
+layout(buffer_reference, scalar) buffer Vertices { VertexAttribute v[]; };
+layout(buffer_reference, scalar) buffer Indices { uvec3 i[]; };
+
+// layout(binding = B_LIGHT) uniform _LightSet { LightSet lightSet; };
+// // layout(push_constant) uniform _RtxState
+// // {
+// //   VoxelrtSetting setting;
+// // };
+
+#endif
+
 #endif
 

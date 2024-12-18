@@ -16,7 +16,16 @@ message(STATUS "Processing Project ${PROJNAME}:")
 # C++ target and defines
 set(CMAKE_CXX_STANDARD 17)
 add_executable(${PROJNAME}
-        src/voxeleb/voxeleb.cpp)
+        src/voxeleb/voxeleb.cpp
+        src/main.cpp
+        src/buildingshadow/buildingshadow.cpp
+        src/BuildingShadow/buildingshadow.cpp
+        src/BuildingShadow/buildingshadow.cpp
+        src/BuildingShadow/buildingshadowio.cpp
+        src/BuildingShadow/buffer.cpp
+        src/BuildingShadow/command.cpp
+        src/BuildingShadow/descriptor.cpp
+        src/BuildingShadow/pipeline.cpp)
 
 
 
@@ -97,6 +106,7 @@ file(GLOB SOURCE_FILES
         src/raytracing/*.cpp
         src/voxeleb/*.cpp
         src/voxelrt/*.cpp
+        src/BuildingShadow/*.cpp
 )
 
 file(GLOB HEADER_FILES
@@ -106,6 +116,7 @@ file(GLOB HEADER_FILES
         src/raytracing/*.h
         src/voxeleb/*.h
         src/voxelrt/*.h
+        src/BuildingShadow/*.h
 )
 
 #--------------------------------------------------------------------------------------------------

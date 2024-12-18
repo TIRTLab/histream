@@ -914,4 +914,11 @@ void Geometry::orthcorrect(std::shared_ptr<VoxelrtIO> &modelio,float vza, float 
     int aa = 0;
 }
 
+bool Geometry::createGeometry(std::shared_ptr<FileIO>& fileio, std::shared_ptr<BuildingShadowIO>& modelio)
+{
+    modelio->angle =  fileio->m_pBuildingShadowXml->angle;
+
+    return false;
+}
+
 

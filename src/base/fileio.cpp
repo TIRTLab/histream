@@ -17,18 +17,21 @@ using namespace std;
 bool FileIO::readXml(std::string Path, Mode mode) {
     m_mode = mode;
 
-    std::string filePath = Path + "\\Input.xml";
-    TiXmlDocument mydoc(filePath.c_str()); // tinyxml.h
-    bool isloadOk = mydoc.LoadFile();
-    if (!isloadOk)
-    {
-        std::cout << "could not load the test file.Error:" << mydoc.ErrorDesc() << std::endl;
-        exit(1);
-    }
-    RootElement = mydoc.RootElement(); // root node of xml
+    // m_mode = Mode::eVoxelEB;
+    // m_pVoxelebXml = std::move(xmlexamples.m_pVoxelebXml);
+    // return true;
 
     if(m_mode == Mode::eRaytracing)
     {
+        std::string filePath = Path + "\\Input.xml";
+        TiXmlDocument mydoc(filePath.c_str()); // tinyxml.h
+        bool isloadOk = mydoc.LoadFile();
+        if (!isloadOk)
+        {
+            std::cout << "could not load the test file.Error:" << mydoc.ErrorDesc() << std::endl;
+            exit(1);
+        }
+        RootElement = mydoc.RootElement(); // root node of xml
         m_mode = Mode::eRaytracing;
         m_pRaytracingXml = std::make_shared<RaytracingXml>();
         m_pRaytracingXml->projectDir = Path;
@@ -38,12 +41,20 @@ bool FileIO::readXml(std::string Path, Mode mode) {
         m_pRaytracingXml->spectralxmls = readSpectralXML(RootElement->FirstChild("Attribute"), m_mode);
         m_pRaytracingXml->thermalxmls = readThermalXML(RootElement->FirstChild("Attribute"), m_mode);
         m_pRaytracingXml->scenexml = readSceneXML(RootElement->FirstChild("Scene"), m_mode);
-    }else if(m_mode == Mode::eVoxelEB){
-
+    }
+    else if(m_mode == Mode::eVoxelEB){
+        std::string filePath = Path + "\\Input.xml";
+        TiXmlDocument mydoc(filePath.c_str()); // tinyxml.h
+        bool isloadOk = mydoc.LoadFile();
+        if (!isloadOk)
+        {
+            std::cout << "could not load the test file.Error:" << mydoc.ErrorDesc() << std::endl;
+            exit(1);
+        }
+        RootElement = mydoc.RootElement(); // root node of xml
         m_mode = Mode::eVoxelEB;
         m_pVoxelebXml = std::make_shared<VoxelEBXml>();
         m_pVoxelebXml->projectDir = Path;
-
         m_pVoxelebXml->settingxml = readSettingXML(RootElement->FirstChild("Control"), m_mode);
         m_pVoxelebXml->lightxml = readLightXML(RootElement->FirstChild("Geometry"), m_mode);
         m_pVoxelebXml->sensorxml = readSensorXML(RootElement->FirstChild("Geometry"), m_mode);
@@ -56,8 +67,16 @@ bool FileIO::readXml(std::string Path, Mode mode) {
         m_pVoxelebXml->meteoxml = readMeteoXML(RootElement->FirstChild("Meteorology"), m_mode);
         m_pVoxelebXml->aerocondxml= readAeroXML(RootElement->FirstChild("Attribute"), m_mode);
     }
-
     else if(m_mode == Mode::eVoxelRT){
+        std::string filePath = Path + "\\Input.xml";
+        TiXmlDocument mydoc(filePath.c_str()); // tinyxml.h
+        bool isloadOk = mydoc.LoadFile();
+        if (!isloadOk)
+        {
+            std::cout << "could not load the test file.Error:" << mydoc.ErrorDesc() << std::endl;
+            exit(1);
+        }
+        RootElement = mydoc.RootElement(); // root node of xml
         m_mode = Mode::eVoxelRT;
         m_pVoxelrtXml = std::make_shared<VoxelRTXml>();
         m_pVoxelrtXml->projectDir = Path;
@@ -70,6 +89,16 @@ bool FileIO::readXml(std::string Path, Mode mode) {
         m_pVoxelrtXml->propxmls = readPropertyXML(RootElement->FirstChild("Attribute"), m_mode);
         m_pVoxelrtXml->thermalxmls = readThermalXML(RootElement->FirstChild("Attribute"), m_mode);
     }
+    else if (m_mode == Mode::eBuildingShadow)
+    {
+        m_pBuildingShadowXml = std::make_shared<BuildingShadowXml>();
+        m_pBuildingShadowXml->projectDir = Path;
+        m_pBuildingShadowXml->angle = Angle{0,0,30,0};
+        m_pBuildingShadowXml->defineDir = "D:/code/field";
+
+    }
+
+
     return true;
 
 }
@@ -502,7 +531,6 @@ SettingXml FileIO::readSettingXML(TiXmlNode *controlNode, Mode mode){
     if (sonExists("isUAVtrave", controlNode->ToElement())){
         settingxml.isUAVtrave = stoi(controlNode->FirstChildElement("isUAVtrave")->GetText());
     }
-
 
     char szFilePath[MAX_PATH + 1] = { 0 };
     GetModuleFileNameA(NULL, szFilePath, MAX_PATH);

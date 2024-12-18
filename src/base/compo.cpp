@@ -33,6 +33,13 @@ bool Compo::createCompOptical(std::shared_ptr<FileIO> &fileio, std::shared_ptr<R
         id++;
     }
 
+    /// add empty to avoid shader error
+    if (!fileio->m_pRaytracingXml->sensorxml.isTemperature)
+    {
+        meshio->thermals.push_back(Thermal{300, 300});
+        meshio->thermalNames.insert({"empty",0});
+    }
+
     return true;
 }
 

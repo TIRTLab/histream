@@ -86,6 +86,8 @@ void ObjLoader::loadModel(const std::string& filename)
             const float* vp = &attrib.vertices[3 * index.vertex_index];
             vertex.pos = { (-1.0) * (*(vp + 0)), *(vp + 1), *(vp + 2) * (-1) };
 
+            // vertex.pos = { (1.0) * (*(vp + 0)), *(vp + 1), *(vp + 2) * (1) };
+
             if (minElevation > vertex.pos.y) minElevation = vertex.pos.y;
 
             /* if(!attrib.normals.empty() && index.normal_index >= 0)
@@ -179,6 +181,7 @@ void ObjLoader::loadMesh(const std::string& filename, const std::string& meshnam
 
             const float* vp = &attrib.vertices[3 * index.vertex_index];
             vertex.pos = { (-1.0) * (*(vp + 0)), *(vp + 1), *(vp + 2) * (-1) };
+            // vertex.pos = { (1.0) * (*(vp + 0)), *(vp + 1), *(vp + 2) * (1) };
 
             /*if (!attrib.normals.empty() && index.normal_index >= 0)
             {
@@ -186,17 +189,17 @@ void ObjLoader::loadMesh(const std::string& filename, const std::string& meshnam
                vertex.nrm = { *(np + 0), *(np + 1), *(np + 2) };
             }*/
 
-            if (!attrib.texcoords.empty() && index.texcoord_index >= 0)
-            {
-                const float* tp = &attrib.texcoords[2 * index.texcoord_index + 0];
-                vertex.texCoord = { *tp, 1.0f - *(tp + 1) };
-            }
-
-            if (!attrib.colors.empty())
-            {
-                const float* vc = &attrib.colors[3 * index.vertex_index];
-                vertex.color = { *(vc + 0), *(vc + 1), *(vc + 2) };
-            }
+            // if (!attrib.texcoords.empty() && index.texcoord_index >= 0)
+            // {
+            //     const float* tp = &attrib.texcoords[2 * index.texcoord_index + 0];
+            //     vertex.texCoord = { *tp, 1.0f - *(tp + 1) };
+            // }
+            //
+            // if (!attrib.colors.empty())
+            // {
+            //     const float* vc = &attrib.colors[3 * index.vertex_index];
+            //     vertex.color = { *(vc + 0), *(vc + 1), *(vc + 2) };
+            // }
 
             m_vertices.push_back(vertex);
             m_indices.push_back(static_cast<int>(m_indices.size()));

@@ -1,0 +1,193 @@
+#version 460
+#extension GL_ARB_separate_shader_objects : enable
+#extension GL_EXT_nonuniform_qualifier : enable
+#extension GL_GOOGLE_include_directive : enable
+#extension GL_EXT_scalar_block_layout : enable
+#extension GL_EXT_ray_tracing : enable
+#extension GL_EXT_ray_query : enable
+#extension GL_ARB_shader_clock : enable                 // Using clockARB
+#extension GL_EXT_shader_image_load_formatted : enable  // The folowing extension allow to pass images as function parameters
+
+#extension GL_NV_shader_sm_builtins : require     // Debug - gl_WarpIDNV, gl_SMIDNV
+#extension GL_ARB_gpu_shader_int64 : enable       // Debug - heatmap value
+#extension GL_EXT_shader_realtime_clock : enable  // Debug - heatmap timing
+
+#extension GL_EXT_shader_explicit_arithmetic_types_int64 : require
+#extension GL_EXT_buffer_reference2 : require
+#extension GL_EXT_debug_printf : enable
+#extension GL_KHR_memory_scope_semantics:require
+#extension GL_EXT_shader_atomic_float: require 
+
+#define BUILDING_SHADOW_BIND_ININDEX
+#define BUILDINGSHADOW 1
+
+#include "../bindinglayout.h"
+#include "../parameters.h"
+#include "../global.glsl"
+#include "../bsdf.glsl"
+#include "../functions.glsl"
+#include "../random.glsl"
+
+#include "../shade_state_voxel.glsl"
+
+PtPayload        prd;
+ShadowHitPayload shadow_payload;
+
+#include "../traceray_comp.glsl"
+
+layout(local_size_x = GROUP_SIZEX) in;
+
+void main()
+{
+    // 获取当前线程 ID
+    const uint triangleIndex = gl_GlobalInvocationID.x;
+
+    int meshId = 0;
+    // Primitive buffer addresses
+    Indices  indices  = Indices(meshLinks[meshId].indexAddress);
+    Vertices vertices = Vertices(meshLinks[meshId].vertexAddress);
+    // Indices of this triangle primitive.
+    uvec3 tri = indices.i[triangleIndex];
+
+    // All vertex attributes of the triangle.
+    VertexAttribute attr0 = vertices.v[tri.x];
+    VertexAttribute attr1 = vertices.v[tri.y];
+    VertexAttribute attr2 = vertices.v[tri.z];
+
+     // Vertex of the triangle
+    const vec3 v0           = attr0.position.xyz;
+    const vec3 v1           = attr1.position.xyz;
+    const vec3 v2           = attr2.position.xyz;
+
+    // // Normal
+    // vec3 geom_normal  = normalize(cross(v1 - v0, v2 - v0));
+    
+
+    // // // // uint64_t id = 1;
+    // float result = float(vertices.v[0].position.x);
+    // result = float(v0.x);
+    // atomicStore(facetInfos[triangleIndex].sunlitRatio, result, gl_ScopeDevice, gl_StorageSemanticsBuffer, gl_SemanticsRelease);
+
+    vec3 lightDirection = vec3(1,1,1);
+    lightDirection = normalize(lightDirection);
+
+    ////////// 均匀网格分隔
+    // 当前分割数的总点数
+    int numDivisions = 5;
+    int pointsNum = 0;
+    int sunlitPointNum = 0;
+    int totalPoints = (numDivisions + 1) * (numDivisions + 2) / 2;
+    // 生成点的网格
+    for (int i = 0; i <= numDivisions; ++i) {
+        for (int j = 0; j <= numDivisions - i; ++j) { // 确保覆盖整个三角形
+
+            // 计算重心坐标 (u, v, w)
+            float u = float(i) / float(numDivisions);
+            float v = float(j) / float(numDivisions);
+            float w = 1.0 - u - v;
+
+            // 计算采样点位置
+            // vec3 sampledPoint = u * v0 + v * v1 + w * v2 + 0.05 * geom_normal; // 向法线方向加一点，以免打到自己
+
+            vec3 sampledPoint = u * v0 + v * v1 + w * v2; // 向法线方向加一点，以免打到自己
+            Ray ray = Ray(sampledPoint, lightDirection);
+
+            ClosestHit(ray, 0.1);
+
+            // uint64_t id = 1;
+            // float result = float(sampledPoint.x);
+            // atomicStore(facetInfos[triangleIndex].sunlitRatio, result, gl_ScopeDevice, gl_StorageSemanticsBuffer, gl_SemanticsRelease);
+
+            if(prd.hitT == INFINITY){
+                sunlitPointNum ++;
+                pointsNum++;
+            }
+            else{
+                // /// 去除内部的错误点
+                // ShadeState sstate = GetShadeState(prd);
+                // vec3 woWorld = sstate.position - sstate.lastPosition;
+                // vec3 wiWorld = normalize(lightDirection);  // sun direction in world coordinates.
+                // bool inSameSide = IsSameSide(woWorld, wiWorld, sstate.normal);
+
+                // if (inSameSide){/// 打到了建筑内部
+                // }
+                // else{
+                //     sunlitPointNum ++;
+                //     pointsNum++;
+                // }
+
+                pointsNum++;
+
+            }
+
+        }
+    }
+
+
+    
+
+    // //////////// 随机等面积分割, 应该是伪随机了
+    // int numDivisions = 50;
+    // int pointsNum = 0;
+    // int sunlitPointNum = 0;
+    // for (int i=0; i <numDivisions; i++){
+    //     // 生成两个随机数，假设已经传递给 shader 或者通过某种方式生成
+    //     float xi1 = fract(sin(float(triangleIndex) * 12.9898 + 78.233) * 43758.5453);  // 模拟一个伪随机数生成
+    //     float xi2 = fract(sin(float(triangleIndex) * 29.9898 + 42.233) * 43758.5453);
+    //     // 计算重心坐标 (u, v, w)
+    //     float u = 1.0 - sqrt(xi1);
+    //     float v = sqrt(xi1) * (1.0 - xi2);
+    //     float w = sqrt(xi1) * xi2;
+    //     // 确保重心坐标满足 u + v + w = 1
+    //     if (w < 0.0) {
+    //         continue; // 排除重心坐标为负的情况
+    //     }
+
+    //     // 计算采样点位置
+    //     vec3 sampledPoint = u * v0 + v * v1 + w * v2  + 0.05 * geom_normal; // 向法线方向加一点，以免打到自己
+
+    //     Ray ray = Ray(sampledPoint, lightDirection);
+
+    //     ClosestHit(ray, 0.1);
+
+    //     // uint64_t id = 1;
+    //     // float result = float(sampledPoint.x);
+    //     // atomicStore(facetInfos[triangleIndex].sunlitRatio, result, gl_ScopeDevice, gl_StorageSemanticsBuffer, gl_SemanticsRelease);
+
+    //     if(prd.hitT == INFINITY){
+    //             pointsNum++;
+    //     }
+    //     else{
+    //         /// 去除内部的错误点
+    //         ShadeState sstate = GetShadeState(prd);
+    //         vec3 woWorld = sstate.position - sstate.lastPosition;
+    //         vec3 wiWorld = normalize(lightDirection);  // sun direction in world coordinates.
+    //         bool inSameSide = IsSameSide(woWorld, wiWorld, sstate.normal);
+
+    //         if (inSameSide){/// 打到了建筑内部
+    //         }
+    //         else{
+    //             sunlitPointNum ++;
+    //             pointsNum++;
+    //         }
+    //     }
+    // }
+    
+    float sunlitRatio = 0;
+    if (pointsNum == 0 ){
+        sunlitRatio=0;
+    }
+    else{
+        
+        sunlitRatio = sunlitPointNum / pointsNum;
+    }
+
+    float ind = float(triangleIndex);
+    atomicStore(facetInfos[triangleIndex].faceId, ind, gl_ScopeDevice, gl_StorageSemanticsBuffer, gl_SemanticsRelease);
+
+
+    atomicStore(facetInfos[triangleIndex].sunlitRatio, sunlitRatio, gl_ScopeDevice, gl_StorageSemanticsBuffer, gl_SemanticsRelease);
+    // float result = float(pointsNum);
+    // atomicStore(facetInfos[triangleIndex].sunlitRatio, result, gl_ScopeDevice, gl_StorageSemanticsBuffer, gl_SemanticsRelease);
+
+}

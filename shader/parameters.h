@@ -80,9 +80,9 @@ struct hitValue
 struct VertexAttribute
 {
 	vec3 position;
-	vec3 NRM;
-	vec3 color;
-	vec2 txt;
+	// vec3 NRM;
+	// vec3 color;
+	// vec2 txt;
 };
 
 struct SensorMatrix
@@ -291,7 +291,11 @@ struct Meteo
 	float dtime;
 };
 
-
+struct FacetInfo
+{
+	float faceId;
+    float sunlitRatio;
+};
 
 
 #endif 

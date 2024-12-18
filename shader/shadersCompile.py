@@ -9,6 +9,8 @@ import subprocess
 # versionName = 'VoxelTriTracing'
 versionName = "voxeleb"
 # versionName = "voxelrt"
+# versionName = "buildingShadow"
+versionName = 'RayTracing'
 
 inPath = os.path.join(os.path.dirname(__file__),versionName)
 outPath = os.path.join(os.path.dirname(__file__),versionName)

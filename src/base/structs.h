@@ -58,6 +58,11 @@ enum class VoxelEBStage
     out
 };
 
+enum class BuildingShadowStage
+{
+    gap,
+};
+
 enum class VoxelRTStage
 {
     gap,
@@ -85,6 +90,7 @@ enum Mode {
     eRaytracing,
     eVoxelEB,
     eVoxelRT,
+    eBuildingShadow,
 };
 
 enum RaytracingStageIndices
@@ -249,15 +255,12 @@ struct SettingXml
   // 		  // i: the ith GPU work, but not work currently
   //  std::string outDir;	  // the outDir to read input and save imagal and statistical results
   //  bool isDisplay{0};
-  //  bool isTemperature{0};
+  // bool isTemperature{0};
     int theGPU{0};
     int n_sample{32};
     int maxDepth{5};
     int isUAVtrave{false};
-
-
-
-//    bool isTemperature{false};
+    // bool isTemperature{false};
 //    bool isDisplay{false};
 //    bool isImage{false};
 };
@@ -476,6 +479,14 @@ struct RaytracingXml
     std::vector<SpectralXml> spectralxmls;
     std::vector<ThermalXml> thermalxmls;
 
+};
+
+struct BuildingShadowXml
+{
+    std::string projectDir;
+    std::string defineDir;
+
+    Angle angle;
 };
 
 struct PropertyXml{
