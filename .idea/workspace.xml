@@ -25,199 +25,13 @@
   </component>
   <component name="CMakeSettings">
     <configurations>
-      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" GENERATION_OPTIONS="-DCMAKE_TOOLCHAIN_FILE=D:\vcpkg\scripts\buildsystems\vcpkg.cmake" />
-      <configuration PROFILE_NAME="Debug-Visual Studio" ENABLED="true" CONFIG_NAME="Debug" TOOLCHAIN_NAME="Visual Studio" GENERATION_OPTIONS="-DCMAKE_TOOLCHAIN_FILE=D:\vcpkg\scripts\buildsystems\vcpkg.cmake" />
+      <configuration PROFILE_NAME="Release" ENABLED="true" CONFIG_NAME="Release" GENERATION_OPTIONS="-DCMAKE_TOOLCHAIN_FILE=D:\code\clone\vcpkg\scripts\buildsystems\vcpkg.cmake" />
+      <configuration PROFILE_NAME="Debug-Visual Studio" ENABLED="true" CONFIG_NAME="Debug" TOOLCHAIN_NAME="Visual Studio" GENERATION_OPTIONS="-DCMAKE_TOOLCHAIN_FILE=D:\code\clone\vcpkg\scripts\buildsystems\vcpkg.cmake" />
     </configurations>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="41383f7c-aa66-40f8-b6a4-0b675cfdc6d4" name="更改" comment="更改">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/.ninja_deps" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/.ninja_log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/3.27.8/CompilerIdC/CMakeCCompilerId.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/3.27.8/CompilerIdC/CMakeCCompilerId.exe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/3.27.8/CompilerIdC/CMakeCCompilerId.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/3.27.8/CompilerIdCXX/CMakeCXXCompilerId.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/3.27.8/CompilerIdCXX/CMakeCXXCompilerId.exe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/3.27.8/CompilerIdCXX/CMakeCXXCompilerId.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/CMakeConfigureLog.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/ShowIncludes/foo.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/ShowIncludes/main.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/ShowIncludes/main.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/cmake.check_cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/D_/code/field_n/nvpro_core/nvp/perproject_globals.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/D_/code/field_n/nvpro_core/nvp/resources.i" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/D_/code/field_n/nvpro_core/nvp/resources.rc.res" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/D_/code/field_n/nvpro_core/nvvk/nsight_aftermath_vk.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/base/accelstruct.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/base/appsetting.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/base/compo.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/base/defined.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/base/engine.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/base/fileio.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/base/geometry.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/base/gridio.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/base/instanceio.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/base/meshio.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/base/myfunction.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/base/objloader.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/base/pixelio.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/base/scene.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/base/surfio.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/base/utils.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/base/virtualio.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/base/virtualscreen.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/base/voxeldesigner.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/base/voxelio.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/base/xmlexamples.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/main.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/raytracing/buffer.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/raytracing/command.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/raytracing/descriptor.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/raytracing/pipeline.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/raytracing/raytracing.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/raytracing/raytracingio.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/thirdparty/spa.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/thirdparty/tinystr.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/thirdparty/tinyxml.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/thirdparty/tinyxmlerror.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/thirdparty/tinyxmlparser.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/voxeleb/buffer.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/voxeleb/command.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/voxeleb/descriptor.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/voxeleb/pipeline.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/voxeleb/voxeleb.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/voxeleb/voxelebio.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/voxelrt/buffer.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/voxelrt/command.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/voxelrt/descriptor.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/voxelrt/pipeline.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/voxelrt/voxelrt.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/field.dir/src/voxelrt/voxelrtio.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/Testing/Temporary/LastTest.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/cmake_pch.cxx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/cmake_pch.cxx.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/cmake_pch.cxx.pch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/cmake_pch.hxx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/fileformats/nv_dds.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/fileformats/tiny_converter.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/imgui/backends/imgui_vk_extra.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/imgui/imgui_axis.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/imgui/imgui_camera_widget.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/imgui/imgui_helper.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/imgui/imgui_icon.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/imgui/imgui_orient.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvh/appwindowprofiler.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvh/bitarray.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvh/cameramanipulator.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvh/filemapping.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvh/gltfscene.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvh/nvml_monitor.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvh/nvprint.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvh/parametertools.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvh/primitives.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvh/profiler.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvh/shaderfilemanager.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvp/nvpfilesystem.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvp/nvpsystem.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvp/nvpsystem_win32.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvp/nvpwindow.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvk/appwindowprofiler_vk.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvk/buffersuballocator_vk.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvk/commands_vk.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvk/context_vk.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvk/debug_util_vk.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvk/descriptorsets_vk.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvk/dynamicrendering_vk.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvk/error_vk.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvk/extensions_vk.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvk/gizmos_vk.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvk/images_vk.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvk/memallocator_dedicated_vk.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvk/memallocator_vk.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvk/memorymanagement_vk.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvk/memorymanagement_vkgl.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvk/pipeline_vk.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvk/profiler_vk.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvk/raytraceKHR_vk.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvk/raytraceNV_vk.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvk/renderpasses_vk.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvk/resourceallocator_vk.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvk/samplers_vk.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvk/sbtwrapper_vk.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvk/shadermodulemanager_vk.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvk/sparse_image_vk.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvk/stagingmemorymanager_vk.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvk/swapchain_vk.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvk/vulkanhppsupport.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvk/vulkanhppsupport_vkgl.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvkhl/appbase_vk.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvkhl/appbase_vkpp.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvkhl/application.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvkhl/element_inspector.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvkhl/gbuffer.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvkhl/gltf_scene.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvkhl/gltf_scene_rtx.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvkhl/gltf_scene_vk.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvkhl/hdr_env.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvkhl/hdr_env_dome.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvkhl/sky.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/nvvkhl/tonemap_postprocess.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/third_party/imgui/backends/imgui_impl_glfw.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/CMakeFiles/nvpro_core.dir/third_party/imgui/backends/imgui_impl_vulkan.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/third_party/CMakeFiles/fmt.dir/fmt/src/format.cc.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/third_party/CMakeFiles/imgui.dir/imgui/imgui.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/third_party/CMakeFiles/imgui.dir/imgui/imgui_demo.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/third_party/CMakeFiles/imgui.dir/imgui/imgui_draw.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/third_party/CMakeFiles/imgui.dir/imgui/imgui_tables.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/third_party/CMakeFiles/imgui.dir/imgui/imgui_widgets.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/third_party/CMakeFiles/implot.dir/implot/implot.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/third_party/CMakeFiles/implot.dir/implot/implot_demo.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/third_party/CMakeFiles/implot.dir/implot/implot_items.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/third_party/fmt.lib" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/third_party/glfw/src/CMakeFiles/glfw.dir/context.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/third_party/glfw/src/CMakeFiles/glfw.dir/egl_context.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/third_party/glfw/src/CMakeFiles/glfw.dir/init.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/third_party/glfw/src/CMakeFiles/glfw.dir/input.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/third_party/glfw/src/CMakeFiles/glfw.dir/monitor.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/third_party/glfw/src/CMakeFiles/glfw.dir/osmesa_context.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/third_party/glfw/src/CMakeFiles/glfw.dir/vulkan.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/third_party/glfw/src/CMakeFiles/glfw.dir/wgl_context.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/third_party/glfw/src/CMakeFiles/glfw.dir/win32_init.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/third_party/glfw/src/CMakeFiles/glfw.dir/win32_joystick.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/third_party/glfw/src/CMakeFiles/glfw.dir/win32_monitor.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/third_party/glfw/src/CMakeFiles/glfw.dir/win32_thread.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/third_party/glfw/src/CMakeFiles/glfw.dir/win32_time.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/third_party/glfw/src/CMakeFiles/glfw.dir/win32_window.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/third_party/glfw/src/CMakeFiles/glfw.dir/window.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/third_party/glfw/src/glfw3.lib" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/third_party/glfw/src/glfw3.pc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/third_party/glfw/src/glfw_config.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/third_party/imgui.lib" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/nvpro_core/third_party/implot.lib" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/doxygen/doxyfile.dox" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/doxygen/doxyfile.dox" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/fileformats/khr_df.h" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/fileformats/khr_df.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/imgui/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/imgui/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/nvh/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/nvh/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/nvp/nvpfilesystem.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/nvp/nvpfilesystem.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/nvvk/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/nvvk/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/nvvk/context_vk.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/nvvk/context_vk.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/nvvk/extensions_vk.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/nvvk/extensions_vk.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/nvvkhl/shaders/hdr_integrate_brdf.comp" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/nvvkhl/shaders/hdr_integrate_brdf.comp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/third_party/basis_universal/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/third_party/basis_universal/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/third_party/cgltf/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/third_party/cgltf/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/third_party/fmt/ChangeLog.md" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/third_party/fmt/ChangeLog.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/third_party/tinygltf/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/third_party/tinygltf/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/third_party/vma/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/third_party/vma/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/third_party/zlib/ChangeLog" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/third_party/zlib/ChangeLog" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/third_party/zlib/FAQ" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/third_party/zlib/FAQ" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/third_party/zstd/CHANGELOG" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/third_party/zstd/CHANGELOG" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/third_party/zstd/CONTRIBUTING.md" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/third_party/zstd/CONTRIBUTING.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nvpro_core/third_party/zstd/lib/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../nvpro_core/third_party/zstd/lib/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -227,7 +41,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug-Visual Studio" />
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -280,7 +94,7 @@
     "cidr.known.project.marker": "true",
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "D:/vcpkg",
+    "last_opened_file_path": "D:/code/clone/vcpkg",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -299,55 +113,55 @@
       <recent name="D:\code\field\src\HuailaiLidar" />
     </key>
   </component>
-  <component name="RunManager" selected="CMake Application.field">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="field" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="field" TARGET_NAME="field" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="field" RUN_TARGET_NAME="field">
+  <component name="RunManager" selected="CMake 应用程序.field">
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="fmt" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="field" TARGET_NAME="fmt" CONFIG_NAME="Debug">
+    <configuration name="field" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="field" TARGET_NAME="field" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="field" RUN_TARGET_NAME="field">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="glfw" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="field" TARGET_NAME="glfw" CONFIG_NAME="Debug">
+    <configuration name="fmt" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="field" TARGET_NAME="fmt" CONFIG_NAME="Release">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="imgui" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="field" TARGET_NAME="imgui" CONFIG_NAME="Debug">
+    <configuration name="glfw" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="field" TARGET_NAME="glfw" CONFIG_NAME="Release">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="implot" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="field" TARGET_NAME="implot" CONFIG_NAME="Debug">
+    <configuration name="imgui" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="field" TARGET_NAME="imgui" CONFIG_NAME="Release">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="nvpro_core" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="field" TARGET_NAME="nvpro_core" CONFIG_NAME="Debug">
+    <configuration name="implot" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="field" TARGET_NAME="implot" CONFIG_NAME="Release">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="update_mappings" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="field" TARGET_NAME="update_mappings" CONFIG_NAME="Debug">
+    <configuration name="nvpro_core" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="field" TARGET_NAME="nvpro_core" CONFIG_NAME="Release">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="update_mappings" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="field" TARGET_NAME="update_mappings" CONFIG_NAME="Release">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
     <list>
-      <item itemvalue="CMake Application.update_mappings" />
-      <item itemvalue="CMake Application.field" />
-      <item itemvalue="CMake Application.fmt" />
-      <item itemvalue="CMake Application.glfw" />
-      <item itemvalue="CMake Application.imgui" />
-      <item itemvalue="CMake Application.implot" />
-      <item itemvalue="CMake Application.nvpro_core" />
+      <item itemvalue="CMake 应用程序.field" />
+      <item itemvalue="CMake 应用程序.nvpro_core" />
+      <item itemvalue="CMake 应用程序.fmt" />
+      <item itemvalue="CMake 应用程序.imgui" />
+      <item itemvalue="CMake 应用程序.implot" />
+      <item itemvalue="CMake 应用程序.glfw" />
+      <item itemvalue="CMake 应用程序.update_mappings" />
     </list>
   </component>
   <component name="SharedIndexes">
@@ -446,6 +260,7 @@
       <workItem from="1730707951105" duration="3116000" />
       <workItem from="1731638818895" duration="107000" />
       <workItem from="1731638959978" duration="500000" />
+      <workItem from="1734489781551" duration="5358000" />
     </task>
     <servers />
   </component>

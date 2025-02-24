@@ -311,8 +311,8 @@ bool Scene::createPrimObj_Crown(PrimEntity & voxelEntity,nanovdb::GridBuilder<in
     if(voxelEntity.isdisFromFile == true){
         int n_dis = 0;
         float *tempx, *tempy,*tempz;
-        tempx = Utils::readascfile(voxelEntity.distributefile,0,0,n_dis);
-        tempy = Utils::readascfile(voxelEntity.distributefile,0,1,n_dis);
+        tempy = Utils::readascfile(voxelEntity.distributefile,0,0,n_dis);
+        tempx = Utils::readascfile(voxelEntity.distributefile,0,1,n_dis);
         tempz = Utils::readascfile(voxelEntity.distributefile,0,2,n_dis);
         voxelEntity.primDistributions.resize(n_dis);
         voxelEntity.scales.resize(n_dis);
