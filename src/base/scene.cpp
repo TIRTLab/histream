@@ -106,14 +106,21 @@ bool Scene::createObjScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<Rayt
             tempx = Utils::readascfile(objEntity.file,0,0,n_dis);
             tempy = Utils::readascfile(objEntity.file,0,1,n_dis);
             tempz = Utils::readascfile(objEntity.file,0,2,n_dis);
+
+            float *tempScale, *tempRotation;
+            tempScale = Utils::readascfileWithDefault(objEntity.file,0,3,n_dis, 1.0);
+            tempRotation = Utils::readascfileWithDefault(objEntity.file,0,4,n_dis, 0.0);
+
             objEntity.objDistributions.resize(n_dis);
             objEntity.scales.resize(n_dis);
             objEntity.rotations.resize(n_dis);
             for(int kin = 0;kin<n_dis;kin++)
             {
                 objEntity.objDistributions[kin]=(glm::vec3(tempx[kin],tempy[kin],tempz[kin]));
-                objEntity.scales[kin] = 1.0;
-                objEntity.rotations[kin] = 0.0;
+                // objEntity.scales[kin] = 1.0;
+                // objEntity.rotations[kin] = 0.0;
+                objEntity.scales[kin] = tempScale[kin];
+                objEntity.rotations[kin] = tempRotation[kin];
             }
         }
 

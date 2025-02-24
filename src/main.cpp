@@ -21,6 +21,10 @@ int main(int argc, char **argv) {
     const string path = parser.getString("-w", "");
     const string version = parser.getString("-v", "");
 
+    // std::string path = "D:/data/field_app/example1";
+    // path = "E:\\Sim_dataset_time_angle\\homo_test";
+    // std::string version = "eRaytracing";
+
     // std::string path = "D:/data/field_app/voxelRT";
     // std::string version = "eVoxelRT";
 
@@ -29,7 +33,7 @@ int main(int argc, char **argv) {
 
     if (version.empty() || path.empty()) {
         cout << "Wrong Input" << endl;
-        return false;
+        return true;
     }
 
     Engine engine;
@@ -38,5 +42,5 @@ int main(int argc, char **argv) {
     engine.run();
     engine.destroy();
 
-    return true;
+    return false;
 }

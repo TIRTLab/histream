@@ -206,7 +206,7 @@ void Geometry::updateAngle(std::shared_ptr<RaytracingIO> &modelio, int kangle){
 //              << "    sza_" << std::to_string(angles.z) << "    saa_" << std::to_string(angles.w) << std::endl;
 
     float ratio = 1.0;
-    //ratio = 0.707;
+    // ratio = 0.707;
     SensorMatrix sensorMatrix = createSensor(modelio->voxelSize,modelio->voxelOrigin,
                                              angle.vza, angle.vaa, ratio);
     updateSensor(modelio, sensorMatrix);

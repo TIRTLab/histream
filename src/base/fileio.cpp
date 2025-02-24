@@ -677,9 +677,14 @@ SceneXml FileIO::readSceneXML(TiXmlNode *sceneNode, Mode mode) {
             objEntity.objName = node->Attribute("objName");
             objEntity.filePath = node->FirstChildElement("fileName")->GetText();
 //            objEntity.filePath = "D:\\work\\data\\field_aoyunlst\\field_data\\aoyun\\single_tree_a2_b3_q0.3_lai2.7.obj";
-            objEntity.meshNames = {"Crown"};
+            // objEntity.meshNames = {"Crown"};
+            objEntity.meshNames ={myFunction::mySplitStr(node->FirstChildElement("meshNames")->GetText(), ",")};
 //            objEntity.types = {Type::SOIL, Type::VEGETATION, Type::VEGETATION};
-            objEntity.types = {Type::VEGETATION};
+            for (int i = 0; i < objEntity.meshNames.size(); i++)
+            {
+                objEntity.types.push_back(Type::VEGETATION);
+            }
+            // objEntity.types = {Type::VEGETATION};
             objEntity.spectralNames = {myFunction::mySplitStr(node->FirstChildElement("spectralNames")->GetText(), ",")};
 //            objEntity.spectralNames = {"leaf"};
             if (sonExists("thermalNames", node)){

@@ -75,6 +75,8 @@ namespace Utils {
 
     float* readascfile(std::string infileName, int skip, int col, int& num);
 
+	float* readascfileWithDefault(std::string infileName, int skip, int col, int& num, float defaultValue);
+
     int readascfileinout(std::string infileName, int skip, int col,
                          std::vector<float> &data, int& num);
 

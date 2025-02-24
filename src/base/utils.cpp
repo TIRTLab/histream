@@ -106,6 +106,70 @@ float* Utils::readascfile(std::string infileName, int skip, int col, int &num)
 	return mydata;
 }
 
+float* Utils::readascfileWithDefault(std::string infileName, int skip, int col, int& num, float defaultValue)
+{
+	std::string line;
+	std::vector<std::string> fields;
+	std::string deli(" ");
+
+	// 第一次读取文件，确定行数
+	std::ifstream infile(infileName.c_str());
+	if (infile.is_open())
+	{
+		num = 0;
+		if (skip != 0)
+		{
+			for (int i = 0; i < skip; i++) std::getline(infile, line);
+		}
+		while (std::getline(infile, line))
+		{
+			fields = Utils::splitt(line, deli);
+			if (int(fields.size()) >= 1)
+			{
+				num++;
+			}
+		}
+	}
+	else
+	{
+		std::cout << "Unable to open the file: " << infileName << std::endl;
+		return nullptr; // 文件打开失败，返回空指针
+	}
+	infile.close();
+
+	// 分配内存
+	float* mydata = new float[num];
+	if (num >= 1)
+	{
+		int jj = 0;
+		std::ifstream infilee(infileName.c_str());
+
+		if (skip != 0)
+		{
+			for (int i = 0; i < skip; i++) std::getline(infilee, line);
+		}
+
+		// 第二次读取文件，填充数据
+		while (std::getline(infilee, line))
+		{
+			fields = Utils::splitt(line, deli);
+			if (int(fields.size()) > col)
+			{
+				// 如果列数足够，读取指定列的数据
+				mydata[jj] = atof(fields[col].c_str());
+			}
+			else
+			{
+				// 如果列数不足，填充默认值
+				mydata[jj] = defaultValue;
+			}
+			jj++;
+		}
+		infilee.close();
+	}
+
+	return mydata;
+}
 
 
 int Utils::readascfileinout(std::string infileName, int skip, int col, std::vector<float> &data, int &num)
