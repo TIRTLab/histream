@@ -390,7 +390,50 @@ SensorXml FileIO::readSensorXML(TiXmlNode *node, Mode mode){
                     int VzaMax = stoi(subEle->FirstChildElement("vzaMax")->GetText());
                     int vzaStep = stoi(subEle->FirstChildElement("vzaStep")->GetText());
                     for (int k = 0; k<=VzaMax; k += vzaStep){
-                        nvmath::vec2f viewAngleTemp = {k, 0};
+                        nvmath::vec2f viewAngleTemp = {k, SAA};
+                        glm::vec2 viewanglesk = {viewAngleTemp[0],
+                                                 viewAngleTemp[1]};
+                        sensorxml.viewAngles.push_back(viewanglesk);
+                    }
+                    for (int k = 0; k<=VzaMax; k += vzaStep){
+                        nvmath::vec2f viewAngleTemp;
+                        if (SAA > 180){
+                            viewAngleTemp = {k, SAA-180};
+                        }
+                        else{
+                            viewAngleTemp = {k, SAA+180};
+                        }
+                        glm::vec2 viewanglesk = {viewAngleTemp[0],
+                                                 viewAngleTemp[1]};
+                        sensorxml.viewAngles.push_back(viewanglesk);
+                    }
+
+                }
+                if (stoi(subEle->FirstChildElement("CSPP")->GetText()) == 1){
+                    int VzaMax = stoi(subEle->FirstChildElement("vzaMax")->GetText());
+                    int vzaStep = stoi(subEle->FirstChildElement("vzaStep")->GetText());
+                    for (int k = 0; k<=VzaMax; k += vzaStep){
+                        nvmath::vec2f viewAngleTemp;
+                        if (SAA < 270){
+                            viewAngleTemp = {k, SAA+90};
+                        }
+                        else{
+                            viewAngleTemp = {k, SAA-270};
+                        }
+
+                        glm::vec2 viewanglesk = {viewAngleTemp[0],
+                                                 viewAngleTemp[1]};
+                        sensorxml.viewAngles.push_back(viewanglesk);
+                    }
+                    for (int k = 0; k<=VzaMax; k += vzaStep){
+                        nvmath::vec2f viewAngleTemp;
+                        if (SAA < 90){
+                            viewAngleTemp = {k, SAA+270};
+                        }
+                        else{
+                            viewAngleTemp = {k, SAA-90};
+                        }
+
                         glm::vec2 viewanglesk = {viewAngleTemp[0],
                                                  viewAngleTemp[1]};
                         sensorxml.viewAngles.push_back(viewanglesk);
@@ -402,6 +445,50 @@ SensorXml FileIO::readSensorXML(TiXmlNode *node, Mode mode){
             {
                 int isHemisphere = stoi(subEle->FirstChildElement("enabled")->GetText());
                 int hemiAngleNum = stoi(subEle->FirstChildElement("angleNum")->GetText());
+                if (isHemisphere == 1){
+                    float theta0, theta1, theta;
+                    float r0, r1;
+                    int k0, k1, k00;
+                    float pi = 3.1415926, dphi;
+
+                    theta0 = pi / 2.0;
+                    k0 = hemiAngleNum;
+                    r0 = 2.0 * sin(theta0 / 2.0);
+
+                    for (int k = 0; k < 10; k++) {
+                        theta1 = theta0 - 2.0 * sin(theta0 / 2.0) * sqrt(pi / k0);
+                        r1 = 2.0 * sin(theta1 / 2.0);
+                        k1 = k0 * pow(r1 / r0, 2);
+
+                        theta = (theta0 + theta1) / 2.0 * 180.0 / pi;
+
+                        k00 = k0;
+                        dphi = 360.0 / k00;
+                        for (int kk = 0; kk < k00; kk++) {
+                            // 生成每个 viewAngleTemp 值
+                            glm::vec2 viewanglesk = {
+                                    theta,                          // 每一个 VZA
+                                    dphi / 2.0 + dphi * kk          // 每一个 VAA
+                            };
+
+                            // 插入到 sensorxml.viewAngles 中
+                            sensorxml.viewAngles.push_back(viewanglesk);
+                        }
+
+                        if (k1 < 0) {
+                            // 如果 k1 小于 0，插入 VZA = 0 和 VAA = 0 的角度
+                            glm::vec2 viewanglesk = {0.0f, 0.0f};
+                            sensorxml.viewAngles.push_back(viewanglesk);
+                            break;
+                        }
+
+                        theta0 = theta1;
+                        r0 = r1;
+                        k0 = k1;
+
+
+                    }
+                }
             }
         }
 
@@ -458,6 +545,7 @@ LightXml FileIO::readLightXML(TiXmlNode *geometryNode, Mode mode){
             nvmath::vec2f lightAngleTemp = { myFunction::mySplitFloat(lightAngleIter->GetText(), ",")[0],
                                              myFunction::mySplitFloat(lightAngleIter->GetText(), ",")[1] };
             lightxml.solarAngle = {lightAngleTemp[0], lightAngleTemp[1]};
+            SAA = lightAngleTemp[1];
 
         }
 
