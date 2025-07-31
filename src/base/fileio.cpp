@@ -670,7 +670,15 @@ SceneXml FileIO::readSceneXML(TiXmlNode *sceneNode, Mode mode) {
 
 //暂时没有dem这个功能，设置为false
     sceneXml.background.isDEM = {false};
-    sceneXml.background.DEMFile = "";
+    if (sonExists("DEM", sceneNode->ToElement()))
+    {
+        if (sceneNode->FirstChildElement("DEM")->GetText() != NULL){
+            sceneXml.background.isDEM = {true};
+            sceneXml.background.DEMFile = sceneNode->FirstChildElement("DEM")->GetText();
+        }
+    }
+
+
 
 // 添加一个meteo的经纬度信息-----------------------------------------
     if (sonExists("Meteorology", RootElement->ToElement()))
