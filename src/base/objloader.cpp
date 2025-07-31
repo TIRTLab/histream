@@ -316,7 +316,8 @@ void ObjLoader::creatBackgroundFromDEM(const std::string& filename, nvmath::vec3
     //std::vector<nvmath::vec3f> points;
     uint32_t nVertices = 0;
     uint32_t nIndices = 0;
-    minElevation = newImage.at<float>(0,0);
+//    minElevation = newImage.at<float>(0,0);
+    minElevation = *std::min_element(newImage.begin<float>(), newImage.end<float>());
     for (float j = 0.0; j < nImgSizeX; j = j + step)
     {
         for (float k = 0.0; k < nImgSizeY; k = k + step)
@@ -337,15 +338,15 @@ void ObjLoader::creatBackgroundFromDEM(const std::string& filename, nvmath::vec3
             if (kk1 > nImgSizeY * scale - scale / 2.0) kk1 = nImgSizeY * scale - scale / 2.0 - 0.01;
             if (kk2 > nImgSizeY * scale - scale / 2.0) kk2 = nImgSizeY * scale - scale / 2.0 - 0.01;
 
-            nvmath::vec3f point1 = { j * scale, newImage.at<float>(jj1, kk1), k * scale };
-            nvmath::vec3f point2 = { j * scale, newImage.at<float>(jj1, kk2), (k + step) * scale };
-            nvmath::vec3f point3 = { (j + step) * scale, newImage.at<float>(jj2, kk2), (k + step) * scale };
-            nvmath::vec3f point4 = { (j + step) * scale, newImage.at<float>(jj2, kk1), k * scale };
+            nvmath::vec3f point1 = { j * scale, newImage.at<float>(jj1, kk1) - minElevation, k * scale };
+            nvmath::vec3f point2 = { j * scale, newImage.at<float>(jj1, kk2) - minElevation, (k + step) * scale };
+            nvmath::vec3f point3 = { (j + step) * scale, newImage.at<float>(jj2, kk2) - minElevation, (k + step) * scale };
+            nvmath::vec3f point4 = { (j + step) * scale, newImage.at<float>(jj2, kk1) - minElevation, k * scale };
 
-            if (minElevation > point1.y) minElevation = point1.y;
-            if (minElevation > point2.y) minElevation = point2.y;
-            if (minElevation > point3.y) minElevation = point3.y;
-            if (minElevation > point4.y) minElevation = point4.y;
+//            if (minElevation > point1.y) minElevation = point1.y;
+//            if (minElevation > point2.y) minElevation = point2.y;
+//            if (minElevation > point3.y) minElevation = point3.y;
+//            if (minElevation > point4.y) minElevation = point4.y;
 
             VertexAttribute va1{ point1 };
             m_vertices.emplace_back(va1);
@@ -798,6 +799,11 @@ void ObjLoader::clearCurrentInfo()
 {
 //    m_vertices.swap(std::vector<VertexAttribute>());
 //    m_indices.swap(std::vector<uint32_t>());
+}
+
+float ObjLoader::getElevation(float locX, float locY) {
+    float locZ = 0;
+    return locZ;
 }
 
 

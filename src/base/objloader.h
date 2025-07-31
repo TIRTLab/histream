@@ -18,6 +18,7 @@
 // #include "libInterpolate/Interpolate.hpp"
 #include "gdal.h"
 #include "gdal_priv.h"
+#include "opencv2/opencv.hpp"
 
 
 struct ShapeInfo
@@ -35,6 +36,8 @@ public:
 	void loadMesh(const std::string& filename, const std::string& meshname);
 	void createBackground(glm::vec3);
 	void creatBackgroundFromDEM(const std::string& filename, nvmath::vec3f sceneSize);
+
+    float getElevation(float locX, float locY);
 //
 //	void createBackgroundFromDEM(const std::string& filename, nvmath::vec3f sceneSize_XYZ, _2D::ThinPlateSplineInterpolator<double>& interp);
 //	void createBackgroundFromDEM(const std::string& filename, nvmath::vec3f sceneSize_XYZ, _2D::BilinearInterpolator<double>& interp);//�������ǰ���ԭ����DEM���ɣ�����������ʱ�볡����С��һ�£�
@@ -56,6 +59,9 @@ private:
     float m_step{5};
     int nImgSizeX{1};
     int nImgSizeY{1};
+
+    cv::Mat originDEM;
+    cv::Mat resizedDEM;
 
 
 };

@@ -41,6 +41,8 @@ public:
     bool createPrimObj_Background(Background & background,nanovdb::GridBuilder<int32_t> &nanoBuilder, std::shared_ptr<VoxelrtIO> &modelio);
 
 
+    void outputObjMesh(ObjMesh model, std::string &fileName);
+
 
     PrimMesh XYZ2XZY(PrimMesh model,int mark=0);
    ObjMesh XYZ2XZY(ObjMesh model);
