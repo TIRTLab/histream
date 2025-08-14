@@ -21,9 +21,9 @@ int main(int argc, char **argv) {
 //    const string path = parser.getString("-w", "");
 //    const string version = parser.getString("-v", "");
 
-    // std::string path = "D:/data/field_app/example1";
-    // path = "E:\\Sim_dataset_time_angle\\homo_test";
-    // std::string version = "eRaytracing";
+     std::string path = "D:/data/field_app/example1";
+     path = "D:\\data\\sim_albedo";
+     std::string version = "eRaytracing";
 
     // std::string path = "D:/data/field_app/voxelRT";
     // std::string version = "eVoxelRT";
@@ -31,8 +31,8 @@ int main(int argc, char **argv) {
     // std::string path = "D:/data/field_app/voxelEB_release";
     // std::string version = "eVoxelEB";
 
-     std::string path = "D:/test2";
-     std::string version = "eVoxelEB";
+//     std::string path = "D:/test2";
+//     std::string version = "eVoxelEB";
 //
     if (version.empty() || path.empty()) {
         cout << "Wrong Input" << endl;

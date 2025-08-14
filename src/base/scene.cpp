@@ -32,8 +32,9 @@ bool Scene::createObjScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<Rayt
     //-------------------------
     //-- Background Mesh
     //-------------------------
-    if(scenexml.background.isDEM == true) {
-        return false;
+    if(scenexml.background.isDEM) {
+        loader.creatBackgroundFromDEM(scenexml.background.DEMFile, scenexml.background.sceneSize);
+//        return false;
     }else{
         loader.createBackground(fileio->m_pRaytracingXml->scenexml.background.sceneSize);
     }
@@ -41,6 +42,9 @@ bool Scene::createObjScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<Rayt
     int & n_modelmesh = raytracingio->n_modelmesh;
     loader.m_objmesh.meshId = n_modelmesh;
     meshio->objMeshes.emplace_back(loader.m_objmesh);
+
+//    std::string outpath = "D:/data/sim_albedo/demTest.obj";
+//    outputObjMesh(loader.m_objmesh, outpath);
     //-------------------------
     //-- Background MeshLink
     //-------------------------
@@ -116,7 +120,7 @@ bool Scene::createObjScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<Rayt
             objEntity.rotations.resize(n_dis);
             for(int kin = 0;kin<n_dis;kin++)
             {
-                objEntity.objDistributions[kin]=(glm::vec3(tempx[kin],tempy[kin],tempz[kin]));
+                objEntity.objDistributions[kin]=(glm::vec3(tempx[kin],tempy[kin],tempz[kin] + loader.getElevation(tempx[kin], tempy[kin])));
                 // objEntity.scales[kin] = 1.0;
                 // objEntity.rotations[kin] = 0.0;
                 objEntity.scales[kin] = tempScale[kin];
@@ -1665,6 +1669,25 @@ ObjMesh Scene::XYZ2XZY(ObjMesh model){
 
 
     return temp;
+}
+
+void Scene::outputObjMesh(ObjMesh model, std::string &fileName) {
+    std::ofstream outfile(fileName);
+
+    if (outfile.is_open()){
+        for (auto & vertice : model.vertices){
+            outfile << "v " << vertice.pos.x << " "
+            << vertice.pos.y << " "
+            << vertice.pos.z << " " << std::endl;
+        }
+        for (int k = 0; k < model.indices.size(); k = k+3){
+            outfile << "f " << model.indices[k] + 1 << " "
+            << model.indices[k + 1] + 1 << " "
+            << model.indices[k + 2] + 1 << " " << std::endl;
+        }
+        outfile.close();
+    }
+
 }
 
 
