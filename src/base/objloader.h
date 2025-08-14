@@ -6,7 +6,7 @@
 #ifdef USE_NEW_NVPRO_CORE
 //#include "libInterpolate/Interpolate.hpp"
 #else
-//#include "Interpolate.hpp"
+#include "Interpolate.hpp"
 #endif
 #include "thirdparty/tiny_obj_loader.h"
 #include "structs.h"
@@ -38,6 +38,10 @@ public:
 	void creatBackgroundFromDEM(const std::string& filename, nvmath::vec3f sceneSize);
 
     float getElevation(float locX, float locY);
+	void interpolateZValues(nvmath::vec3f sceneSize,  // 场景范围 (x_size, y_size, z_size)
+		float* tempx, float* tempy, float* tempz,  // 输入坐标序列
+		int num_points  // 坐标数量
+		);
 //
 //	void createBackgroundFromDEM(const std::string& filename, nvmath::vec3f sceneSize_XYZ, _2D::ThinPlateSplineInterpolator<double>& interp);
 //	void createBackgroundFromDEM(const std::string& filename, nvmath::vec3f sceneSize_XYZ, _2D::BilinearInterpolator<double>& interp);//�������ǰ���ԭ����DEM���ɣ�����������ʱ�볡����С��һ�£�
@@ -47,6 +51,7 @@ public:
 	ObjMesh m_objmesh;
 
 	float minElevation{ 0 };
+	float centerElevation{ 0 };
 
 private:
 	std::vector<VertexAttribute> m_vertices;
@@ -61,7 +66,7 @@ private:
     int nImgSizeY{1};
 
     cv::Mat originDEM;
-    cv::Mat resizedDEM;
+	cv::Mat m_heightmap; // 存储 resize 后的高程数据
 
 
 };

@@ -130,6 +130,20 @@ bool Raytracing::updateSetting(std::shared_ptr<RaytracingIO> &raytracingio){
 
 bool Raytracing::run(std::shared_ptr<RaytracingIO> &raytracingio, std::shared_ptr<FileIO> &fileio) {
 
+    /// 清除txt文件信息
+    if (raytracingio->isAlbedo)
+    {
+        // 以写入模式打开文件（std::ios::trunc 会清空文件）
+        std::ofstream file(raytracingio->projectDir + "\\albedo.txt", std::ios::trunc);
+        // 检查是否成功打开
+        if (!file.is_open()) {
+            std::cerr << "Error: Could not clear file " << raytracingio->projectDir + "\\albedo.txt" << std::endl;
+        }
+        // 文件内容已被清空，无需额外操作
+        file.close(); // 显式关闭（可选）
+    }
+
+
     for(int kangle = 0; kangle < raytracingio->n_angle; kangle++)
     {
         raytracingio->kangle = kangle;
@@ -138,8 +152,16 @@ bool Raytracing::run(std::shared_ptr<RaytracingIO> &raytracingio, std::shared_pt
 
         m_pCommand->run(raytracingio);
 
-        // output
-        output(raytracingio,fileio,kangle);
+        if (raytracingio->isImage)
+        {
+            // output
+            output(raytracingio,fileio,kangle);
+        }
+
+        if (raytracingio->isAlbedo)
+        {
+            outputAlbedo(raytracingio,fileio,kangle);
+        }
 
         std::cout << "Success: " << kangle << std::endl;
     }
@@ -155,7 +177,7 @@ bool Raytracing::run(std::shared_ptr<RaytracingIO> &raytracingio, std::shared_pt
 
 
 
-void Raytracing::output(std::shared_ptr<RaytracingIO> &modelio, std::shared_ptr<FileIO> &fileio, int kangle) {
+void Raytracing::outputOrth(std::shared_ptr<RaytracingIO> &modelio, std::shared_ptr<FileIO> &fileio, int kangle) {
 
     VkBufferUsageFlags usage{VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT};
     int width = modelio->imageSize.x;
@@ -192,6 +214,8 @@ void Raytracing::output(std::shared_ptr<RaytracingIO> &modelio, std::shared_ptr<
     Angle angle = modelio->angles[kangle];
     std::vector<float> waves = modelio->waves;
     glm::vec2 resolution = modelio->imageSize;
+
+    // fileio->writeENVIdata(modelio->projectDir, pData, width, height, n_wave, angle,-1,-1);
 
 
     Eigen::VectorXd cx;
@@ -230,8 +254,109 @@ void Raytracing::output(std::shared_ptr<RaytracingIO> &modelio, std::shared_ptr<
         fileio->writeENVIdata(modelio->projectDir, pData_orth, width, height, n_wave, angle,-1,-1);
     }
 
-    //delete [] pData;
+    delete [] pData;
     delete [] pData_orth;
+
+}
+
+void Raytracing::output(std::shared_ptr<RaytracingIO>& modelio, std::shared_ptr<FileIO>& fileio, int kangle)
+{
+    VkBufferUsageFlags usage{VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT};
+    int width = modelio->imageSize.x;
+    int height = modelio->imageSize.y;
+    int n_wave = modelio->n_wave;
+    VkDeviceSize bufferSize = width * height * n_wave * sizeof(float);
+    nvvk::Buffer pixelBuffer = modelio->m_pAlloc->createBuffer(bufferSize, usage,
+                                                               VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
+
+    m_pVirtual->bufferToBuffer(modelio, *(modelio->m_virtualio->m_pBufferStorage), bufferSize, pixelBuffer);
+
+    // write the buffer to disk
+    void *data = modelio->m_pAlloc->map(pixelBuffer);
+    float *pData = reinterpret_cast<float *>(data);
+
+
+    fileio->outImage.clear();
+    float *walker = pData;
+    for (int kband = 0; kband < n_wave; kband++) {
+        std::vector<float> outImage1;
+        outImage1.assign(walker, walker + width * height);
+        walker += width * height;
+        fileio->outImage.push_back(outImage1);
+    }
+
+    modelio->m_pAlloc->unmap(pixelBuffer);
+    modelio->m_pAlloc->destroy(pixelBuffer);
+
+    Angle angle = modelio->angles[kangle];
+    std::vector<float> waves = modelio->waves;
+    glm::vec2 resolution = modelio->imageSize;
+
+    fileio->writeENVIdata(modelio->projectDir, pData, width, height, n_wave, angle,-1,-1);
+
+    // delete [] pData;
+}
+
+void Raytracing::outputAlbedo(std::shared_ptr<RaytracingIO>& modelio, std::shared_ptr<FileIO>& fileio, int kangle)
+{
+    VkBufferUsageFlags usage{VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT};
+    int width = modelio->imageSize.x;
+    int height = modelio->imageSize.y;
+    int n_wave = modelio->n_wave;
+    VkDeviceSize bufferSize = width * height * n_wave * sizeof(float);
+    nvvk::Buffer pixelBuffer = modelio->m_pAlloc->createBuffer(bufferSize, usage,
+                                                               VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
+
+    m_pVirtual->bufferToBuffer(modelio, *(modelio->m_virtualio->m_pBufferStorage), bufferSize, pixelBuffer);
+
+    // write the buffer to disk
+    void *data = modelio->m_pAlloc->map(pixelBuffer);
+    float *pData = reinterpret_cast<float *>(data);
+
+    fileio->outImage.clear();
+    float *walker = pData;
+    for (int kband = 0; kband < n_wave; kband++) {
+        std::vector<float> outImage1;
+        outImage1.assign(walker, walker + width * height);
+        walker += width * height;
+        fileio->outImage.push_back(outImage1);
+
+        float sum = 0.0f;
+        int count = 0;
+        for (int i = 0; i < width * height; i++) {
+            if (outImage1[i] > 0.0f) {
+                sum += outImage1[i];
+                count++;
+            }
+        }
+        float mean = sum / count;
+
+        fileio->outImageMeanValue.push_back(mean);
+    }
+
+    modelio->m_pAlloc->unmap(pixelBuffer);
+    modelio->m_pAlloc->destroy(pixelBuffer);
+
+    Angle angle = modelio->angles[kangle];
+    std::vector<float> waves = modelio->waves;
+
+    // 1. 打开文件（追加模式：std::ios::app）
+    std::ofstream outfile(modelio->projectDir + "\\albedo.txt", std::ios::app);  // 如果文件不存在会自动创建
+
+    // 2. 检查文件是否成功打开
+    if (!outfile.is_open()) {
+        std::cerr << "Error: Could not open file " << modelio->projectDir + "\\albedo.txt" << std::endl;
+        return;
+    }
+
+    // 3. 写入数据（每行一个数）
+    for (int num=0; num < n_wave; num++) {
+        outfile << waves[num] << " " << angle.sza << " " << angle.saa << " " <<  angle.vza << " " << angle.vaa << " " << fileio->outImageMeanValue[fileio->outImageMeanValue.size() - 3 + num] << "\n";  // 换行分隔
+    }
+
+    // 4. 关闭文件（析构函数会自动调用，但显式关闭更安全）
+    outfile.close();
+
 
 }
 

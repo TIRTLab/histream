@@ -140,6 +140,8 @@ void ObjLoader::loadModel(const std::string& filename)
     //}
 }
 
+
+
 /// <summary>
 /// 把obj文件中特定mesh名字的读取进去，只读取vertex和index
 /// </summary>
@@ -289,7 +291,7 @@ void ObjLoader::creatBackgroundFromDEM(const std::string& filename, nvmath::vec3
     int newY = nImgSizeY * scale;
 //    float * newImage = new float[newX*newY];
     cv::Mat newImage(newX,newY,CV_32F,0);
-    cv::resize(A,newImage,cv::Size(newX,newY),cv::INTER_LINEAR);
+    cv::resize(A,newImage,cv::Size(newX,newY),cv::INTER_CUBIC);
 //    std::vector<double> x, y, z;
 //    for (int i = 0; i < nImgSizeX; i++)
 //    {
@@ -307,7 +309,7 @@ void ObjLoader::creatBackgroundFromDEM(const std::string& filename, nvmath::vec3
 //    interp.setData(x, y, z);
 
 
-    float step = 1.0 / 10.0;
+    float step = 1/10.0;
     delete[] pafScanline;
     delete poDataset;
     scale = sceneSize.x / nImgSizeX;
@@ -318,6 +320,7 @@ void ObjLoader::creatBackgroundFromDEM(const std::string& filename, nvmath::vec3
     uint32_t nIndices = 0;
 //    minElevation = newImage.at<float>(0,0);
     minElevation = *std::min_element(newImage.begin<float>(), newImage.end<float>());
+    centerElevation = (*std::max_element(newImage.begin<float>(), newImage.end<float>()) + minElevation) / 2.0;
     for (float j = 0.0; j < nImgSizeX; j = j + step)
     {
         for (float k = 0.0; k < nImgSizeY; k = k + step)
@@ -338,10 +341,10 @@ void ObjLoader::creatBackgroundFromDEM(const std::string& filename, nvmath::vec3
             if (kk1 > nImgSizeY * scale - scale / 2.0) kk1 = nImgSizeY * scale - scale / 2.0 - 0.01;
             if (kk2 > nImgSizeY * scale - scale / 2.0) kk2 = nImgSizeY * scale - scale / 2.0 - 0.01;
 
-            nvmath::vec3f point1 = { j * scale, newImage.at<float>(jj1, kk1) - minElevation, k * scale };
-            nvmath::vec3f point2 = { j * scale, newImage.at<float>(jj1, kk2) - minElevation, (k + step) * scale };
-            nvmath::vec3f point3 = { (j + step) * scale, newImage.at<float>(jj2, kk2) - minElevation, (k + step) * scale };
-            nvmath::vec3f point4 = { (j + step) * scale, newImage.at<float>(jj2, kk1) - minElevation, k * scale };
+            nvmath::vec3f point1 = { j * scale - sceneSize.x / 2.0, newImage.at<float>(jj1, kk1) - centerElevation, k * scale - sceneSize.y/2.0 };
+            nvmath::vec3f point2 = { j * scale - sceneSize.x / 2.0, newImage.at<float>(jj1, kk2) - centerElevation, (k + step) * scale  - sceneSize.y/2.0};
+            nvmath::vec3f point3 = { (j + step) * scale - sceneSize.x / 2.0, newImage.at<float>(jj2, kk2) - centerElevation, (k + step) * scale  - sceneSize.y/2.0};
+            nvmath::vec3f point4 = { (j + step) * scale - sceneSize.x / 2.0, newImage.at<float>(jj2, kk1) - centerElevation, k * scale  - sceneSize.y/2.0};
 
 //            if (minElevation > point1.y) minElevation = point1.y;
 //            if (minElevation > point2.y) minElevation = point2.y;
@@ -373,6 +376,8 @@ void ObjLoader::creatBackgroundFromDEM(const std::string& filename, nvmath::vec3
     m_objmesh.nIndices = nIndices;
     m_objmesh.vertices = m_vertices;
     m_objmesh.indices = m_indices;
+
+    m_heightmap = newImage.clone(); // 保存插值后的高程图
 }
 
 //void ObjLoader::createBackgroundFromDEM(const std::string& filename, nvmath::vec3f sceneSize_XYZ, _2D::ThinPlateSplineInterpolator<double>& interp)
@@ -803,7 +808,70 @@ void ObjLoader::clearCurrentInfo()
 
 float ObjLoader::getElevation(float locX, float locY) {
     float locZ = 0;
+
     return locZ;
+}
+void ObjLoader::interpolateZValues(nvmath::vec3f sceneSize, float* tempx, float* tempy,
+    float* tempz, int num_points)
+{
+    if (m_heightmap.empty()) {
+        std::cerr << "Error: Heightmap not initialized. Call creatBackgroundFromDEM first." << std::endl;
+        return;
+    }
+    int width = m_heightmap.cols;
+    int height = m_heightmap.rows;
+
+    // 2. 检查坐标是否在场景范围内
+    for (int i = 0; i < num_points; i++) {
+        if (tempx[i] < 0 || tempx[i] > sceneSize.x || tempy[i] < 0 || tempy[i] > sceneSize.y) {
+            std::cerr << "Warning: Coordinate (" << tempx[i] << ", " << tempy[i] << ") out of bounds!" << std::endl;
+            tempz[i] = 0; // 默认填充 0 或抛出异常
+            continue;
+        }
+    }
+
+    // 3. 构建映射矩阵
+    cv::Mat map_x(1, num_points, CV_32F);
+    cv::Mat map_y(1, num_points, CV_32F);
+
+    for (int i = 0; i < num_points; i++) {
+        float v = (tempx[i] / sceneSize.x) * (width - 1);
+        float u = (tempy[i] / sceneSize.y) * (height - 1);
+        // map_x.at<float>(0, i) = u;
+        // map_y.at<float>(0, i) = v;
+        // map_x.at<float>(0, i) = v;
+        // map_y.at<float>(0, i) = u;
+
+        // 边界检查
+        if (u < 0 || u >= width-1 || v < 0 || v >= height-1) {
+            tempz[i] = 0.0f;
+            continue;
+        }
+
+        // 双线性插值
+        int x0 = floor(u);
+        int y0 = floor(v);
+        int x1 = x0 + 1;
+        int y1 = y0 + 1;
+
+        float dx = u - x0;
+        float dy = v - y0;
+
+        float z00 = m_heightmap.at<float>(y0, x0);
+        float z10 = m_heightmap.at<float>(y0, x1);
+        float z01 = m_heightmap.at<float>(y1, x0);
+        float z11 = m_heightmap.at<float>(y1, x1);
+
+        float zInterp =
+            (1 - dx) * (1 - dy) * z00 +
+            dx       * (1 - dy) * z10 +
+            (1 - dx) * dy       * z01 +
+            dx       * dy       * z11;
+
+        tempz[i] = zInterp;
+    }
+
+
 }
 
 

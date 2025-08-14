@@ -34,6 +34,7 @@ bool Scene::createObjScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<Rayt
     //-------------------------
     if(scenexml.background.isDEM) {
         loader.creatBackgroundFromDEM(scenexml.background.DEMFile, scenexml.background.sceneSize);
+        isInterp = true;
 //        return false;
     }else{
         loader.createBackground(fileio->m_pRaytracingXml->scenexml.background.sceneSize);
@@ -68,7 +69,7 @@ bool Scene::createObjScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<Rayt
     bgInstance.meshId = static_cast<uint32_t>(n_modelmesh);
     n_modelmesh++;
     glm::mat4 bgunit = glm::mat4(1.0f);
-    glm::vec3 bgShift = glm::vec3{0, 0 - loader.minElevation, 0};
+    glm::vec3 bgShift = glm::vec3{0, 0, 0};
     glm::vec3 bgScale = glm::vec3{1.0, 1.0, 1.0};
     glm::mat4 bgMat = glm::scale(bgunit, bgScale) * glm::translate(bgunit,bgShift);
     bgInstance.object2worldMatrix = bgMat;
@@ -111,6 +112,13 @@ bool Scene::createObjScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<Rayt
             tempy = Utils::readascfile(objEntity.file,0,1,n_dis);
             tempz = Utils::readascfile(objEntity.file,0,2,n_dis);
 
+            if (isInterp)
+            {
+                loader.interpolateZValues(scenexml.background.sceneSize,
+                    tempx, tempy, tempz, n_dis);
+            }
+
+
             float *tempScale, *tempRotation;
             tempScale = Utils::readascfileWithDefault(objEntity.file,0,3,n_dis, 1.0);
             tempRotation = Utils::readascfileWithDefault(objEntity.file,0,4,n_dis, 0.0);
@@ -120,7 +128,7 @@ bool Scene::createObjScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<Rayt
             objEntity.rotations.resize(n_dis);
             for(int kin = 0;kin<n_dis;kin++)
             {
-                objEntity.objDistributions[kin]=(glm::vec3(tempx[kin],tempy[kin],tempz[kin] + loader.getElevation(tempx[kin], tempy[kin])));
+                objEntity.objDistributions[kin]=(glm::vec3(tempx[kin],tempy[kin],tempz[kin]));
                 // objEntity.scales[kin] = 1.0;
                 // objEntity.rotations[kin] = 0.0;
                 objEntity.scales[kin] = tempScale[kin];
@@ -182,8 +190,7 @@ bool Scene::createObjScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<Rayt
                 glm::vec3 shift;
                 if (isInterp == true)
                 {
-                    // double shiftInterp = loader.getShiftInterp(interp, shift0);
-                    // shift = nvmath::vec3f{shift0.x - x / 2.0, shift0.z + shiftInterp - loader.minElevation, shift0.y - y / 2.0};
+                    shift = nvmath::vec3f{shift0.x - x / 2.0, shift0.z - loader.centerElevation, shift0.y - y / 2.0};
                 }
                 else
                 {
