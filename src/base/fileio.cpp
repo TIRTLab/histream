@@ -344,155 +344,340 @@ SensorXml FileIO::readSensorXML(TiXmlNode *node, Mode mode){
 
     SensorXml sensorxml;
     TiXmlElement* sensorEle = node->FirstChildElement("Sensor");
+
 //赋值
     for (TiXmlElement* pEle = sensorEle->FirstChildElement(); pEle != NULL; pEle = pEle->NextSiblingElement())
     {
-//        SensorStruct temp;
-        sensorxml.name = pEle->Attribute("name");
-//        sensorxml.projection = pEle->FirstChildElement("projWay")->GetText();
-        sensorxml.projection = Projection::PARALLAL;
-        if (sonExists("FOV", pEle))
+        // const char* typeAttr = pEle->Attribute("type");
+        std::string sensorType;
+        if (pEle->Attribute("type") == NULL)
         {
-//            temp.FOV = std::stoi(pEle->FirstChildElement("FOV")->GetText());
+            sensorType = "Multispectral sensor";
         }
         else
         {
-//            temp.FOV = -1;
+            sensorType = pEle->Attribute("type");
         }
-        sensorxml.resolution = {std::stof(pEle->FirstChildElement("pixelResolutionX")->GetText()),
-                                std::stof(pEle->FirstChildElement("pixelResolutionY")->GetText())};
-//        temp.pixelResolutionX = std::stof(pEle->FirstChildElement("pixelResolutionX")->GetText());
-//        temp.pixelResolutionY = std::stof(pEle->FirstChildElement("pixelResolutionY")->GetText());
 
-        sensorxml.waves = myFunction::mySplitFloat(pEle->FirstChildElement("controlBand")->GetText(), ",");
-
-        TiXmlElement* allViewAngleEle = pEle->FirstChildElement("viewAngle");
-        for (TiXmlElement* subEle = allViewAngleEle->FirstChildElement(); subEle != NULL; subEle = subEle->NextSiblingElement())
+        if (sensorType.empty() || sensorType == "Multispectral sensor")
         {
-            std::string type = subEle->Attribute("type");
-            if (type == "custom")
+            sensorxml.name = pEle->Attribute("name");
+    //        sensorxml.projection = pEle->FirstChildElement("projWay")->GetText();
+            sensorxml.projection = Projection::PARALLAL;
+            if (sonExists("FOV", pEle))
             {
-                glm::vec2 viewanglesk;
-                for (TiXmlElement* viewAngleIter = subEle->FirstChildElement(); viewAngleIter != NULL; viewAngleIter = viewAngleIter->NextSiblingElement())
+    //            temp.FOV = std::stoi(pEle->FirstChildElement("FOV")->GetText());
+            }
+            else
+            {
+    //            temp.FOV = -1;
+            }
+            sensorxml.resolution = {std::stof(pEle->FirstChildElement("pixelResolutionX")->GetText()),
+                                    std::stof(pEle->FirstChildElement("pixelResolutionY")->GetText())};
+    //        temp.pixelResolutionX = std::stof(pEle->FirstChildElement("pixelResolutionX")->GetText());
+    //        temp.pixelResolutionY = std::stof(pEle->FirstChildElement("pixelResolutionY")->GetText());
+
+            sensorxml.waves = myFunction::mySplitFloat(pEle->FirstChildElement("controlBand")->GetText(), ",");
+
+
+            TiXmlElement* allViewAngleEle = pEle->FirstChildElement("viewAngle");
+            for (TiXmlElement* subEle = allViewAngleEle->FirstChildElement(); subEle != NULL; subEle = subEle->NextSiblingElement())
+            {
+                std::string type = subEle->Attribute("type");
+                if (type == "custom")
                 {
-                    nvmath::vec2f viewAngleTemp = { myFunction::mySplitFloat(viewAngleIter->GetText(), ",")[0],
-                                                    myFunction::mySplitFloat(viewAngleIter->GetText(), ",")[1] };
-                    viewanglesk = {viewAngleTemp[0],
-                                   viewAngleTemp[1]};
-                    sensorxml.viewAngles.push_back(viewanglesk);
-//                    temp.viewZenith.push_back(viewAngleTemp[0]);
-//                    temp.viewAzimuth.push_back(viewAngleTemp[1]);
+                    glm::vec2 viewanglesk;
+                    for (TiXmlElement* viewAngleIter = subEle->FirstChildElement(); viewAngleIter != NULL; viewAngleIter = viewAngleIter->NextSiblingElement())
+                    {
+                        nvmath::vec2f viewAngleTemp = { myFunction::mySplitFloat(viewAngleIter->GetText(), ",")[0],
+                                                        myFunction::mySplitFloat(viewAngleIter->GetText(), ",")[1] };
+                        viewanglesk = {viewAngleTemp[0],
+                                       viewAngleTemp[1]};
+                        sensorxml.viewAngles.push_back(viewanglesk);
+    //                    temp.viewZenith.push_back(viewAngleTemp[0]);
+    //                    temp.viewAzimuth.push_back(viewAngleTemp[1]);
+                    }
                 }
-            }
-            else if (type == "BRF")
-            {
-                if (stoi(subEle->FirstChildElement("SPP")->GetText()) == 1){
-                    int VzaMax = stoi(subEle->FirstChildElement("vzaMax")->GetText());
-                    int vzaStep = stoi(subEle->FirstChildElement("vzaStep")->GetText());
-                    for (int k = 0; k<=VzaMax; k += vzaStep){
-                        nvmath::vec2f viewAngleTemp = {k, SAA};
-                        glm::vec2 viewanglesk = {viewAngleTemp[0],
-                                                 viewAngleTemp[1]};
-                        sensorxml.viewAngles.push_back(viewanglesk);
-                    }
-                    for (int k = 0; k<=VzaMax; k += vzaStep){
-                        nvmath::vec2f viewAngleTemp;
-                        if (SAA > 180){
-                            viewAngleTemp = {k, SAA-180};
+                else if (type == "BRF")
+                {
+                    if (stoi(subEle->FirstChildElement("SPP")->GetText()) == 1){
+                        int VzaMax = stoi(subEle->FirstChildElement("vzaMax")->GetText());
+                        int vzaStep = stoi(subEle->FirstChildElement("vzaStep")->GetText());
+                        for (int k = 0; k<=VzaMax; k += vzaStep){
+                            nvmath::vec2f viewAngleTemp = {k, SAA};
+                            glm::vec2 viewanglesk = {viewAngleTemp[0],
+                                                     viewAngleTemp[1]};
+                            sensorxml.viewAngles.push_back(viewanglesk);
                         }
-                        else{
-                            viewAngleTemp = {k, SAA+180};
-                        }
-                        glm::vec2 viewanglesk = {viewAngleTemp[0],
-                                                 viewAngleTemp[1]};
-                        sensorxml.viewAngles.push_back(viewanglesk);
-                    }
-
-                }
-                if (stoi(subEle->FirstChildElement("CSPP")->GetText()) == 1){
-                    int VzaMax = stoi(subEle->FirstChildElement("vzaMax")->GetText());
-                    int vzaStep = stoi(subEle->FirstChildElement("vzaStep")->GetText());
-                    for (int k = 0; k<=VzaMax; k += vzaStep){
-                        nvmath::vec2f viewAngleTemp;
-                        if (SAA < 270){
-                            viewAngleTemp = {k, SAA+90};
-                        }
-                        else{
-                            viewAngleTemp = {k, SAA-270};
-                        }
-
-                        glm::vec2 viewanglesk = {viewAngleTemp[0],
-                                                 viewAngleTemp[1]};
-                        sensorxml.viewAngles.push_back(viewanglesk);
-                    }
-                    for (int k = 0; k<=VzaMax; k += vzaStep){
-                        nvmath::vec2f viewAngleTemp;
-                        if (SAA < 90){
-                            viewAngleTemp = {k, SAA+270};
-                        }
-                        else{
-                            viewAngleTemp = {k, SAA-90};
-                        }
-
-                        glm::vec2 viewanglesk = {viewAngleTemp[0],
-                                                 viewAngleTemp[1]};
-                        sensorxml.viewAngles.push_back(viewanglesk);
-                    }
-
-                }
-            }
-            else if (type == "albedo")
-            {
-                int isHemisphere = stoi(subEle->FirstChildElement("enabled")->GetText());
-                int hemiAngleNum = stoi(subEle->FirstChildElement("angleNum")->GetText());
-                if (isHemisphere == 1){
-                    float theta0, theta1, theta;
-                    float r0, r1;
-                    int k0, k1, k00;
-                    float pi = 3.1415926, dphi;
-
-                    theta0 = pi / 2.0;
-                    k0 = hemiAngleNum;
-                    r0 = 2.0 * sin(theta0 / 2.0);
-
-                    for (int k = 0; k < 10; k++) {
-                        theta1 = theta0 - 2.0 * sin(theta0 / 2.0) * sqrt(pi / k0);
-                        r1 = 2.0 * sin(theta1 / 2.0);
-                        k1 = k0 * pow(r1 / r0, 2);
-
-                        theta = (theta0 + theta1) / 2.0 * 180.0 / pi;
-
-                        k00 = k0;
-                        dphi = 360.0 / k00;
-                        for (int kk = 0; kk < k00; kk++) {
-                            // 生成每个 viewAngleTemp 值
-                            glm::vec2 viewanglesk = {
-                                    theta,                          // 每一个 VZA
-                                    dphi / 2.0 + dphi * kk          // 每一个 VAA
-                            };
-
-                            // 插入到 sensorxml.viewAngles 中
+                        for (int k = 0; k<=VzaMax; k += vzaStep){
+                            nvmath::vec2f viewAngleTemp;
+                            if (SAA > 180){
+                                viewAngleTemp = {k, SAA-180};
+                            }
+                            else{
+                                viewAngleTemp = {k, SAA+180};
+                            }
+                            glm::vec2 viewanglesk = {viewAngleTemp[0],
+                                                     viewAngleTemp[1]};
                             sensorxml.viewAngles.push_back(viewanglesk);
                         }
 
-                        if (k1 < 0) {
-                            // 如果 k1 小于 0，插入 VZA = 0 和 VAA = 0 的角度
-                            glm::vec2 viewanglesk = {0.0f, 0.0f};
+                    }
+                    if (stoi(subEle->FirstChildElement("CSPP")->GetText()) == 1){
+                        int VzaMax = stoi(subEle->FirstChildElement("vzaMax")->GetText());
+                        int vzaStep = stoi(subEle->FirstChildElement("vzaStep")->GetText());
+                        for (int k = 0; k<=VzaMax; k += vzaStep){
+                            nvmath::vec2f viewAngleTemp;
+                            if (SAA < 270){
+                                viewAngleTemp = {k, SAA+90};
+                            }
+                            else{
+                                viewAngleTemp = {k, SAA-270};
+                            }
+
+                            glm::vec2 viewanglesk = {viewAngleTemp[0],
+                                                     viewAngleTemp[1]};
                             sensorxml.viewAngles.push_back(viewanglesk);
-                            break;
+                        }
+                        for (int k = 0; k<=VzaMax; k += vzaStep){
+                            nvmath::vec2f viewAngleTemp;
+                            if (SAA < 90){
+                                viewAngleTemp = {k, SAA+270};
+                            }
+                            else{
+                                viewAngleTemp = {k, SAA-90};
+                            }
+
+                            glm::vec2 viewanglesk = {viewAngleTemp[0],
+                                                     viewAngleTemp[1]};
+                            sensorxml.viewAngles.push_back(viewanglesk);
                         }
 
-                        theta0 = theta1;
-                        r0 = r1;
-                        k0 = k1;
+                    }
+                }
+                else if (type == "albedo")
+                {
+                    int isHemisphere = stoi(subEle->FirstChildElement("enabled")->GetText());
+                    int hemiAngleNum = stoi(subEle->FirstChildElement("angleNum")->GetText());
+                    if (isHemisphere == 1){
+                        float theta0, theta1, theta;
+                        float r0, r1;
+                        int k0, k1, k00;
+                        float pi = 3.1415926, dphi;
+
+                        theta0 = pi / 2.0;
+                        k0 = hemiAngleNum;
+                        r0 = 2.0 * sin(theta0 / 2.0);
+
+                        for (int k = 0; k < 10; k++) {
+                            theta1 = theta0 - 2.0 * sin(theta0 / 2.0) * sqrt(pi / k0);
+                            r1 = 2.0 * sin(theta1 / 2.0);
+                            k1 = k0 * pow(r1 / r0, 2);
+
+                            theta = (theta0 + theta1) / 2.0 * 180.0 / pi;
+
+                            k00 = k0;
+                            dphi = 360.0 / k00;
+                            for (int kk = 0; kk < k00; kk++) {
+                                // 生成每个 viewAngleTemp 值
+                                glm::vec2 viewanglesk = {
+                                        theta,                          // 每一个 VZA
+                                        dphi / 2.0 + dphi * kk          // 每一个 VAA
+                                };
+
+                                // 插入到 sensorxml.viewAngles 中
+                                sensorxml.viewAngles.push_back(viewanglesk);
+                            }
+
+                            if (k1 < 0) {
+                                // 如果 k1 小于 0，插入 VZA = 0 和 VAA = 0 的角度
+                                glm::vec2 viewanglesk = {0.0f, 0.0f};
+                                sensorxml.viewAngles.push_back(viewanglesk);
+                                break;
+                            }
+
+                            theta0 = theta1;
+                            r0 = r1;
+                            k0 = k1;
 
 
+                        }
+                    }
+                }
+            }
+        }
+        else if (sensorType == "hyperspectral sensor")
+        {
+            sensorxml.name = pEle->Attribute("name");
+            sensorxml.projection = Projection::PARALLAL;
+            if (sonExists("FOV", pEle))
+            {
+    // temp.FOV = std::stoi(pEle->FirstChildElement("FOV")->GetText());
+            }
+            else
+            {
+    //            temp.FOV = -1;
+            }
+
+            sensorxml.resolution = {std::stof(pEle->FirstChildElement("pixelResolutionX")->GetText()),
+                                    std::stof(pEle->FirstChildElement("pixelResolutionY")->GetText())};
+
+            // sensorxml.waves = myFunction::mySplitFloat(pEle->FirstChildElement("controlBand")->GetText(), ",");
+            std::string bandsFilePath = pEle->FirstChildElement("bandsFilePath")->GetText();
+            std::ifstream file(bandsFilePath);
+
+            if (!file.is_open()) {
+                std::cerr << "Can not open file: " << bandsFilePath << std::endl;
+                //return 1;
+            }
+            std::string line;
+            while (std::getline(file, line)) {
+                if (!line.empty()) {
+                    try {
+                        // 将字符串转换为float并添加到vector中
+                        float num = std::stof(line);
+                        sensorxml.waves.push_back(num);
+                    }
+                    catch (const std::invalid_argument& e) {
+                        std::cerr << "无效的数字格式: " << line << std::endl;
+                    }
+                    catch (const std::out_of_range& e) {
+                        std::cerr << "数字超出范围: " << line << std::endl;
+                    }
+                }
+            }
+            file.close();
+
+
+
+
+            TiXmlElement* allViewAngleEle = pEle->FirstChildElement("viewAngle");
+            for (TiXmlElement* subEle = allViewAngleEle->FirstChildElement(); subEle != NULL; subEle = subEle->NextSiblingElement())
+            {
+                std::string type = subEle->Attribute("type");
+                if (type == "custom")
+                {
+                    glm::vec2 viewanglesk;
+                    for (TiXmlElement* viewAngleIter = subEle->FirstChildElement(); viewAngleIter != NULL; viewAngleIter = viewAngleIter->NextSiblingElement())
+                    {
+                        nvmath::vec2f viewAngleTemp = { myFunction::mySplitFloat(viewAngleIter->GetText(), ",")[0],
+                                                        myFunction::mySplitFloat(viewAngleIter->GetText(), ",")[1] };
+                        viewanglesk = {viewAngleTemp[0],
+                                       viewAngleTemp[1]};
+                        sensorxml.viewAngles.push_back(viewanglesk);
+    //                    temp.viewZenith.push_back(viewAngleTemp[0]);
+    //                    temp.viewAzimuth.push_back(viewAngleTemp[1]);
+                    }
+                }
+                else if (type == "BRF")
+                {
+                    if (stoi(subEle->FirstChildElement("SPP")->GetText()) == 1){
+                        int VzaMax = stoi(subEle->FirstChildElement("vzaMax")->GetText());
+                        int vzaStep = stoi(subEle->FirstChildElement("vzaStep")->GetText());
+                        for (int k = 0; k<=VzaMax; k += vzaStep){
+                            nvmath::vec2f viewAngleTemp = {k, SAA};
+                            glm::vec2 viewanglesk = {viewAngleTemp[0],
+                                                     viewAngleTemp[1]};
+                            sensorxml.viewAngles.push_back(viewanglesk);
+                        }
+                        for (int k = 0; k<=VzaMax; k += vzaStep){
+                            nvmath::vec2f viewAngleTemp;
+                            if (SAA > 180){
+                                viewAngleTemp = {k, SAA-180};
+                            }
+                            else{
+                                viewAngleTemp = {k, SAA+180};
+                            }
+                            glm::vec2 viewanglesk = {viewAngleTemp[0],
+                                                     viewAngleTemp[1]};
+                            sensorxml.viewAngles.push_back(viewanglesk);
+                        }
+
+                    }
+                    if (stoi(subEle->FirstChildElement("CSPP")->GetText()) == 1){
+                        int VzaMax = stoi(subEle->FirstChildElement("vzaMax")->GetText());
+                        int vzaStep = stoi(subEle->FirstChildElement("vzaStep")->GetText());
+                        for (int k = 0; k<=VzaMax; k += vzaStep){
+                            nvmath::vec2f viewAngleTemp;
+                            if (SAA < 270){
+                                viewAngleTemp = {k, SAA+90};
+                            }
+                            else{
+                                viewAngleTemp = {k, SAA-270};
+                            }
+
+                            glm::vec2 viewanglesk = {viewAngleTemp[0],
+                                                     viewAngleTemp[1]};
+                            sensorxml.viewAngles.push_back(viewanglesk);
+                        }
+                        for (int k = 0; k<=VzaMax; k += vzaStep){
+                            nvmath::vec2f viewAngleTemp;
+                            if (SAA < 90){
+                                viewAngleTemp = {k, SAA+270};
+                            }
+                            else{
+                                viewAngleTemp = {k, SAA-90};
+                            }
+
+                            glm::vec2 viewanglesk = {viewAngleTemp[0],
+                                                     viewAngleTemp[1]};
+                            sensorxml.viewAngles.push_back(viewanglesk);
+                        }
+
+                    }
+                }
+                else if (type == "albedo")
+                {
+                    int isHemisphere = stoi(subEle->FirstChildElement("enabled")->GetText());
+                    int hemiAngleNum = stoi(subEle->FirstChildElement("angleNum")->GetText());
+                    if (isHemisphere == 1){
+                        float theta0, theta1, theta;
+                        float r0, r1;
+                        int k0, k1, k00;
+                        float pi = 3.1415926, dphi;
+
+                        theta0 = pi / 2.0;
+                        k0 = hemiAngleNum;
+                        r0 = 2.0 * sin(theta0 / 2.0);
+
+                        for (int k = 0; k < 10; k++) {
+                            theta1 = theta0 - 2.0 * sin(theta0 / 2.0) * sqrt(pi / k0);
+                            r1 = 2.0 * sin(theta1 / 2.0);
+                            k1 = k0 * pow(r1 / r0, 2);
+
+                            theta = (theta0 + theta1) / 2.0 * 180.0 / pi;
+
+                            k00 = k0;
+                            dphi = 360.0 / k00;
+                            for (int kk = 0; kk < k00; kk++) {
+                                // 生成每个 viewAngleTemp 值
+                                glm::vec2 viewanglesk = {
+                                        theta,                          // 每一个 VZA
+                                        dphi / 2.0 + dphi * kk          // 每一个 VAA
+                                };
+
+                                // 插入到 sensorxml.viewAngles 中
+                                sensorxml.viewAngles.push_back(viewanglesk);
+                            }
+
+                            if (k1 < 0) {
+                                // 如果 k1 小于 0，插入 VZA = 0 和 VAA = 0 的角度
+                                glm::vec2 viewanglesk = {0.0f, 0.0f};
+                                sensorxml.viewAngles.push_back(viewanglesk);
+                                break;
+                            }
+
+                            theta0 = theta1;
+                            r0 = r1;
+                            k0 = k1;
+
+
+                        }
                     }
                 }
             }
         }
 
-//        sensorDatasets.push_back(temp);
     }
 // 补充，sensorxml里面的bool isImage{true};
 //    bool isAlbedo{false};
