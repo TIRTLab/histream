@@ -17,13 +17,13 @@ VULKAN_HPP_DEFAULT_DISPATCH_LOADER_DYNAMIC_STORAGE
 using namespace std;
 
 int main(int argc, char **argv) {
-//    const InputParser parser(argc, argv);
-//    const string path = parser.getString("-w", "");
-//    const string version = parser.getString("-v", "");
+    const InputParser parser(argc, argv);
+    const string path = parser.getString("-w", "");
+    const string version = parser.getString("-v", "");
 
-     std::string path = "D:/data/field_app/example1";
-     path = "D:\\data\\sim_albedo";
-     std::string version = "eRaytracing";
+     // std::string path = "D:/data/field_app/example1";
+     // path = "D:/data/hyperSpectral/test1";
+     // std::string version = "eRaytracing";
 
     // std::string path = "D:/data/field_app/voxelRT";
     // std::string version = "eVoxelRT";

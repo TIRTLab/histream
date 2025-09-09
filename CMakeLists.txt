@@ -15,7 +15,7 @@ message(STATUS "Processing Project ${PROJNAME}:")
 #--------------------------------------------------------------------------------------------------
 # C++ target and defines
 set(CMAKE_CXX_STANDARD 17)
-add_executable(${PROJNAME}
+add_executable(hiStream
         src/voxeleb/voxeleb.cpp)
 
 
@@ -73,13 +73,13 @@ message(STATUS "Use new nvpro_core")
 # Memory Allocation
 #   Forcing to use our memory allocator DMA (similar to Vulkan Memory Allocator (VMA))
 #target_compile_definitions(${PROJNAME} PUBLIC ALLOC_VMA)
-target_compile_definitions(${PROJNAME} PUBLIC ALLOC_DMA)
+target_compile_definitions(hiStream  PUBLIC ALLOC_DMA)
 #target_compile_definitions(${PROJNAME} PUBLIC ALLOC_DEDICATED)
 
 
 #--------------------------------------------------------------------------------------------------
 # Default definitions: PROJECT_RELDIRECTORY, ... 
-_add_project_definitions(${PROJNAME})
+_add_project_definitions(hiStream)
 
 #--------------------------------------------------------------------------------------------------
 # For NVML, the DLL is loaded by the application
@@ -120,11 +120,11 @@ file(GLOB HEADER_FILES
 
 #--------------------------------------------------------------------------------------------------
 # Sources
-target_sources(${PROJNAME} PUBLIC ${SOURCE_FILES} ${HEADER_FILES})
-target_sources(${PROJNAME} PUBLIC ${COMMON_SOURCE_FILES})
-target_sources(${PROJNAME} PUBLIC ${PACKAGE_SOURCE_FILES})
-target_sources(${PROJNAME} PUBLIC ${GLSL_SOURCES})
-target_sources(${PROJNAME} PUBLIC ${GLSL_HEADERS})
+target_sources(hiStream PUBLIC ${SOURCE_FILES} ${HEADER_FILES})
+target_sources(hiStream PUBLIC ${COMMON_SOURCE_FILES})
+target_sources(hiStream PUBLIC ${PACKAGE_SOURCE_FILES})
+target_sources(hiStream PUBLIC ${GLSL_SOURCES})
+target_sources(hiStream PUBLIC ${GLSL_HEADERS})
 
 
 #-------------------------------------------------------------------------------------------------
@@ -150,30 +150,30 @@ source_group("Shader Headers" FILES ${GLSL_HEADERS})
 
 ##########################################################
 ### external libararies
-target_link_libraries(${PROJNAME} ${PLATFORM_LIBRARIES} nvpro_core)
+target_link_libraries(hiStream ${PLATFORM_LIBRARIES} nvpro_core)
 
 find_package(GDAL REQUIRED)
-target_include_directories(${PROJNAME} PUBLIC ${GDAL_INCLUDE_DIRS})
-target_link_libraries(${PROJNAME} ${GDAL_LIBRARIES})
+target_include_directories(hiStream PUBLIC ${GDAL_INCLUDE_DIRS})
+target_link_libraries(hiStream ${GDAL_LIBRARIES})
 
 find_package(Eigen3 CONFIG REQUIRED)
-target_link_libraries(${PROJNAME}  Eigen3::Eigen)
+target_link_libraries(hiStream  Eigen3::Eigen)
 
 set(OpenCV_DIR "${VCPKG_INSTALLED_DIR}/x64-windows/share/opencv2")
 find_package(OpenCV REQUIRED)
-target_link_libraries(${PROJNAME} ${OpenCV_LIBS})
+target_link_libraries(hiStream ${OpenCV_LIBS})
 
 
 foreach (DEBUGLIB ${LIBRARIES_DEBUG})
-    target_link_libraries(${PROJNAME} debug ${DEBUGLIB})
+    target_link_libraries(hiStream debug ${DEBUGLIB})
 endforeach (DEBUGLIB)
 
 foreach (RELEASELIB ${LIBRARIES_OPTIMIZED})
-    target_link_libraries(${PROJNAME} optimized ${RELEASELIB})
+    target_link_libraries(hiStream optimized ${RELEASELIB})
 endforeach (RELEASELIB)
 
 #####################################################################################
 # copies binaries that need to be put next to the exe files (ZLib, etc.)
 #
-_finalize_target(${PROJNAME})
+_finalize_target(hiStream)
 

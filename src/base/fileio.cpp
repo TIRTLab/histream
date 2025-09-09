@@ -252,8 +252,11 @@ std::vector<SpectralXml> FileIO::readSpectralXML(TiXmlNode *node, Mode mode) {
                 spectralXml.refl_tir = stof(Node->FirstChildElement("ref_TIR")->GetText());
             }
 
-            std::string a = Node->FirstChildElement("spectral_file")->GetText();
-            spectralXml.path = a;
+            if (Node->FirstChildElement("spectral_file")->GetText()!=NULL)
+            {
+                std::string a = Node->FirstChildElement("spectral_file")->GetText();
+                spectralXml.path = a;
+            }
         } else if (Node->Attribute("type") == std::string("Prospect")) {
             spectralXml.type = spectralType::PROSPECT;
             spectralXml.reflectances = {myFunction::mySplitFloat((Node->FirstChildElement("reflectance")->GetText()), ",")};
