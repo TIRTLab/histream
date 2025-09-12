@@ -200,8 +200,8 @@ bool Scene::createObjScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<Rayt
 
                 glm::mat4 unit = glm::mat4(1.0f);
                 glm::vec3 scale = glm::vec3(scale0);
-                glm::mat4 angle = glm::rotate(unit, glm::radians(angle0), glm::vec3(0.0,1.0,0.0));
-                glm::mat4 mat = glm::scale(unit,scale) * glm::translate(unit, shift) * angle;
+                glm::mat4 rotation = glm::rotate(unit, glm::radians(angle0), glm::vec3(0.0, 1.0, 0.0));
+                glm::mat4 mat = glm::translate(unit, shift) * rotation * glm::scale(unit, scale);
                 instance.object2worldMatrix = mat;
                 instance.world2objectMatrix = glm::transpose(glm::inverse(mat));
                 instanceio->instances.emplace_back(instance);
