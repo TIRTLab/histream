@@ -30,9 +30,9 @@
 layout(location = 0) rayPayloadEXT PtPayload prd;
 layout(location = 1) rayPayloadEXT ShadowHitPayload shadow_payload;
 
-float Radiance[25];
-float RadianceSum[25];
-float Throughput[25];
+float Radiance[800];
+float RadianceSum[800];
+float Throughput[800];
 
 //  call vulkan API to get collision information.
 void ClosestHit(Ray r,float Lmin)
@@ -117,6 +117,7 @@ bool DirectLighting(vec3 position, vec3 woWorld, ShadeState sstate, int kDepth)
           bsdf = abs(bsdf0) * spectralMaterials[matIndex0 + kBand].reflectance;
         }
         Radiance[kBand] += Throughput[kBand] * lightSet.direct * bsdf * cosTheta;
+        // Radiance[kBand] += cosTheta;
       }
     }
 
@@ -448,6 +449,8 @@ void main()
 	for(int kBand = 0; kBand <  setting.n_wave; kBand++)
 	{
 		float value = Radiance[kBand];
+
+    // value = lightSet.direct / PI;
     uint bufferId =  (n_pixel * kBand) + (imageCoords.y * imageRes.x + imageCoords.x );
 		atomicStore(outImage[bufferId], value, gl_ScopeDevice, gl_StorageSemanticsBuffer, gl_SemanticsRelease);
 	}
