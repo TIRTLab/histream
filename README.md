@@ -1,1 +1,17 @@
-# field
+# HiStream
+实现局部区域（1米到50公里）场景的遥感观测模拟
+
+现有模块：
+1）rayrt： 面元的光线追踪；
+2）voxelrt: 体元的光线追踪；
+3）voxeleb: 体元的能量平衡；
+
+已有的工作：
+1）voxeleb-huailai:怀来站的热红外遥感模拟；
+
+
+接下来的工作：
+1）rayrt-spectral：面元的高光谱模拟；
+2）voxelrt—hex：异质性体元的模拟；
+3）voxeleb-beijing: 北京市/奥运区的模拟
+4）voxeleb-uav: 大量的无人机模拟；
