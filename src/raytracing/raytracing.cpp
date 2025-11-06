@@ -104,6 +104,7 @@ bool Raytracing::uploadSetting(std::shared_ptr<FileIO> &fileio, std::shared_ptr<
     raytracingio->isDisplay = fileio->m_pRaytracingXml->sensorxml.isDisplay;
     raytracingio->isAlbedo = fileio->m_pRaytracingXml->sensorxml.isAlbedo;
     raytracingio->isImage = fileio->m_pRaytracingXml->sensorxml.isImage;
+    raytracingio->isOrth = fileio->m_pRaytracingXml->sensorxml.isOrth;
     raytracingio->imageSize = fileio->m_pRaytracingXml->sensorxml.resolution;
     raytracingio->maxDepth = fileio->m_pRaytracingXml->settingxml.maxDepth;
     raytracingio->n_sample = fileio->m_pRaytracingXml->settingxml.n_sample;
@@ -156,6 +157,11 @@ bool Raytracing::run(std::shared_ptr<RaytracingIO> &raytracingio, std::shared_pt
         {
             // output
             output(raytracingio,fileio,kangle);
+        }
+
+        if (raytracingio->isOrth)
+        {
+            outputOrth(raytracingio,fileio,kangle);
         }
 
         if (raytracingio->isAlbedo)

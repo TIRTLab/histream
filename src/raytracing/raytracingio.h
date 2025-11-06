@@ -116,6 +116,8 @@ public:
     bool isImage;
     bool isAlbedo;
 
+    bool isOrth;
+
 
     RayRTSetting setting;
     std::shared_ptr<nvvk::Buffer> m_pBufferWave;

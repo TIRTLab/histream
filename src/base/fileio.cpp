@@ -698,6 +698,10 @@ SensorXml FileIO::readSensorXML(TiXmlNode *node, Mode mode){
     {
         sensorxml.isImage = stoi(controlnode->FirstChildElement("isImage")->GetText());
     }
+    if (sonExists("isOrth", controlnode->ToElement()))
+    {
+        sensorxml.isOrth = stoi(controlnode->FirstChildElement("isOrth")->GetText());
+    }
     if (sonExists("isTemperature", controlnode->ToElement()))
     {
         sensorxml.isTemperature = stoi(controlnode->FirstChildElement("isTemperature")->GetText());
@@ -778,6 +782,7 @@ SettingXml FileIO::readSettingXML(TiXmlNode *controlNode, Mode mode){
     if (sonExists("isUAVtrave", controlNode->ToElement())){
         settingxml.isUAVtrave = stoi(controlNode->FirstChildElement("isUAVtrave")->GetText());
     }
+
 
 
     char szFilePath[MAX_PATH + 1] = { 0 };
@@ -892,10 +897,10 @@ SceneXml FileIO::readSceneXML(TiXmlNode *sceneNode, Mode mode) {
             for (TiXmlElement *node = obj->FirstChildElement(); node != NULL; node = node->NextSiblingElement()) {
                 PrimEntity entity;
                 entity.primitiveName = node->FirstChildElement("meshNames")->GetText();
-                entity.meshNames = {node->FirstChildElement("canopyNames")->GetText()};
+                entity.meshNames = {node->FirstChildElement("meshNames")->GetText()};
                 std::string name = node->FirstChildElement("types")->GetText();
 
-                if (name == "building") {
+                if (name == "Building") {
                     entity.meshNames = {"wall", "roof"};
                     entity.spectralNames = {"wall", "roof"};
 //                    entity.thermalNames = {"wall", "roof"};
@@ -910,7 +915,7 @@ SceneXml FileIO::readSceneXML(TiXmlNode *sceneNode, Mode mode) {
                     entity.heightfile = m_pVoxelebXml->projectDir + "\\height.tif";
 //                entity.isdisFromFile = false;
 //                entity.distributefile = " ";
-                } else if (name == "vegetation") {
+                } else if (name == "Vegetation") {
                     entity.canopyNames = {node->FirstChildElement("canopyNames")->GetText()};
                     entity.propNames = {node->FirstChildElement("bioNames")->GetText()};
                     entity.spectralNames = {node->FirstChildElement("spectralNames")->GetText()};
@@ -930,13 +935,13 @@ SceneXml FileIO::readSceneXML(TiXmlNode *sceneNode, Mode mode) {
 
                 std::string shapetype = node->FirstChildElement("shapeTypes")->GetText();
                 cout << shapetype << endl;
-                if (shapetype == "ellipsoid") {
+                if (shapetype == "ellipsoid" || shapetype == "Ellipsoid") {
                     entity.shape = {ShapeType::ELLIPSOID,
                                     myFunction::mySplitFloat(node->FirstChildElement("shapes")->GetText(), ",")[2],
                                     myFunction::mySplitFloat(node->FirstChildElement("shapes")->GetText(), ",")[1],
                                     myFunction::mySplitFloat(node->FirstChildElement("shapes")->GetText(), ",")[0],
                                     glm::vec3(0, 0, 0)};
-                } else if (shapetype == "cube") {
+                } else if (shapetype == "cube" || shapetype == "Cube") {
                     entity.shape = {ShapeType::CUBE,
                                     myFunction::mySplitFloat(node->FirstChildElement("shapes")->GetText(), ",")[2],
                                     myFunction::mySplitFloat(node->FirstChildElement("shapes")->GetText(), ",")[1],

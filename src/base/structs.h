@@ -221,6 +221,7 @@ struct SensorXml
     std::vector<glm::vec2> viewAngles; // { zenith, azimuth }
     std::vector<float> waves;
     bool isImage{true};
+    bool isOrth{false};
     bool isAlbedo{false};
     bool isTemperature{true};
     bool isDisplay{false};
