@@ -28,7 +28,7 @@
 #define SENSOR_FOV    0.5
 #define ANGLE_COR 0.1
 #define DEG2RAD  0.017453292
-#define DIFFUSENUM 32
+#define DIFFUSENUM 50 // 32
 #define N1 2001
 #define N2 161
 
