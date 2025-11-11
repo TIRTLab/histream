@@ -76,7 +76,7 @@ bool Pipeline::createPipeline(std::shared_ptr<VoxelebIO> &modelio)
 
         vkCreateComputePipelines(m_device, {}, 1, &computePipelineCreateInfo, nullptr, &m_pipelines[stage]);
 
-        m_debug.setObjectName(m_pipelines[stage], "VoxelLST");
+        // m_debug.setObjectName(m_pipelines[stage], "VoxelLST");
         vkDestroyShaderModule(m_device, computePipelineCreateInfo.stage.module, nullptr);
     }
 

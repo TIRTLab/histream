@@ -17,8 +17,8 @@ using namespace std;
 bool FileIO::readXml(std::string Path, Mode mode) {
     m_mode = mode;
 
-    std::string filePath = Path + "\\Input.xml";
-    TiXmlDocument mydoc(filePath.c_str()); // tinyxml.h
+    // std::string filePath = Path;
+    TiXmlDocument mydoc(Path.c_str()); // tinyxml.h
     bool isloadOk = mydoc.LoadFile();
     if (!isloadOk)
     {
@@ -31,7 +31,7 @@ bool FileIO::readXml(std::string Path, Mode mode) {
     {
         m_mode = Mode::eRaytracing;
         m_pRaytracingXml = std::make_shared<RaytracingXml>();
-        m_pRaytracingXml->projectDir = Path;
+        // m_pRaytracingXml->projectDir = Path;
         m_pRaytracingXml->settingxml = readSettingXML(RootElement->FirstChild("Control"), m_mode);
         m_pRaytracingXml->lightxml = readLightXML(RootElement->FirstChild("Geometry"), m_mode);
         m_pRaytracingXml->sensorxml = readSensorXML(RootElement->FirstChild("Geometry"), m_mode);
@@ -42,7 +42,7 @@ bool FileIO::readXml(std::string Path, Mode mode) {
 
         m_mode = Mode::eVoxelEB;
         m_pVoxelebXml = std::make_shared<VoxelEBXml>();
-        m_pVoxelebXml->projectDir = Path;
+        // m_pVoxelebXml->projectDir = Path;
 
         m_pVoxelebXml->settingxml = readSettingXML(RootElement->FirstChild("Control"), m_mode);
         m_pVoxelebXml->lightxml = readLightXML(RootElement->FirstChild("Geometry"), m_mode);
@@ -60,7 +60,7 @@ bool FileIO::readXml(std::string Path, Mode mode) {
     else if(m_mode == Mode::eVoxelRT){
         m_mode = Mode::eVoxelRT;
         m_pVoxelrtXml = std::make_shared<VoxelRTXml>();
-        m_pVoxelrtXml->projectDir = Path;
+        // m_pVoxelrtXml->projectDir = Path;
         m_pVoxelrtXml->settingxml = readSettingXML(RootElement->FirstChild("Control"), m_mode);
         m_pVoxelrtXml->lightxml = readLightXML(RootElement->FirstChild("Geometry"), m_mode);
         m_pVoxelrtXml->sensorxml = readSensorXML(RootElement->FirstChild("Geometry"), m_mode);
@@ -798,14 +798,17 @@ SettingXml FileIO::readSettingXML(TiXmlNode *controlNode, Mode mode){
     {
         m_pRaytracingXml->definedDir = exe_path;
         //controlNode->FirstChildElement("defineDir")->GetText();
+        m_pRaytracingXml->projectDir = controlNode->FirstChildElement("outDir")->GetText();
     }
     if (mode == Mode::eVoxelRT)
     {
         m_pVoxelrtXml->definedDir = exe_path;//controlNode->FirstChildElement("defineDir")->GetText();
+        m_pVoxelrtXml->projectDir = controlNode->FirstChildElement("outDir")->GetText();
     }
     if (mode == Mode::eVoxelEB)
     {
         m_pVoxelebXml->definedDir = exe_path;//controlNode->FirstChildElement("defineDir")->GetText();
+        m_pVoxelebXml->projectDir = controlNode->FirstChildElement("outDir")->GetText();
     }
 
     return settingxml;
@@ -1384,20 +1387,20 @@ void FileIO::writeENVIdata(std::string projectDir, float *pData, int width, int 
 //                          "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".tif";
     std::string tifName,hdrName;
     if(t >= 0){
-        tifName = projectDir + "/results/t=" + oss_t.str() +"_VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
+        tifName = projectDir + "/t=" + oss_t.str() +"_VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
                   "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".img";
-        hdrName = projectDir + "/results/t=" + oss_t.str() +"_VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
+        hdrName = projectDir + "/t=" + oss_t.str() +"_VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
                   "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".hdr";
     }else if(k >= 0) {
-        tifName = projectDir +"/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
+        tifName = projectDir +"/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
                   "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + "_"+oss_k.str()+".img";
-        hdrName = projectDir +"/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
+        hdrName = projectDir +"/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
                   "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + "_"+oss_k.str()+".hdr";
     }else
     {
-        tifName = projectDir +"/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
+        tifName = projectDir +"/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
                   "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".img";
-        hdrName = projectDir +"/results/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
+        hdrName = projectDir +"/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
                   "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".hdr";
     }
     std::ofstream outfilet1(tifName.c_str(), std::ios::binary);

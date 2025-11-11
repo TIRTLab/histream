@@ -18,29 +18,34 @@ using namespace std;
 
 int main(int argc, char **argv) {
     const InputParser parser(argc, argv);
-    const string path = parser.getString("-w", "");
-    const string version = parser.getString("-v", "");
+    const string path = parser.getString("-w", "");     //// 路径，单独运行时的文件夹
+    const string version = parser.getString("-v", "");  ////
+    const string xmlPath = parser.getString("-f", "");  //// 批量模式Batch mode,给定xml的路径
+    std::string filePath;
 
-     // std::string path = "D:/pxy/";
-     // path = "D:\\pxy\\project4";
-     // std::string version = "eRaytracing";
 
-    // std::string path = "D:/data/field_app/voxelRT";
-    // std::string version = "eVoxelRT";
-
-    // std::string path = "D:/data/field_app/voxelEB_release";
+    // std::string xmlPath = "D:/data/hiStream/night_correction/Input.xml";
     // std::string version = "eVoxelEB";
+    // std::string path;
+    // std::string filePath;
 
-     // std::string path = "D:/data/hiStream/LST";
-     // std::string version = "eVoxelEB";
-//
-    if (version.empty() || path.empty()) {
-        cout << "Wrong Input" << endl;
+
+    if (version.empty())
+    {
+        cout << "Wrong version input" << endl;
         return true;
+    }
+    if (!xmlPath.empty())
+    {
+        filePath = xmlPath;
+    }
+    if (!path.empty())
+    {
+        filePath = path + "//Input.xml";
     }
 
     Engine engine;
-    engine.input(path, version);
+    engine.input(filePath, version);
     engine.create();
     engine.run();
     engine.destroy();
