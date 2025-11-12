@@ -20,24 +20,17 @@ int main(int argc, char **argv) {
     const InputParser parser(argc, argv);
     const string path = parser.getString("-w", "");     //// 路径，单独运行时的文件夹
     const string version = parser.getString("-v", "");  ////
-    const string xmlPath = parser.getString("-f", "");  //// 批量模式Batch mode,给定xml的路径
     std::string filePath;
 
 
-    // std::string xmlPath = "D:/data/hiStream/night_correction/Input.xml";
     // std::string version = "eVoxelEB";
-    // std::string path;
+    // std::string path= "D:\\data\\hiStream\\night_correction";
     // std::string filePath;
-
 
     if (version.empty())
     {
         cout << "Wrong version input" << endl;
         return true;
-    }
-    if (!xmlPath.empty())
-    {
-        filePath = xmlPath;
     }
     if (!path.empty())
     {

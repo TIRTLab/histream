@@ -153,45 +153,61 @@ bool Voxeleb::run(std::shared_ptr<VoxelebIO> &modelio, std::shared_ptr<FileIO> &
 
 
 // for(int knode = 72; knode < 75;knode = knode + 1) {
-
-//modelio->startTimeNode = 63;
-//modelio->endTimeNode = 74;
-for(int knode = modelio->startTimeNode; knode < modelio->endTimeNode;knode = knode +1) {
-// for(int knode = 0; knode < 144;knode = knode + 1) {
-    modelio->k_node = knode;
-
-    updateMeteo(modelio,knode);
-
-    m_pCommand->runEB(modelio);
-
-    std::cout << "Time Info:" << "    t_" << std::to_string(modelio->meteo.t) << std::endl;
-    outputVoxel(modelio,fileio);
-//
-//    if (knode == 73)
-    // if (1)
-    {
-    for (int kangle = 0; kangle < modelio->n_angle; kangle++) {
-        modelio->k_angle = kangle;
-        m_pGeometry->updateAngle(modelio,kangle);
-
-        Angle angle = modelio->angles[kangle];
-
-        ////updateSetting(modelio);
-        m_pCommand->runRT(modelio);
-
-//        std::cout << "Success: " << kangle << std::endl;
+    /// 清除txt文件信息
+    // 以写入模式打开文件（std::ios::trunc 会清空文件）
+    std::ofstream file(modelio->projectDir + "\\result_statistics.txt", std::ios::trunc);
+    // 检查是否成功打开
+    if (!file.is_open()) {
+        std::cerr << "Error: Could not clear file " << modelio->projectDir + "\\result_statistics.txt" << std::endl;
+    }
+    file << "t SZA SAA VZA VAA wavelength Radiance\n";
+    // 文件内容已被清空，无需额外操作
+    file.close(); // 显式关闭（可选）
 
 
-            std::cout << "Angle Info:"
-                  << "    vza_" << std::to_string(angle.vza) << "    vaa_" << std::to_string(angle.vaa)
-                  << "    sza_" << std::to_string(angle.sza) << "    saa_" << std::to_string(angle.saa) << std::endl;
-            output(modelio,fileio,knode, kangle);
+    //modelio->startTimeNode = 63;
+    //modelio->endTimeNode = 74;
+    for(int knode = modelio->startTimeNode; knode < modelio->endTimeNode;knode = knode +1) {
+    // for(int knode = 0; knode < 144;knode = knode + 1) {
+        modelio->k_node = knode;
+
+        updateMeteo(modelio,knode);
+
+        m_pCommand->runEB(modelio);
+
+        std::cout << "Time Info:" << "    t_" << std::to_string(modelio->meteo.t) << std::endl;
+        outputVoxel(modelio,fileio);
+    //
+    //    if (knode == 73)
+        // if (1)
+        {
+        for (int kangle = 0; kangle < modelio->n_angle; kangle++) {
+            modelio->k_angle = kangle;
+            m_pGeometry->updateAngle(modelio,kangle);
+
+            Angle angle = modelio->angles[kangle];
+
+            ////updateSetting(modelio);
+            m_pCommand->runRT(modelio);
+
+    //        std::cout << "Success: " << kangle << std::endl;
+
+
+                std::cout << "Angle Info:"
+                      << "    vza_" << std::to_string(angle.vza) << "    vaa_" << std::to_string(angle.vaa)
+                      << "    sza_" << std::to_string(angle.sza) << "    saa_" << std::to_string(angle.saa) << std::endl;
+
+                if (modelio->isImage)
+                {
+                    output(modelio,fileio,knode, kangle);
+                }
+
+                outputTxt(modelio, fileio, kangle);
+            }
+            // output(modelio,fileio,knode, kangle);
         }
-        // output(modelio,fileio,knode, kangle);
 
     }
-
-}
     return true;
 }
 
@@ -289,6 +305,103 @@ void Voxeleb::output(std::shared_ptr<VoxelebIO> &modelio, std::shared_ptr<FileIO
 
 
     //m_pFileOutput->writeTif(, pData, angles, waves, resolution);
+}
+
+void Voxeleb::outputTxt(std::shared_ptr<VoxelebIO>& modelio, std::shared_ptr<FileIO>& fileio, int kangle)
+{
+    VkBufferUsageFlags usage{VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT};
+    int width = modelio->imageSize.x;
+    int height = modelio->imageSize.y;
+    int n_wave = modelio->n_wave;
+    VkDeviceSize bufferSize = width * height *n_wave* sizeof(float);
+    nvvk::Buffer pixelBuffer = modelio->m_pAlloc->createBuffer(bufferSize, usage,
+                                                               VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
+
+    m_pVirtual->bufferToBuffer(modelio, *(modelio->m_virtualio->m_pBufferStorage), bufferSize, pixelBuffer);
+
+    // write the buffer to disk
+    void *data = modelio->m_pAlloc->map(pixelBuffer);
+    float *pData = reinterpret_cast<float *>(data);
+
+
+
+    Angle angle = modelio->angles[kangle];
+    std::vector<float> waves = modelio->waves;
+    glm::vec2 resolution = modelio->imageSize;
+
+    Eigen::VectorXd cx;
+    Eigen::VectorXd cy;
+    m_pGeometry->orthcorrect(modelio,angle.vza,angle.vaa,cy,cx);
+
+
+    float *pData_orth = new float[width*height*n_wave];
+    std::memset(pData_orth,0,width*height*n_wave*sizeof(float));
+    for(int i=0;i<width;i++)
+    {
+        for(int j=0;j<height;j++)
+        {
+            int old = j*width+i;
+            int ii,jj;
+            ii = int(i*cx[0]+j*cx[1]+i*j*cx[2]+cx[3]);
+            jj = int(i*cy[0]+j*cy[1]+i*j*cy[2]+cy[3]);
+            int orth = ii*height + jj;
+
+            if (orth <0) continue;
+            if(orth > height*width) continue;
+            for(int k=0;k<n_wave;k++)
+            {
+                int oldd = k*width*height + old;
+
+                int orthh =  k*width*height + orth;
+                if (pData[orthh]==0) continue;
+                pData_orth[oldd] = pData[orthh];
+            }
+        }
+    }
+
+    float t = modelio->meteo.t;
+
+    fileio->outImage.clear();
+    // float *walker = pData_orth;
+    for (int kband = 0; kband < n_wave; kband++) {
+        std::vector<float> outImage1;
+        outImage1.assign(pData_orth, pData_orth + width * height);
+        pData_orth += width * height;
+        fileio->outImage.push_back(outImage1);
+
+        float sum = 0.0f;
+        int count = 0;
+        for (int i = 0; i < width * height; i++) {
+            if (outImage1[i] > 0.0f) {
+                sum += outImage1[i];
+                count++;
+            }
+        }
+        float mean = sum / count;
+
+        fileio->outImageMeanValue.push_back(mean);
+    }
+
+    modelio->m_pAlloc->unmap(pixelBuffer);
+    modelio->m_pAlloc->destroy(pixelBuffer);
+
+    // 1. 打开文件（追加模式：std::ios::app）
+    std::ofstream outfile(modelio->projectDir + "\\result_statistics.txt", std::ios::app);  // 如果文件不存在会自动创建
+
+    // 2. 检查文件是否成功打开
+    if (!outfile.is_open()) {
+        std::cerr << "Error: Could not open file " << modelio->projectDir + "\\result_statistics.txt" << std::endl;
+        return;
+    }
+
+    // 3. 写入数据（每行一个数）
+    for (int num=0; num < n_wave; num++) {
+        outfile << t << " " << angle.sza << " " << angle.saa << " " <<  angle.vza << " " << angle.vaa << " " << waves[num] << " " << fileio->outImageMeanValue[fileio->outImageMeanValue.size() - n_wave + num] << "\n";  // 换行分隔
+    }
+
+    // 4. 关闭文件（析构函数会自动调用，但显式关闭更安全）
+    outfile.close();
+
 }
 
 void Voxeleb::outputVoxel(std::shared_ptr<VoxelebIO> &modelio, std::shared_ptr<FileIO> &fileio) {

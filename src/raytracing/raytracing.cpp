@@ -357,7 +357,7 @@ void Raytracing::outputAlbedo(std::shared_ptr<RaytracingIO>& modelio, std::share
 
     // 3. 写入数据（每行一个数）
     for (int num=0; num < n_wave; num++) {
-        outfile << waves[num] << " " << angle.sza << " " << angle.saa << " " <<  angle.vza << " " << angle.vaa << " " << fileio->outImageMeanValue[fileio->outImageMeanValue.size() - 3 + num] << "\n";  // 换行分隔
+        outfile << waves[num] << " " << angle.sza << " " << angle.saa << " " <<  angle.vza << " " << angle.vaa << " " << fileio->outImageMeanValue[fileio->outImageMeanValue.size() - n_wave + num] << "\n";  // 换行分隔
     }
 
     // 4. 关闭文件（析构函数会自动调用，但显式关闭更安全）
