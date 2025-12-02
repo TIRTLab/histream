@@ -156,7 +156,8 @@ bool Raytracing::run(std::shared_ptr<RaytracingIO> &raytracingio, std::shared_pt
         if (raytracingio->isImage)
         {
             // output
-            output(raytracingio,fileio,kangle);
+            // output(raytracingio,fileio,kangle);
+            outputOrth(raytracingio,fileio,kangle);
         }
 
         if (raytracingio->isOrth)
@@ -260,7 +261,7 @@ void Raytracing::outputOrth(std::shared_ptr<RaytracingIO> &modelio, std::shared_
         fileio->writeENVIdata(modelio->projectDir, pData_orth, width, height, n_wave, angle,-1,-1);
     }
 
-    delete [] pData;
+    // delete [] pData;
     delete [] pData_orth;
 
 }
