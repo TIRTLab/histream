@@ -37,7 +37,7 @@ public:
 	void createBackground(glm::vec3);
 	void creatBackgroundFromDEM(const std::string& filename, nvmath::vec3f sceneSize);
 
-    float getElevation(float locX, float locY);
+    float getHeightAt(float locX, float locY);
 	void interpolateZValues(nvmath::vec3f sceneSize,  // 场景范围 (x_size, y_size, z_size)
 		float* tempx, float* tempy, float* tempz,  // 输入坐标序列
 		int num_points  // 坐标数量
@@ -68,5 +68,8 @@ private:
     cv::Mat originDEM;
 	cv::Mat m_heightmap; // 存储 resize 后的高程数据
 
+	nvmath::vec3f m_worldOrigin; // 地形左上角的世界坐标
+	nvmath::vec3f m_worldSize;     // 地形的世界尺寸
 
+	nvmath::vec3f m_sceneSizeCache; // 缓存场景大小，用于坐标逆映射
 };

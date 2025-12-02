@@ -34,6 +34,8 @@ bool Scene::createObjScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<Rayt
     //-------------------------
     if(scenexml.background.isDEM) {
         loader.creatBackgroundFromDEM(scenexml.background.DEMFile, scenexml.background.sceneSize);
+        std::string objDir = fileio->m_pRaytracingXml->projectDir + "/dem.obj";
+        outputObjMesh(loader.m_objmesh, objDir);
         isInterp = true;
 //        return false;
     }else{

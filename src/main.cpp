@@ -23,8 +23,8 @@ int main(int argc, char **argv) {
     std::string filePath;
 
 
-    // std::string version = "eVoxelEB";
-    // std::string path= "D:\\data\\hiStream\\night_correction";
+    // std::string version = "eRaytracing";
+    // std::string path= "D://data//hyperSpectral//test_1202";
     // std::string filePath;
 
     if (version.empty())
