@@ -1403,6 +1403,14 @@ void FileIO::writeENVIdata(std::string projectDir, float *pData, int width, int 
         hdrName = projectDir +"/VZA=" + oss_x.str() + "_VAA=" + oss_y.str() +
                   "_SZA=" + oss_z.str() + "_SAA=" + oss_w.str() + ".hdr";
     }
+
+    int totalPixels = width * height * band;
+    // 对每个像素进行处理
+    for (int i = 0; i < totalPixels; i++) {
+        // 示例1: 乘以一个系数
+        pData[i] = pData[i] * 3.1415926 / std::cos(angle.sza * 3.1415926 / 180);
+    }
+
     std::ofstream outfilet1(tifName.c_str(), std::ios::binary);
     outfilet1.write(reinterpret_cast<const char*>(pData), sizeof(float) * width * height * band);
     outfilet1.close();
