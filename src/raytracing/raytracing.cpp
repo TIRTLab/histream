@@ -156,8 +156,8 @@ bool Raytracing::run(std::shared_ptr<RaytracingIO> &raytracingio, std::shared_pt
         if (raytracingio->isImage)
         {
             // output
-            // output(raytracingio,fileio,kangle);
-            outputOrth(raytracingio,fileio,kangle);
+            output(raytracingio,fileio,kangle);
+            // outputOrth(raytracingio,fileio,kangle);
         }
 
         if (raytracingio->isOrth)
@@ -296,85 +296,6 @@ VkBufferUsageFlags usage{VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TR
     // 释放内存
     delete[] pCpuData;    // 记得释放拷贝的源数据
     delete[] pData_orth;  // 释放结果数据
-//     VkBufferUsageFlags usage{VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT};
-//     int width = modelio->imageSize.x;
-//     int height = modelio->imageSize.y;
-//     int n_wave = modelio->n_wave;
-//     VkDeviceSize bufferSize = width * height * n_wave * sizeof(float);
-//     nvvk::Buffer pixelBuffer = modelio->m_pAlloc->createBuffer(bufferSize, usage,
-//                                                                VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
-//
-//     m_pVirtual->bufferToBuffer(modelio, *(modelio->m_virtualio->m_pBufferStorage), bufferSize, pixelBuffer);
-//
-//     // write the buffer to disk
-//     void *data = modelio->m_pAlloc->map(pixelBuffer);
-//     float *pData = reinterpret_cast<float *>(data);
-//
-//
-//     fileio->outImage.clear();
-//     float *walker = pData;
-//     for (int kband = 0; kband < n_wave; kband++) {
-//         std::vector<float> outImage1;
-//         outImage1.assign(walker, walker + width * height);
-//         walker += width * height;
-//         fileio->outImage.push_back(outImage1);
-//     }
-//
-// //     float test0 = pData[0];
-// //    float test5 = pData[5];
-// //    float test6 = pData[6];
-//
-//
-//     modelio->m_pAlloc->unmap(pixelBuffer);
-//     modelio->m_pAlloc->destroy(pixelBuffer);
-//
-//     Angle angle = modelio->angles[kangle];
-//     std::vector<float> waves = modelio->waves;
-//     glm::vec2 resolution = modelio->imageSize;
-//
-//     // fileio->writeENVIdata(modelio->projectDir, pData, width, height, n_wave, angle,-1,-1);
-//
-//
-//     Eigen::VectorXd cx;
-//     Eigen::VectorXd cy;
-//     m_pGeometry->orthcorrect(modelio,angle.vza,angle.vaa,cy,cx);
-//
-//
-//     float *pData_orth = new float[width*height*n_wave];
-//     std::memset(pData_orth,0,width*height*n_wave*sizeof(float));
-//     for(int i=0;i<width;i++)
-//     {
-//         for(int j=0;j<height;j++)
-//         {
-//             int old = j*width+i;
-//             int ii,jj;
-//             ii = int(i*cx[0]+j*cx[1]+i*j*cx[2]+cx[3]);
-//             jj = int(i*cy[0]+j*cy[1]+i*j*cy[2]+cy[3]);
-//             int orth = ii*height + jj;
-//
-//             if (orth <0) continue;
-//             if(orth > height*width) continue;
-//             for(int k=0;k<n_wave;k++)
-//             {
-//                 int oldd = k*width*height + old;
-//
-//                int orthh =  k*width*height + orth;
-//                 if (pData[orthh]==0) continue;
-//                 pData_orth[oldd] = pData[orthh];
-//             }
-//         }
-//     }
-//
-//
-//     if(modelio->istime==false) {
-//         fileio->writeENVIdata(modelio->projectDir, pData_orth, width, height, n_wave, angle,-1,-1);
-//     }else{
-//         fileio->writeENVIdata(modelio->projectDir, pData_orth, width, height, n_wave, angle,-1,-1);
-//     }
-//
-//     // delete [] pData;
-//     delete [] pData_orth;
-
 }
 
 void Raytracing::output(std::shared_ptr<RaytracingIO>& modelio, std::shared_ptr<FileIO>& fileio, int kangle)
@@ -383,19 +304,38 @@ void Raytracing::output(std::shared_ptr<RaytracingIO>& modelio, std::shared_ptr<
     int width = modelio->imageSize.x;
     int height = modelio->imageSize.y;
     int n_wave = modelio->n_wave;
-    VkDeviceSize bufferSize = width * height * n_wave * sizeof(float);
+
+    // 【修正1】使用 size_t 防止整数溢出 (3000*3000*100 超过 int 上限)
+    size_t total_elements = (size_t)width * height * n_wave;
+    VkDeviceSize bufferSize = total_elements * sizeof(float);
+
     nvvk::Buffer pixelBuffer = modelio->m_pAlloc->createBuffer(bufferSize, usage,
                                                                VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
 
     m_pVirtual->bufferToBuffer(modelio, *(modelio->m_virtualio->m_pBufferStorage), bufferSize, pixelBuffer);
 
-    // write the buffer to disk
+    // map memory
     void *data = modelio->m_pAlloc->map(pixelBuffer);
-    float *pData = reinterpret_cast<float *>(data);
 
+    // 【修正2】创建 CPU 端内存副本 (Deep Copy)
+    // 这是解决 0xc0000005 崩溃的核心：将显存数据拷贝到 CPU，使其脱离 Vulkan 生命周期
+    float* pCpuData = new float[total_elements];
+    if (pCpuData) {
+        // 使用 memcpy 高速拷贝
+        std::memcpy(pCpuData, data, bufferSize);
+    } else {
+        // 内存分配失败处理 (通常是因为没有编译为 x64)
+        std::cerr << "Error: Failed to allocate CPU memory. Make sure to compile in x64 mode!" << std::endl;
+        modelio->m_pAlloc->unmap(pixelBuffer);
+        modelio->m_pAlloc->destroy(pixelBuffer);
+        return; // 或者适当的错误处理
+    }
 
+    // --- 此时数据已安全在 pCpuData 中，不再依赖 pData/data 指针 ---
+
+    // 填充 outImage (使用 pCpuData)
     fileio->outImage.clear();
-    float *walker = pData;
+    float *walker = pCpuData;
     for (int kband = 0; kband < n_wave; kband++) {
         std::vector<float> outImage1;
         outImage1.assign(walker, walker + width * height);
@@ -403,6 +343,7 @@ void Raytracing::output(std::shared_ptr<RaytracingIO>& modelio, std::shared_ptr<
         fileio->outImage.push_back(outImage1);
     }
 
+    // 【修正3】现在可以安全销毁 Vulkan 资源了
     modelio->m_pAlloc->unmap(pixelBuffer);
     modelio->m_pAlloc->destroy(pixelBuffer);
 
@@ -410,9 +351,10 @@ void Raytracing::output(std::shared_ptr<RaytracingIO>& modelio, std::shared_ptr<
     std::vector<float> waves = modelio->waves;
     glm::vec2 resolution = modelio->imageSize;
 
-    fileio->writeENVIdata(modelio->projectDir, pData, width, height, n_wave, angle,-1,-1);
+    fileio->writeENVIdata(modelio->projectDir, pCpuData, width, height, n_wave, angle,-1,-1);
 
-    // delete [] pData;
+    // 释放内存
+    delete[] pCpuData;    // 记得释放拷贝的源数据
 }
 
 void Raytracing::outputAlbedo(std::shared_ptr<RaytracingIO>& modelio, std::shared_ptr<FileIO>& fileio, int kangle)
