@@ -50,6 +50,14 @@ public:
     void orthcorrect(std::shared_ptr<VoxelrtIO> &modelio,float vza, float vaa,
                      Eigen::VectorXd & cx, Eigen::VectorXd & cy);
 
+    bool createGeometry(std::shared_ptr<FileIO> &fileio);
+    SensorMatrix        sensor;
+    LightSet            light;
+    glm::ivec2          imageSize;
+    std::vector<Angle>  angles;
+    std::vector<float>  waves;
+
+
 
 };
 

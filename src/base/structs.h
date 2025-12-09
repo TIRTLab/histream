@@ -85,6 +85,7 @@ enum Mode {
     eRaytracing,
     eVoxelEB,
     eVoxelRT,
+    eVoxelization,
 };
 
 enum RaytracingStageIndices
@@ -479,6 +480,22 @@ struct RaytracingXml
 
 };
 
+struct VoxelizationXml
+{
+    std::string projectDir;
+    std::string definedDir;
+    // system setting
+    SettingXml settingxml;
+    // run setting
+    LightXml lightxml;  // for solar angle
+    SensorXml sensorxml; // for viewing angle
+
+    SceneXml scenexml;
+    // component materials
+    std::vector<SpectralXml> spectralxmls;
+    std::vector<ThermalXml> thermalxmls;
+};
+
 struct PropertyXml{
     std::string name;
     Type type;
@@ -562,6 +579,12 @@ struct  VoxelRTXml
     AtomCondXml atomcondxml;
 
 
+};
+
+struct OutputSeting{
+    bool isImage;
+    bool isAlbedo;
+    bool isOrth;
 };
 
 

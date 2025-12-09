@@ -15,8 +15,7 @@ message(STATUS "Processing Project ${PROJNAME}:")
 #--------------------------------------------------------------------------------------------------
 # C++ target and defines
 set(CMAKE_CXX_STANDARD 17)
-add_executable(hiStream
-        src/voxeleb/voxeleb.cpp)
+add_executable(hiStream)
 
 
 
@@ -97,6 +96,7 @@ file(GLOB SOURCE_FILES
         src/raytracing/*.cpp
         src/voxeleb/*.cpp
         src/voxelrt/*.cpp
+        src/cases/Voxelization/*.cpp
 )
 
 file(GLOB HEADER_FILES
@@ -106,6 +106,7 @@ file(GLOB HEADER_FILES
         src/raytracing/*.h
         src/voxeleb/*.h
         src/voxelrt/*.h
+        src/cases/Voxelization/*.h
 )
 
 #--------------------------------------------------------------------------------------------------

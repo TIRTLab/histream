@@ -914,4 +914,47 @@ void Geometry::orthcorrect(std::shared_ptr<VoxelrtIO> &modelio,float vza, float 
     int aa = 0;
 }
 
+bool Geometry::createGeometry(std::shared_ptr<FileIO> &fileio) {
+    //--------------------------------------------------------
+    //--- Resolution
+    //-------------------------------------------------------
+    imageSize = fileio->sensorxml.resolution;
+    CameraManip.setWindowSize(imageSize.x, imageSize.y );
+    //---------------------------------------------------------
+    // Angles
+    //---------------------------------------------------------
+    float vza, vaa, sza, saa;
+    LightXml lightxml = fileio->lightxml;
+    SensorXml sensorxml = fileio->sensorxml;
+
+    sza = lightxml.solarAngle[0];
+    saa = lightxml.solarAngle[1];
+    for (int i = 0; i < sensorxml.viewAngles.size(); i++)
+    {
+        vza = sensorxml.viewAngles[i][0];
+        vaa = sensorxml.viewAngles[i][1];
+        angles.emplace_back(Angle{vza, vaa, sza, saa});
+    }
+
+    //---------------------------------------------------------
+    // Bands
+    //---------------------------------------------------------
+    waves = fileio->m_pRaytracingXml->sensorxml.waves;
+
+    //---------------------------------------------------------
+    // LIGHT AND SENSOR INI with Angle 0 and Band 0
+    //---------------------------------------------------------
+    vza = angles[0].vza;
+    vaa = angles[0].vaa;
+    sza = angles[0].sza;
+    saa = angles[0].saa;
+    sensor = createSensor(voxelSize,voxelOrigin, vza, vaa, 1.0);
+
+    light = createLight(sza, saa, fileio->lightxml.direct, fileio->lightxml.diffuse,
+                                 fileio->lightxml.solarTemperature,
+                                 fileio->lightxml.skyTemperature);
+
+    return false;
+}
+
 

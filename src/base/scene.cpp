@@ -1699,4 +1699,189 @@ void Scene::outputObjMesh(ObjMesh model, std::string &fileName) {
 
 }
 
+bool Scene::createObjScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<Compo> &compo) {
+    bool isInterp = false;
+    auto & scenexml = fileio->scenexml;
+
+    float x = scenexml.background.sceneSize.x; // lenght
+    float y = scenexml.background.sceneSize.y; // width
+    float z = scenexml.background.sceneSize.z; // height
+    sceneSize = glm::vec3(x,y,z);
+    sceneOrigin = scenexml.background.sceneOrigin;
+    voxelSize = glm::vec3(x,z,y);
+    voxelOrigin =  glm::vec3(0,0,0);
+
+    ObjLoader loader;
+    //-------------------------
+    //-- Background Mesh
+    //-------------------------
+    if(scenexml.background.isDEM) {
+        loader.creatBackgroundFromDEM(scenexml.background.DEMFile, scenexml.background.sceneSize);
+        std::string objDir = fileio->projectDir + "/dem.obj";
+        outputObjMesh(loader.m_objmesh, objDir);
+        isInterp = true;
+    }else{
+        loader.createBackground(scenexml.background.sceneSize);
+    }
+
+    n_modelmesh = 0;
+    loader.m_objmesh.meshId = n_modelmesh;
+    objMeshes.emplace_back(loader.m_objmesh);
+
+    //-------------------------
+    //-- Background MeshLink
+    //-------------------------
+    MeshLink bgMeshLink{};
+    bgMeshLink.type = int(Type::SOIL);
+    std::string bgSpectralName = scenexml.background.bgSpectralName;
+    bgMeshLink.spectralId =  compo->spectralNames.find(bgSpectralName)->second;
+    std::string bgThermalName;
+    int bgThermalIndex = 0;
+    if (fileio->sensorxml.isTemperature)
+    {
+        bgThermalName =  scenexml.background.bgThermalName;
+        bgThermalIndex = compo->thermalNames.find(bgThermalName)->second;
+    }
+    bgMeshLink.thermalId = bgThermalIndex;
+    meshLinks.emplace_back(bgMeshLink);
+
+    //-------------------------
+    //-- Background Instance
+    //-------------------------
+    Instance bgInstance{};
+    bgInstance.meshId = static_cast<uint32_t>(n_modelmesh);
+    n_modelmesh++;
+    glm::mat4 bgunit = glm::mat4(1.0f);
+    glm::vec3 bgShift = glm::vec3{0, 0, 0};
+    glm::vec3 bgScale = glm::vec3{1.0, 1.0, 1.0};
+    glm::mat4 bgMat = glm::scale(bgunit, bgScale) * glm::translate(bgunit,bgShift);
+    bgInstance.object2worldMatrix = bgMat;
+    bgInstance.world2objectMatrix = glm::transpose(glm::inverse(bgMat));
+    instances.emplace_back(bgInstance);
+
+    //-------------------------
+    //-- Background InstanceLink
+    //-------------------------
+    InstanceLink bgInstanceLink{};
+    bgInstanceLink.meshId = bgInstance.meshId;
+    instanceLinks.emplace_back(bgInstanceLink);
+
+    /// ------------------------------------
+    /// Scene
+    ///-------------------------------------
+    //-------------------------
+    //-- Obj Models
+    //-------------------------
+    int n_obj = scenexml.objEntities.size();
+    for (int kobj = 0; kobj < n_obj; kobj++)
+    {
+        auto &objEntity = scenexml.objEntities[kobj];
+        if(objEntity.isFromFile){
+            int n_dis = 0;
+            float *tempx, *tempy,*tempz;
+            tempx = Utils::readascfile(objEntity.file,0,0,n_dis);
+            tempy = Utils::readascfile(objEntity.file,0,1,n_dis);
+            tempz = Utils::readascfile(objEntity.file,0,2,n_dis);
+
+            if (isInterp)
+            {
+                loader.interpolateZValues(scenexml.background.sceneSize,
+                                          tempx, tempy, tempz, n_dis);
+            }
+
+            float *tempScale, *tempRotation;
+            tempScale = Utils::readascfileWithDefault(objEntity.file,0,3,n_dis, 1.0);
+            tempRotation = Utils::readascfileWithDefault(objEntity.file,0,4,n_dis, 0.0);
+
+            objEntity.objDistributions.resize(n_dis);
+            objEntity.scales.resize(n_dis);
+            objEntity.rotations.resize(n_dis);
+            for(int kin = 0;kin<n_dis;kin++)
+            {
+                objEntity.objDistributions[kin]=(glm::vec3(tempx[kin],tempy[kin],tempz[kin]));
+                // objEntity.scales[kin] = 1.0;
+                // objEntity.rotations[kin] = 0.0;
+                objEntity.scales[kin] = tempScale[kin];
+                objEntity.rotations[kin] = tempRotation[kin];
+            }
+        }
+
+        std::string fileName = objEntity.filePath;
+        std::string objName = objEntity.objName;
+        int n_mesh = objEntity.meshNames.size();
+        for (int kmesh = 0; kmesh < n_mesh; kmesh++)
+        {
+            /// ------------------------------------
+            /// model/mesh
+            ///-------------------------------------
+            std::string meshName = objEntity.meshNames[kmesh];
+            std::string spectralName = objEntity.spectralNames[kmesh];
+            std::string thermalName;
+
+            ObjLoader loader1;
+            loader1.loadMesh(fileName, meshName);
+            loader1.m_objmesh.meshId = n_modelmesh;
+            objMeshes.emplace_back(loader1.m_objmesh);
+
+            /// ------------------------------------
+            /// Mesh Link
+            ///-------------------------------------
+
+            int spectralIndex = compo->spectralNames.find(spectralName)->second;
+            int thermalIndex = 0;
+            if (fileio->m_pRaytracingXml->sensorxml.isTemperature)
+            {
+                thermalName = objEntity.thermalNames[kmesh];
+                thermalIndex = compo->thermalNames.find(thermalName)->second;
+            }
+            MeshLink meshLink{};
+            meshLink.type = int(objEntity.types[kmesh]);
+            meshLink.spectralId = spectralIndex;
+            meshLink.thermalId = thermalIndex;
+            meshLinks.emplace_back(meshLink);
+
+            int n_instancet = objEntity.objDistributions.size();
+            for (int kinstance = 0; kinstance < n_instancet; kinstance++)
+            {
+                /// ------------------------------------
+                /// Instance
+                ///-------------------------------------
+                Instance instance{};
+                instance.meshId = static_cast<uint32_t>(n_modelmesh);
+                glm::vec3 shift0 = objEntity.objDistributions[kinstance];
+                float scale0 = objEntity.scales[kinstance];
+                float angle0 = objEntity.rotations[kinstance];
+
+                glm::vec3 shift;
+                if (isInterp)
+                {
+                    shift = nvmath::vec3f{shift0.x - x / 2.0, shift0.z - loader.centerElevation, shift0.y - y / 2.0};
+                }
+                else
+                {
+                    shift = glm::vec3{shift0.x - x / 2.0, shift0.z, shift0.y - y / 2.0};
+                }
+
+                glm::mat4 unit = glm::mat4(1.0f);
+                glm::vec3 scale = glm::vec3(scale0);
+                glm::mat4 rotation = glm::rotate(unit, glm::radians(angle0), glm::vec3(0.0, 1.0, 0.0));
+                glm::mat4 mat = glm::translate(unit, shift) * rotation * glm::scale(unit, scale);
+                instance.object2worldMatrix = mat;
+                instance.world2objectMatrix = glm::transpose(glm::inverse(mat));
+                instances.emplace_back(instance);
+
+                /// ------------------------------------
+                /// InstanceLink
+                ///-------------------------------------
+                InstanceLink instanceLink{};
+                instanceLink.meshId = instance.meshId;
+                instanceLinks.emplace_back(instanceLink);
+            }
+            n_modelmesh++;
+        }
+        int a = 10;
+    }
+    return false;
+}
+
 

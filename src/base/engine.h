@@ -13,6 +13,9 @@
 #include "src/base/appsetting.h"
 #include "src/base/fileio.h"
 
+#include "src/cases/Voxelization/voxelization.h"
+#include "src/cases/Voxelization/voxelizationio.h"
+
 
 
 
@@ -35,6 +38,9 @@ public:
     std::shared_ptr<VoxelebIO>  m_pVoxelebio;
     std::shared_ptr<Voxelrt>    m_pVoxelrt;
     std::shared_ptr<VoxelrtIO>  m_pVoxelrtio;
+
+    std::shared_ptr<Voxelization> m_pVoxelization;
+    std::shared_ptr<VoxelizationIO> m_pVoxelizationio;
 
 };
 

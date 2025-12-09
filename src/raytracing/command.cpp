@@ -3,12 +3,14 @@
 //
 
 #include "command.h"
+#include "cases/Voxelization/command.h"
 
 
 Command::Command()
 {
 
 }
+
 
 
 bool Command::create(std::shared_ptr<RaytracingIO> &raytracingio){

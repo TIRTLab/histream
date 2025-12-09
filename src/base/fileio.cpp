@@ -38,7 +38,8 @@ bool FileIO::readXml(std::string Path, Mode mode) {
         m_pRaytracingXml->spectralxmls = readSpectralXML(RootElement->FirstChild("Attribute"), m_mode);
         m_pRaytracingXml->thermalxmls = readThermalXML(RootElement->FirstChild("Attribute"), m_mode);
         m_pRaytracingXml->scenexml = readSceneXML(RootElement->FirstChild("Scene"), m_mode);
-    }else if(m_mode == Mode::eVoxelEB){
+    }
+    else if(m_mode == Mode::eVoxelEB){
 
         m_mode = Mode::eVoxelEB;
         m_pVoxelebXml = std::make_shared<VoxelEBXml>();
@@ -56,7 +57,6 @@ bool FileIO::readXml(std::string Path, Mode mode) {
         m_pVoxelebXml->meteoxml = readMeteoXML(RootElement->FirstChild("Meteorology"), m_mode);
         m_pVoxelebXml->aerocondxml= readAeroXML(RootElement->FirstChild("Attribute"), m_mode);
     }
-
     else if(m_mode == Mode::eVoxelRT){
         m_mode = Mode::eVoxelRT;
         m_pVoxelrtXml = std::make_shared<VoxelRTXml>();
@@ -70,6 +70,16 @@ bool FileIO::readXml(std::string Path, Mode mode) {
         m_pVoxelrtXml->propxmls = readPropertyXML(RootElement->FirstChild("Attribute"), m_mode);
         m_pVoxelrtXml->thermalxmls = readThermalXML(RootElement->FirstChild("Attribute"), m_mode);
     }
+    else if (m_mode == Mode::eVoxelization){
+        m_mode = Mode::eVoxelization;
+        settingxml = readSettingXML(RootElement->FirstChild("Control"), m_mode);
+        lightxml = readLightXML(RootElement->FirstChild("Geometry"), m_mode);
+        sensorxml = readSensorXML(RootElement->FirstChild("Geometry"), m_mode);
+        spectralxmls = readSpectralXML(RootElement->FirstChild("Attribute"), m_mode);
+        thermalxmls = readThermalXML(RootElement->FirstChild("Attribute"), m_mode);
+        scenexml = readSceneXML(RootElement->FirstChild("Scene"), m_mode);
+    }
+
     return true;
 
 }

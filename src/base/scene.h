@@ -16,6 +16,7 @@
 #include "src/thirdparty/nanoutil/GridBuilder.h"
 #include "src/thirdparty/nanoutil/Primitives.h"
 #include "src/base/voxeldesigner.h"
+#include "src/base/compo.h"
 
 
 
@@ -40,13 +41,25 @@ public:
     bool createPrimObj_Building(PrimEntity & pe,nanovdb::GridBuilder<int32_t> &nanoBuilder,std::shared_ptr<VoxelrtIO> &modelio);
     bool createPrimObj_Background(Background & background,nanovdb::GridBuilder<int32_t> &nanoBuilder, std::shared_ptr<VoxelrtIO> &modelio);
 
+    bool createObjScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<Compo> &compo);
+
 
     void outputObjMesh(ObjMesh model, std::string &fileName);
 
 
     PrimMesh XYZ2XZY(PrimMesh model,int mark=0);
-   ObjMesh XYZ2XZY(ObjMesh model);
+    ObjMesh XYZ2XZY(ObjMesh model);
 
+
+    glm::vec3 sceneSize;
+    glm::vec3 sceneOrigin;
+    glm::vec3 voxelSize;
+    glm::vec3 voxelOrigin;
+    int n_modelmesh {0};
+    std::vector<ObjMesh>      objMeshes;
+    std::vector<MeshLink>     meshLinks;
+    std::vector<Instance>     instances;
+    std::vector<InstanceLink> instanceLinks;
 };
 
 

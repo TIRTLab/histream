@@ -20,6 +20,10 @@ void Engine::init(Mode mode)
         m_pVoxelrt = std::make_shared<Voxelrt>();
         m_pVoxelrtio = std::make_shared<VoxelrtIO>();
     }
+    else if (mode == Mode::eVoxelization){
+        m_pVoxelization = std::make_shared<Voxelization>();
+        m_pVoxelizationio = std::make_shared<VoxelizationIO>();
+    }
 }
 
 
@@ -35,6 +39,10 @@ void Engine::input(std::string path, std::string V){
     }
     else if(V == "eVoxelRT"){
         m_mode = Mode::eVoxelRT;
+    }
+    else if (V == "eVoxelization")
+    {
+        m_mode = Mode::eVoxelization;
     }
 
     m_pFileio = std::make_shared<FileIO>();
@@ -61,6 +69,13 @@ void Engine::input(std::string path, std::string V){
         m_pVoxelrtio->definedDir = m_pFileio->m_pVoxelrtXml->definedDir;
         m_pVoxelrtio->projectDir = m_pFileio->m_pVoxelrtXml->projectDir;
     }
+    else if (m_mode == Mode::eVoxelization){
+        // 1. 初始化 Vulkan 上下文和资源分配器
+        m_pVoxelization->setup(appSetting, m_pVoxelizationio);
+
+        // 2. 加载场景数据 (Mesh, Material 等)
+        m_pVoxelization->upload(m_pFileio, m_pVoxelizationio);
+    }
     
 }
 
@@ -72,6 +87,9 @@ void Engine::create() {
         m_pVoxeleb->create(m_pVoxelebio);
     }else if(m_mode == Mode::eVoxelRT){
         m_pVoxelrt->create(m_pVoxelrtio);
+    }else if (m_mode == Mode::eVoxelization){
+        // [新增] 创建体素化管线和 Buffer
+        m_pVoxelization->create(m_pVoxelizationio);
     }
 }
 
@@ -83,6 +101,9 @@ void Engine::run() {
         m_pVoxeleb->run(m_pVoxelebio,m_pFileio);
     else if(m_mode == Mode::eVoxelRT)
         m_pVoxelrt->run(m_pVoxelrtio,m_pFileio);
+    else if(m_mode == Mode::eVoxelization)
+        // [新增] 运行体素化
+        m_pVoxelization->run(m_pVoxelizationio);
 
 }
 
@@ -95,6 +116,10 @@ void Engine::destroy() {
         m_pVoxeleb->destroy(m_pVoxelebio);
     else if(m_mode == Mode::eVoxelRT)
         m_pVoxelrt->destroy(m_pVoxelrtio);
+    else if(m_mode == Mode::eVoxelization)
+        // [新增] 销毁资源
+        m_pVoxelization->destroy(m_pVoxelizationio);
+
     appSetting.destroy();
 
 
