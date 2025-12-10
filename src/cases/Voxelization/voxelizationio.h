@@ -38,20 +38,7 @@ typedef nvvk::ResourceAllocatorVma Allocator;
 typedef nvvk::ResourceAllocatorDedicated Allocator;
 #endif
 
-struct VoxelSetting {
-    glm::vec3 volumeSize;
-    glm::vec3 volumeOrigin;
-    float voxelSize;
-    glm::uvec3 gridSize;
-};
 
-// Shader 推送常量
-struct PushConstantVoxel {
-    glm::mat4 modelMatrix;
-    uint32_t objectID;
-    float padding[3];
-    glm::vec4 volumeInfo;
-};
 
 class VoxelizationIO {
 
@@ -61,10 +48,7 @@ public:
         m_meshio = std::make_shared<MeshIO>();
         m_instanceio = std::make_shared<InstanceIO>();
         m_virtualio = std::make_shared<VirtualIO>();
-        m_pAccelStruct = std::make_shared<AccelStruct>();
     };
-
-
 
     // ----------------------------------------------------------------
     // 基础 Context (必须自己持有)

@@ -918,14 +918,14 @@ bool Geometry::createGeometry(std::shared_ptr<FileIO> &fileio) {
     //--------------------------------------------------------
     //--- Resolution
     //-------------------------------------------------------
-    imageSize = fileio->sensorxml.resolution;
+    imageSize = fileio->m_sensorxml.resolution;
     CameraManip.setWindowSize(imageSize.x, imageSize.y );
     //---------------------------------------------------------
     // Angles
     //---------------------------------------------------------
     float vza, vaa, sza, saa;
-    LightXml lightxml = fileio->lightxml;
-    SensorXml sensorxml = fileio->sensorxml;
+    LightXml lightxml = fileio->m_lightxml;
+    SensorXml sensorxml = fileio->m_sensorxml;
 
     sza = lightxml.solarAngle[0];
     saa = lightxml.solarAngle[1];
@@ -939,7 +939,7 @@ bool Geometry::createGeometry(std::shared_ptr<FileIO> &fileio) {
     //---------------------------------------------------------
     // Bands
     //---------------------------------------------------------
-    waves = fileio->m_pRaytracingXml->sensorxml.waves;
+    waves = fileio->m_sensorxml.waves;
 
     //---------------------------------------------------------
     // LIGHT AND SENSOR INI with Angle 0 and Band 0
@@ -948,11 +948,19 @@ bool Geometry::createGeometry(std::shared_ptr<FileIO> &fileio) {
     vaa = angles[0].vaa;
     sza = angles[0].sza;
     saa = angles[0].saa;
+    auto & scenexml = fileio->m_scenexml;
+    float x = scenexml.background.sceneSize.x; // lenght
+    float y = scenexml.background.sceneSize.y; // width
+    float z = scenexml.background.sceneSize.z; // height
+    // sceneSize = glm::vec3(x,y,z);
+    // sceneOrigin = scenexml.background.sceneOrigin;
+    voxelSize = glm::vec3(x,z,y);
+    voxelOrigin =  glm::vec3(0,0,0);
     sensor = createSensor(voxelSize,voxelOrigin, vza, vaa, 1.0);
 
-    light = createLight(sza, saa, fileio->lightxml.direct, fileio->lightxml.diffuse,
-                                 fileio->lightxml.solarTemperature,
-                                 fileio->lightxml.skyTemperature);
+    light = createLight(sza, saa, fileio->m_lightxml.direct, fileio->m_lightxml.diffuse,
+                                 fileio->m_lightxml.solarTemperature,
+                                 fileio->m_lightxml.skyTemperature);
 
     return false;
 }

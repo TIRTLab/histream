@@ -1701,7 +1701,7 @@ void Scene::outputObjMesh(ObjMesh model, std::string &fileName) {
 
 bool Scene::createObjScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<Compo> &compo) {
     bool isInterp = false;
-    auto & scenexml = fileio->scenexml;
+    auto & scenexml = fileio->m_scenexml;
 
     float x = scenexml.background.sceneSize.x; // lenght
     float y = scenexml.background.sceneSize.y; // width
@@ -1737,7 +1737,7 @@ bool Scene::createObjScene(std::shared_ptr<FileIO> &fileio, std::shared_ptr<Comp
     bgMeshLink.spectralId =  compo->spectralNames.find(bgSpectralName)->second;
     std::string bgThermalName;
     int bgThermalIndex = 0;
-    if (fileio->sensorxml.isTemperature)
+    if (fileio->m_sensorxml.isTemperature)
     {
         bgThermalName =  scenexml.background.bgThermalName;
         bgThermalIndex = compo->thermalNames.find(bgThermalName)->second;

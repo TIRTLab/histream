@@ -22,9 +22,9 @@ int main(int argc, char **argv) {
     const string version = parser.getString("-v", "");  ////
     std::string filePath;
 
-
-    // std::string version = "eRaytracing";
-    // std::string path= "D://data//hyperSpectral//test_1202";
+    //
+    // std::string version = "eVoxelization";
+    // std::string path= "D://data//hiStream//Voxelization";
     // std::string filePath;
 
     if (version.empty())

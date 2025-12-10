@@ -443,6 +443,21 @@ struct ObjMesh
     std::vector<uint32_t>        indices;
 };
 
+struct VoxelSetting {
+    glm::vec3 volumeSize;
+    glm::vec3 volumeOrigin;
+    float voxelSize;
+    glm::uvec3 gridSize;
+};
+
+// Shader 推送常量
+struct PushConstantVoxel {
+    glm::mat4 modelMatrix;
+    uint32_t objectID;
+    float padding[3];
+    glm::vec4 volumeInfo;
+};
+
 struct int5
 {
     int values[5]{0,0,0,0,0};
@@ -480,21 +495,7 @@ struct RaytracingXml
 
 };
 
-struct VoxelizationXml
-{
-    std::string projectDir;
-    std::string definedDir;
-    // system setting
-    SettingXml settingxml;
-    // run setting
-    LightXml lightxml;  // for solar angle
-    SensorXml sensorxml; // for viewing angle
 
-    SceneXml scenexml;
-    // component materials
-    std::vector<SpectralXml> spectralxmls;
-    std::vector<ThermalXml> thermalxmls;
-};
 
 struct PropertyXml{
     std::string name;

@@ -3,7 +3,6 @@
 //
 
 #include "command.h"
-#include "cases/Voxelization/command.h"
 
 
 Command::Command()

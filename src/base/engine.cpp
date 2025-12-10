@@ -72,7 +72,6 @@ void Engine::input(std::string path, std::string V){
     else if (m_mode == Mode::eVoxelization){
         // 1. 初始化 Vulkan 上下文和资源分配器
         m_pVoxelization->setup(appSetting, m_pVoxelizationio);
-
         // 2. 加载场景数据 (Mesh, Material 等)
         m_pVoxelization->upload(m_pFileio, m_pVoxelizationio);
     }
@@ -102,8 +101,12 @@ void Engine::run() {
     else if(m_mode == Mode::eVoxelRT)
         m_pVoxelrt->run(m_pVoxelrtio,m_pFileio);
     else if(m_mode == Mode::eVoxelization)
+    {
         // [新增] 运行体素化
         m_pVoxelization->run(m_pVoxelizationio);
+        m_pVoxelization->debugOutput(m_pVoxelizationio);
+    }
+
 
 }
 

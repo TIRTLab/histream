@@ -72,13 +72,13 @@ bool FileIO::readXml(std::string Path, Mode mode) {
     }
     else if (m_mode == Mode::eVoxelization){
         m_mode = Mode::eVoxelization;
-        settingxml = readSettingXML(RootElement->FirstChild("Control"), m_mode);
-        lightxml = readLightXML(RootElement->FirstChild("Geometry"), m_mode);
-        sensorxml = readSensorXML(RootElement->FirstChild("Geometry"), m_mode);
-        spectralxmls = readSpectralXML(RootElement->FirstChild("Attribute"), m_mode);
-        thermalxmls = readThermalXML(RootElement->FirstChild("Attribute"), m_mode);
-        scenexml = readSceneXML(RootElement->FirstChild("Scene"), m_mode);
     }
+    m_settingxml = readSettingXML(RootElement->FirstChild("Control"), m_mode);
+    m_lightxml = readLightXML(RootElement->FirstChild("Geometry"), m_mode);
+    m_sensorxml = readSensorXML(RootElement->FirstChild("Geometry"), m_mode);
+    m_spectralxmls = readSpectralXML(RootElement->FirstChild("Attribute"), m_mode);
+    m_thermalxmls = readThermalXML(RootElement->FirstChild("Attribute"), m_mode);
+    m_scenexml = readSceneXML(RootElement->FirstChild("Scene"), m_mode);
 
     return true;
 
@@ -821,6 +821,10 @@ SettingXml FileIO::readSettingXML(TiXmlNode *controlNode, Mode mode){
         m_pVoxelebXml->projectDir = controlNode->FirstChildElement("outDir")->GetText();
     }
 
+    /// 统一在这里存储
+    definedDir = exe_path;
+    projectDir = controlNode->FirstChildElement("outDir")->GetText();
+
     return settingxml;
 }
 
@@ -897,6 +901,12 @@ SceneXml FileIO::readSceneXML(TiXmlNode *sceneNode, Mode mode) {
             sceneXml.background.lon = stof(MeteorologyNode->FirstChildElement("Longitude")->GetText());
         }
     }
+
+
+    /// 将上面的背景设置参数，调整到fileio自身变量中
+    m_scenexml.background = sceneXml.background;
+
+
 //// obj文件和位置-----------------------
     if (m_mode == Mode::eVoxelEB)
     {
@@ -1078,6 +1088,45 @@ SceneXml FileIO::readSceneXML(TiXmlNode *sceneNode, Mode mode) {
         }
         sceneXml.primEntities = PrimEntitys;
     }
+
+
+    /// 读取到fileio类里面，统一使用
+    std::vector<ObjEntity> ObjEntities;
+    TiXmlElement* objNode = sceneNode->FirstChildElement("Object");
+    for (TiXmlElement* node = objNode->FirstChildElement(); node != NULL; node = node->NextSiblingElement())
+    {
+        ObjEntity objEntity;
+        objEntity.objName = node->Attribute("objName");
+        objEntity.filePath = node->FirstChildElement("fileName")->GetText();
+        objEntity.meshNames ={myFunction::mySplitStr(node->FirstChildElement("meshNames")->GetText(), ",")};
+        //            objEntity.types = {Type::SOIL, Type::VEGETATION, Type::VEGETATION};
+        for (int i = 0; i < objEntity.meshNames.size(); i++)
+        {
+            objEntity.types.push_back(Type::VEGETATION);
+        }
+        // objEntity.types = {Type::VEGETATION};
+        objEntity.spectralNames = {myFunction::mySplitStr(node->FirstChildElement("spectralNames")->GetText(), ",")};
+        //            objEntity.spectralNames = {"leaf"};
+        if (sonExists("thermalNames", node)){
+            objEntity.thermalNames = {myFunction::mySplitStr(node->FirstChildElement("thermalNames")->GetText(), ",")};
+        }
+
+        if(sonExists("objectPosition", node))
+        {
+            objEntity.isFromFile = {true};
+            objEntity.file = node->FirstChildElement("objectPosition")->GetText();
+        }
+
+        objEntity.objDistributions = {};
+        objEntity.scales = {};
+        objEntity.rotations = {};
+        ObjEntities.push_back(objEntity);
+    }
+    m_scenexml.objEntities = ObjEntities;
+
+
+
+
     return sceneXml;
 }
 

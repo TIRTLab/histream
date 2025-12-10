@@ -7,22 +7,8 @@
 
 #include "voxelizationio.h"
 
-class Descriptor {
+class Descriptor_voxelization {
 public:
-
-    enum BindingInd
-    {
-        spectral,
-        thermal,
-        modelLink,
-        instanceLink,
-        tlas,
-        sensor,
-        light,
-        wave,
-        storage
-    };
-
 
     bool create(std::shared_ptr<VoxelizationIO> &modelio);
     void destroy(std::shared_ptr<VoxelizationIO> &modelio);

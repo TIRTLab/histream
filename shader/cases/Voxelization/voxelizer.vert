@@ -1,22 +1,26 @@
 #version 450
+layout(location = 0) in vec3 inPosition; 
+// 如果你有法线或UV，在这里添加，虽然体素化通常只需要位置
 
-// 假设你的顶点 Buffer 格式
-layout(location = 0) in vec3 inPosition;
-// 假设你通过 Instance 或者其他方式传入了物体 ID
+// Push Constant 必须与 C++ struct PushConstantVoxel 内存布局严格一致
 layout(push_constant) uniform PushConsts {
-    mat4 modelMatrix; // 模型矩阵
-    uint objectID;    // 物体 ID
-    vec3 volumeSize;  // 体素场景大小，如 vec3(1000, 1000, 500)
+    mat4 modelMatrix;   // [64 bytes]
+    uint objectID;      // [4 bytes]
+    float padding[3];   // [12 bytes]
+    vec4 volumeInfo;    // [16 bytes] .x = maxDim (网格最大边长)
 } pco;
 
 layout(location = 0) out vec3 outWorldPos;
-layout(location = 1) out uint outObjectID;
+layout(location = 1) out flat uint outObjectID;
 
 void main() {
-    // 变换到世界空间
+    // 1. 计算世界坐标
     vec4 worldPos = pco.modelMatrix * vec4(inPosition, 1.0);
+    
+    // 2. 传递给 Geometry Shader
     outWorldPos = worldPos.xyz;
     outObjectID = pco.objectID;
     
-    // 注意：这里不赋值 gl_Position，留给 GS 做
+    // 这里赋值 gl_Position 只是为了占位，实际坐标由 GS 决定
+    gl_Position = worldPos; 
 }

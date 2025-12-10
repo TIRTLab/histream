@@ -8,9 +8,9 @@
 #include "voxelizationio.h"
 
 
-class Buffer {
+class Buffer_voxelization {
 public:
-    Buffer(){}
+    Buffer_voxelization()= default;
     bool create(std::shared_ptr<VoxelizationIO> &modelio);
     void destroy(std::shared_ptr<VoxelizationIO> &modelio);
 

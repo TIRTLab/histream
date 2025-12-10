@@ -10,11 +10,14 @@ import subprocess
 versionName = "voxeleb"
 # versionName = "voxelrt"
 # versionName = "RayTracing"
+versionName = "cases\\Voxelization"
 
 inPath = os.path.join(os.path.dirname(__file__),versionName)
 outPath = os.path.join(os.path.dirname(__file__),versionName)
-# outPath = r"C:\\Users\\14836\\Documents\\GitHub\bin_x64\\Debug\shader\\" + versionName + "\\"
-outPath = r"C:\\Users\\14836\\Documents\\GitHub\bin_x64\\Release\shader\\" + versionName + "\\"
+outPath = r"C:\\Users\\14836\\Documents\\GitHub\bin_x64\\Debug\shader\\" + versionName + "\\"
+# outPath = r"C:\\Users\\14836\\Documents\\GitHub\bin_x64\\Release\shader\\" + versionName + "\\"
+# 如果文件夹不存在则创建
+os.makedirs(outPath, exist_ok=True)
 
 inputShaderFiles = []
 outputShaderFiles = []

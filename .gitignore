@@ -204,3 +204,5 @@ cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/descriptor.cpp.
 cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/pipeline.cpp.obj
 cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/voxeleb.cpp.obj
 cmake-build-debug-visual-studio/CMakeFiles/field.dir/src/voxeleb/voxelebio.cpp.obj
+cmake-build-release/*
+

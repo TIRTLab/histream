@@ -17,10 +17,10 @@
 
 
 
-class Pipeline {
+class Pipeline_voxelization {
 
 public:
-    Pipeline(){};
+    Pipeline_voxelization(){};
 
     bool create(std::shared_ptr<VoxelizationIO> &modelio);
     void destroy(std::shared_ptr<VoxelizationIO> &modelio);

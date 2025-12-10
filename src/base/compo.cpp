@@ -371,7 +371,7 @@ bool Compo::createCompoOptical(std::shared_ptr<FileIO> &fileio) {
     //--- Spectral
     //--------------------------------------------------
     int id = 0;
-    for(auto &spectralxml: fileio->spectralxmls ){
+    for(auto &spectralxml: fileio->m_spectralxmls ){
         if(spectralxml.type == spectralType::CUSTOM){
             for(int i=0;i<spectralxml.reflectances.size();i++)
                 spectrals.push_back(Spectral{spectralxml.reflectances[i],spectralxml.transmittance[i]});
@@ -383,14 +383,14 @@ bool Compo::createCompoOptical(std::shared_ptr<FileIO> &fileio) {
     //--- Thermal
     //--------------------------------------------------
     id = 0;
-    for(auto &thermalxml: fileio->thermalxmls ) {
+    for(auto &thermalxml: fileio->m_thermalxmls ) {
         thermals.push_back(Thermal{thermalxml.sunlitTemperature, thermalxml.shadedTemperature});
         thermalNames.insert({thermalxml.thermalName,id});
         id++;
     }
 
     //// add none to avoid pass the empty data into the GPU
-    if (!fileio->sensorxml.isTemperature)
+    if (!fileio->m_sensorxml.isTemperature)
     {
         thermals.push_back(Thermal{300, 300});
         thermalNames.insert({"None",id});

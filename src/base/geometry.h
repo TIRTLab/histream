@@ -57,6 +57,11 @@ public:
     std::vector<Angle>  angles;
     std::vector<float>  waves;
 
+    glm::vec3 sceneSize;
+    glm::vec3 sceneOrigin;
+    glm::vec3 voxelSize;
+    glm::vec3 voxelOrigin;
+
 
 
 };

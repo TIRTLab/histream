@@ -36,15 +36,15 @@ public:
     std::shared_ptr<VoxelEBXml>   m_pVoxelebXml;
     std::shared_ptr<VoxelRTXml>   m_pVoxelrtXml;
 
-    std::shared_ptr<VoxelizationXml> m_pVoxelizationXml;
+
     std::string projectDir;
     std::string definedDir;
-    SettingXml settingxml;
-    LightXml lightxml;  // for solar angle
-    SensorXml sensorxml; // for viewing angle
-    SceneXml scenexml;
-    std::vector<SpectralXml> spectralxmls;
-    std::vector<ThermalXml> thermalxmls;
+    SettingXml m_settingxml;
+    LightXml m_lightxml;  // for solar angle
+    SensorXml m_sensorxml; // for viewing angle
+    SceneXml m_scenexml;
+    std::vector<SpectralXml> m_spectralxmls;
+    std::vector<ThermalXml> m_thermalxmls;
 
 
 //private:
