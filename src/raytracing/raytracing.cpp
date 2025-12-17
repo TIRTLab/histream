@@ -156,8 +156,8 @@ bool Raytracing::run(std::shared_ptr<RaytracingIO> &raytracingio, std::shared_pt
         if (raytracingio->isImage)
         {
             // output
-            output(raytracingio,fileio,kangle);
-            // outputOrth(raytracingio,fileio,kangle);
+            //output(raytracingio,fileio,kangle);
+            outputOrth(raytracingio,fileio,kangle);
         }
 
         if (raytracingio->isOrth)
@@ -239,8 +239,8 @@ VkBufferUsageFlags usage{VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TR
     // 计算校正参数
     Eigen::VectorXd cx;
     Eigen::VectorXd cy;
-    m_pGeometry->orthcorrect(modelio, angle.vza, angle.vaa, cy, cx);
-
+    m_pGeometry->orthcorrect(modelio, angle.vza, angle.vaa, cx, cy);
+    std::cout << "x' = " << cx[0]<<std::endl;
     // 分配结果内存
     float *pData_orth = new float[total_elements];
     std::memset(pData_orth, 0, bufferSize);
@@ -266,6 +266,7 @@ VkBufferUsageFlags usage{VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TR
 
             // 计算源图像索引 (标准 Row-Major: y * width + x)
             // 注意：如果你发现图像旋转了90度，请改回 ii * height + jj，但必须保留上面的 if 检查
+
             long long orth = (long long)jj * width + ii;
 
             // 双重保险：检查源索引是否越界
@@ -275,17 +276,16 @@ VkBufferUsageFlags usage{VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TR
             {
                 // 【修正5】使用 long long 计算波段偏移，防止计算溢出
                 long long band_offset = (long long)k * width * height;
-
                 long long oldd = band_offset + old;
                 long long orthh = band_offset + orth;
-
                 // 读取数据 (使用 pCpuData)
                 if (pCpuData[orthh] == 0) continue;
-
                 pData_orth[oldd] = pCpuData[orthh];
+
             }
         }
     }
+
 
     if(modelio->istime == false) {
         fileio->writeENVIdata(modelio->projectDir, pData_orth, width, height, n_wave, angle, -1, -1);

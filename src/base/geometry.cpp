@@ -75,7 +75,7 @@ SensorMatrix Geometry::createSensor(glm::vec3 size, glm::vec3 origen, float vza,
     const float aspectRatio = CameraManip.getWidth() / static_cast<float>(CameraManip.getHeight());
     glm::mat4 view = CameraManip.getMatrix();
     nvmath::mat4f projj = nvmath::perspectiveVK(CameraManip.getFov(), aspectRatio, 0.0001f, 10000.0f);
-    //glm::mat4 proj = glm::perspective(CameraManip.getFov(), aspectRatio, 0.0001f, 10000.0f);
+    // glm::mat4 proj = projglm::perspective(glm::radians(CameraManip.getFov()), aspectRatio, 0.01f, 1000.0f);
     glm::mat4 proj = glm::perspectiveRH_ZO(glm::radians(CameraManip.getFov()), aspectRatio, 0.1f, 1000.0f);
     proj[1][1] *= -1;
     sensor.viewInverse = glm::inverse(view);
@@ -244,14 +244,18 @@ void Geometry::updateLight(std::shared_ptr<RaytracingIO> &modelio, LightSet &lig
     cmdBufGet.submitAndWait(cmdBuf);
 }
 
+
 void Geometry::orthcorrect(std::shared_ptr<RaytracingIO> &modelio,float vza, float vaa,
                            Eigen::VectorXd &cx, Eigen::VectorXd &cy) {
 
     glm::vec3 size = modelio->voxelSize;
     glm::vec3 origen =modelio->voxelOrigin;
-    glm::vec3 semi = { size.x / 2.0, 0, size.y / 2.0 };
-    glm::vec3 dimensionMin = -semi + glm::vec3{ origen.x, 0, origen.y };
-    glm::vec3 dimensionMax = semi + glm::vec3{ origen.x, 0, origen.y };
+
+
+    glm::vec3 semi = { size.x / 2.0, 0, size.z / 2.0 };
+
+    glm::vec3 dimensionMin = -semi + glm::vec3{ origen.x, 0, origen.z };
+    glm::vec3 dimensionMax = semi + glm::vec3{ origen.x, 0, origen.z };
     //float scale = m_pRaytracingXml->scene.stepSize;
     dimensionMin.y = 0;
     dimensionMax.y = 0;
