@@ -15,8 +15,14 @@
 using namespace std;
 
 bool FileIO::readXml(std::string Path, Mode mode) {
-    m_mode = mode;
 
+
+    m_mode = Mode::eVoxelEB;
+    m_pVoxelebXml = std::move(xmlexamples.m_pVoxelebXml);
+    return false;
+
+
+    m_mode = mode;
     // std::string filePath = Path;
     TiXmlDocument mydoc(Path.c_str()); // tinyxml.h
     bool isloadOk = mydoc.LoadFile();

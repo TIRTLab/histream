@@ -24,6 +24,10 @@ bool Command::create(std::shared_ptr<VoxelebIO> &modelio){
                          return semaphore;
                      });
 
+
+    // if (vkCreateFence(modelio->m_device, &fci, nullptr, &modelio->m_fence) != VK_SUCCESS)
+    //     return false;
+
     return false;
 }
 

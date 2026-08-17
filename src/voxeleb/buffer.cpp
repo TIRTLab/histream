@@ -302,7 +302,7 @@ bool Buffer::createBuffer(std::shared_ptr<VoxelebIO> &voxellstio){
     ///--------------------------------------------------------------------
     /// storage
     VkCommandBuffer cmdBufStorage = cmdGen.createCommandBuffer();
-    int outputSize = voxellstio->n_wave * voxellstio->imageSize.x * voxellstio->imageSize.y * sizeof(float);
+    int outputSize = voxellstio->n_wave * voxellstio->imageSize.x * voxellstio->imageSize.y;
     std::vector<float> outputImage(outputSize, 0.0);
     virtualio->m_pBufferStorage = std::make_shared<nvvk::Buffer>(m_pAlloc->createBuffer(cmdBufStorage, outputImage,
                                                                              VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT,

@@ -14,7 +14,7 @@ versionName = "voxeleb"
 inPath = os.path.join(os.path.dirname(__file__),versionName)
 outPath = os.path.join(os.path.dirname(__file__),versionName)
 # outPath = r"C:\\Users\\14836\\Documents\\GitHub\bin_x64\\Debug\shader\\" + versionName + "\\"
-outPath = r"C:\\Users\\14836\\Documents\\GitHub\bin_x64\\Release\shader\\" + versionName + "\\"
+# outPath = r"C:\\Users\\14836\\Documents\\GitHub\bin_x64\\Release\shader\\" + versionName + "\\"
 
 inputShaderFiles = []
 outputShaderFiles = []

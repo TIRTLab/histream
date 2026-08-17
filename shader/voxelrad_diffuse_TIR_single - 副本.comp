@@ -35,10 +35,11 @@ ShadowHitPayload shadow_payload;
 #include "../traceray_comp.glsl"
 
 layout(local_size_x = GROUP_SIZEX) in;
-// #define DIFFUSE_ANGLE_NUM 32
+
 #define MAXBAND    25
 #define NUM_VNIR 2001 
 #define NUM_BAND 2002
+
 
 float GammaR[DIFFUSE_ANGLE_NUM * DIFFUSE_ANGLE_NUM];
 float GammaT[DIFFUSE_ANGLE_NUM * DIFFUSE_ANGLE_NUM];
@@ -198,6 +199,7 @@ bool voxel_raytracing_diffuse(vec3 voxelPos0, uint bufferId0, NanoVDBLink nanoVD
       {
         // a valid voxel and get voxel information 
         // such as instanceId, typeId, spectralId, thermalId, canopyId
+          instanceId = voxelLinks[bufferId].instanceId;
           InstanceLink instanceLink = instanceLinks[instanceId];
           meshId = instanceLink.meshId;
           MeshLink meshLink = meshLinks[meshId];
@@ -206,11 +208,9 @@ bool voxel_raytracing_diffuse(vec3 voxelPos0, uint bufferId0, NanoVDBLink nanoVD
           bioId = meshLink.bioId;
           typeId = meshLink.type;
 
-
-
           if(typeId == TYPE_VEGETATION)
           {
-              G = canopies[canopyId].G;
+            G = canopies[canopyId].G;
             // density determined by mesh/isntance or pixel scale?
             if(setting.islad < 1){
                 density = canopies[canopyId].density;
@@ -222,42 +222,56 @@ bool voxel_raytracing_diffuse(vec3 voxelPos0, uint bufferId0, NanoVDBLink nanoVD
             alpha_voxel = exp(-density * G * pathLength * scale);
             alpha_toSolar = voxelDirs[bufferId].solar;
 
-          // get the phase function for solar direction to induced direction 
-          gammart.x = GammaSR[iangle];
-          gammart.y = GammaST[iangle];
-          sunlitTemperature = voxelTempes[bufferId].sunlit;
-          shadedTemperature = voxelTempes[bufferId].shaded;
-          /////////////////////////////////////////////////////
-          /// Iteration in BAND
-          /////////////////////////////////////////////////////
+            // get the phase function for solar direction to induced direction 
+            gammart.x = GammaSR[iangle];
+            gammart.y = GammaST[iangle];
+            sunlitTemperature = voxelTempes[bufferId].sunlit;
+            shadedTemperature = voxelTempes[bufferId].shaded;
+            /////////////////////////////////////////////////////
+            /// Iteration in BAND
+            /////////////////////////////////////////////////////
 
-            // THERMAL
-            sunlitRadiance = Stefen_Boltzmann(sunlitTemperature,1);
-            shadedRadiance = Stefen_Boltzmann(shadedTemperature,1);
-            thermalRadiance = (1-alpha_toSolar)*shadedRadiance + alpha_toSolar*sunlitRadiance;
+            
             // SPECTRAL
             trans = spectralMaterials[spectralId*NBAND+kband].transmittance;
             refl = spectralMaterials[spectralId*NBAND+kband].reflectance;
             emis = 1 - trans - refl;
-            float gamma = abs(gammart.x)*(refl + trans) + abs(gammart.y)*trans;  
+            // THERMAL
+            sunlitRadiance = Stefen_Boltzmann(sunlitTemperature,1);
+            shadedRadiance = Stefen_Boltzmann(shadedTemperature,1);
+            thermalRadiance = (1-alpha_toSolar)*shadedRadiance + alpha_toSolar*sunlitRadiance;
+            // float gamma = abs(gammart.x)*(refl + trans) + abs(gammart.y)*trans;  
+            float gamma = (gammart.x)*(refl + trans) + (gammart.y)*trans;  
             gamma = clamp(gamma,0,1);
             float radiance = 0;
-              //////////////////////////////
+            float lai = canopies[canopyId].lai;
+            float p = calReCor(lai);
+            float w = refl + trans;
+            float s = (w - p* w) / (1 - p* w);
+            float a = (1-w) / (1 - p *w); 
+            // emis = a;
+
+            //////////////////////////////
             /// Multiple case
             /////////////////////////////
             if(kiter > 0)
             {
-               for(int jangle=0;jangle<DIFFUSE_ANGLE_NUM;jangle++)
-               {
-                   float radiancej = voxelRads[bufferId0*DIFFUSE_ANGLE_NUM+jangle].cumulated;
-                   directionj0 = (DIFFUSE_DIRECTIONS[jangle]);
-                   gammart.x = GammaR[iangle*DIFFUSE_ANGLE_NUM+jangle];
-                   gammart.y = GammaT[iangle*DIFFUSE_ANGLE_NUM+jangle];
-                   gamma =   abs(gammart.x)*(refl + trans)+ abs(gammart.y)*trans;
-                   gamma = clamp(gamma,0,1);
-                   radiance= radiance + radiancej * gamma* alpha_toVoxel*(1-alpha_voxel);
-               }
-               radiance = radiance / DIFFUSE_ANGLE_NUM;
+              int effeNum = 0;
+              for(int jangle=0;jangle<DIFFUSE_ANGLE_NUM;jangle++)
+              {
+                  float radiancej = voxelRads[bufferId0*DIFFUSE_ANGLE_NUM+jangle].cumulated;
+                  if (radiancej < EPSION_3) continue;
+                  directionj0 = (DIFFUSE_DIRECTIONS[jangle]);   
+                  gammart.x = GammaR[iangle*DIFFUSE_ANGLE_NUM+jangle];
+                  gammart.y = GammaT[iangle*DIFFUSE_ANGLE_NUM+jangle];
+                  gamma =   abs(gammart.x)*(refl + trans)+ abs(gammart.y)*trans;  
+                  gamma = clamp(gamma,0,1);
+                  radiance= radiance + radiancej * gamma* alpha_toVoxel*(1-alpha_voxel);  
+                  effeNum ++;
+              }
+              if (effeNum == 0) effeNum = 1;
+              // radiance = radiance/(DIFFUSE_ANGLE_NUM);
+              radiance = radiance/effeNum;
             }
             //////////////////////////////
             // emitter
@@ -268,7 +282,8 @@ bool voxel_raytracing_diffuse(vec3 voxelPos0, uint bufferId0, NanoVDBLink nanoVD
             //////////////////////////////
             /// Solar 
             /////////////////////////////
-            radiance += (alpha_toSolar * gamma * Esun/cosSolar * alpha_toVoxel *(1-alpha_voxel));  
+            // radiance += (alpha_toSolar * gamma * Esun/cosSolar * alpha_toVoxel *(1-alpha_voxel)); 
+            // radiance += (alpha_toSolar * gamma * Esun * alpha_toVoxel *(1-alpha_voxel));   
             //////////////////////////////
             /// Save back
             /////////////////////////////
@@ -283,76 +298,93 @@ bool voxel_raytracing_diffuse(vec3 voxelPos0, uint bufferId0, NanoVDBLink nanoVD
           //////////////////////////////
           /// facet case
           /////////////////////////////
-        
-
-          if(sstate.typeId == TYPE_BUILDING)
-          {
-            int faceId = getFaceIdSimple(sstate.position,semiRange,alignVoxelId);
-            alignVoxelId = alignVoxelId + faceId;
-          }
-
-
           instanceId = voxelLinks[alignBufferId].instanceId;
           meshId = instanceLinks[instanceId].meshId;
           typeId = meshLinks[meshId].type;
           canopyId = meshLinks[meshId].canopyId;
           spectralId = meshLinks[meshId].spectralId;
           thermalId = meshLinks[meshId].thermalId;
-          uint spectralIdBase = spectralId*NBAND;
-          alpha_toSolar = voxelDirs[alignBufferId].solar;
 
-          vec3 wo = directioni;  // FROM SELECTED VOXEL OUT TO HIT FACET  
-          vec3 wi = lightSet.direction; // FROM SELECTED VOXEL OUT TO SOLAR
-          vec3 ffnormal = sstate.normal;
-          bool inSameSides = IsSameSide(wo,wi,ffnormal);
 
-          // THERMAL
-          sunlitTemperature = voxelTempes[alignBufferId].sunlit;
-          shadedTemperature = voxelTempes[alignBufferId].shaded;
-          float radiance=0;
-
-          sunlitRadiance = Stefen_Boltzmann(sunlitTemperature,1);
-          shadedRadiance = Stefen_Boltzmann(shadedTemperature,1);
-          thermalRadiance = (1-alpha_toSolar)*shadedRadiance + alpha_toSolar*sunlitRadiance;
-          // SPECTRAL
-          trans = spectralMaterials[spectralId*NBAND+kband].transmittance;
-          refl = spectralMaterials[spectralId*NBAND+kband].reflectance;
-          emis = 1 - trans - refl;
-          // //////////////////////////////
-          // /// Multiple case
-          // /////////////////////////////
-          // if(kiter > 0)
-          // {
-          //   for(int jangle=0;jangle<DIFFUSE_ANGLE_NUM;jangle++)
-          //   {
-          //       directionj0 = (DIFFUSE_DIRECTIONS[jangle]);
-          //       bool inSameSide = isSameSide(directioni,directionj0,ffnormal);
-          //       if(!inSameSide) continue;
-          //       float radiancej = voxelRads[bufferId0*DIFFUSE_ANGLE_NUM+iangle].cumulated;
-          //       radiance= radiance + radiancej * refl* alpha_toVoxel;  
-          //   }
-          //   radiance = radiance/DIFFUSE_ANGLE_NUM;
-          // }
-          
-          ////////////////////////////////
-          // SOLAR CASE
-          ///////////////////////////////
-          if(inSameSides)
-          {
-            radiance += (refl * Esun * alpha_toSolar * alpha_toVoxel);
+          if(typeId == TYPE_VEGETATION){
+            //// do nothing
+            // ray = Ray(sstate.position,directioni);
+            // ffnormal  = sstate.normal;
+            // ray.origin = OffsetRay(ray.origin, dot(ray.direction, ffnormal) > 0 ? ffnormal : -ffnormal);
+            // continue;
           }
-          // ////////////////////////////////
-          // //emitter
-          // ////////////////////////////////
-          radiance+= (thermalRadiance * emis * alpha_toVoxel);
-          //////////////////////////////
-          /// Save back
-          /////////////////////////////
-          atomicAdd(voxelRads[bufferId0*DIFFUSE_ANGLE_NUM+iangle].induced,radiance,
-              gl_ScopeDevice,gl_StorageSemanticsBuffer,gl_SemanticsRelaxed);
 
-          alpha_toVoxel = 0;
-          break;
+          if(typeId == TYPE_BUILDING)
+          {
+            int faceId = getFaceIdSimple(sstate.position,semiRange,alignVoxelId);
+            alignBufferId = alignBufferId + faceId;
+            // alignVoxelId = alignVoxelId + faceId; ???
+          }
+
+          if(typeId == TYPE_BUILDING || typeId == TYPE_SOIL){
+            
+            uint spectralIdBase = spectralId*NBAND;
+            alpha_toSolar = voxelDirs[alignBufferId].solar;
+            vec3 wo = directioni;  // FROM SELECTED VOXEL OUT TO HIT FACET  
+            vec3 wi = lightSet.direction; // FROM SELECTED VOXEL OUT TO SOLAR
+            vec3 ffnormal = sstate.normal;
+            bool inSameSides = IsSameSide(wo,wi,ffnormal);
+
+            // THERMAL
+            sunlitTemperature = voxelTempes[alignBufferId].sunlit;
+            shadedTemperature = voxelTempes[alignBufferId].shaded;
+            float radiance=0;
+
+            
+            // SPECTRAL
+            trans = spectralMaterials[spectralId*NBAND+kband].transmittance;
+            refl = spectralMaterials[spectralId*NBAND+kband].reflectance;
+            emis = 1 - trans - refl;
+
+            sunlitRadiance = Stefen_Boltzmann(sunlitTemperature,1);
+            shadedRadiance = Stefen_Boltzmann(shadedTemperature,1);
+            thermalRadiance = (1-alpha_toSolar)*shadedRadiance + alpha_toSolar*sunlitRadiance;
+            //////////////////////////////
+            /// Multiple case
+            /////////////////////////////
+            if(kiter > 0)
+            {
+              int effeNum = 0;
+              for(int jangle=0;jangle<DIFFUSE_ANGLE_NUM;jangle++)
+              {
+                  directionj0 = (DIFFUSE_DIRECTIONS[jangle]);
+                  bool inSameSide = IsSameSide(directioni,directionj0,ffnormal);
+                  if(!inSameSide) continue;
+                  float radiancej = voxelRads[bufferId0*DIFFUSE_ANGLE_NUM+iangle].cumulated;
+                  if (radiancej < EPSION_3) continue;
+                  radiance= radiance + radiancej * refl* alpha_toVoxel;  
+                  effeNum ++;
+              }
+              if (effeNum == 0) effeNum = 1;
+              // radiance = radiance/(DIFFUSE_ANGLE_NUM/2);
+              radiance = radiance/effeNum;
+            }
+            
+            ////////////////////////////////
+            // SOLAR CASE
+            ///////////////////////////////
+            // if(inSameSides)
+            // {
+              // radiance += (refl * Esun * alpha_toSolar * alpha_toVoxel);
+            // }
+            // ////////////////////////////////
+            // //emitter
+            // ////////////////////////////////
+            radiance+= (thermalRadiance * emis * alpha_toVoxel);
+            //////////////////////////////
+            /// Save back
+            /////////////////////////////
+            atomicAdd(voxelRads[bufferId0*DIFFUSE_ANGLE_NUM+iangle].induced,radiance,
+                gl_ScopeDevice,gl_StorageSemanticsBuffer,gl_SemanticsRelaxed);
+
+            alpha_toVoxel = 0;
+            break;
+          }
       }// alignbufferId
 
       ray = Ray(sstate.position,directioni);
@@ -360,7 +392,7 @@ bool voxel_raytracing_diffuse(vec3 voxelPos0, uint bufferId0, NanoVDBLink nanoVD
       ray.origin = OffsetRay(ray.origin, dot(ray.direction, ffnormal) > 0 ? ffnormal : -ffnormal);
     } // step
 
-    if((kstep >= setting.maxStep) && (alpha_toVoxel > 0.05))
+    if((alpha_toVoxel > 0.05))
     {
         float skyrad = alpha_toVoxel*Esky;
         //skyrad = 0.5;
@@ -394,7 +426,7 @@ void main()
     vec3 ffnormal0 = vec3(0,1,0);
 
 
-
+    uint	canopyId = meshLinks[meshId0].canopyId;
     int faceId = voxelLinks[bufferId0].faceId;
 
     // if(primId0 - faceid0*10 == 0) return; 
@@ -442,7 +474,7 @@ void main()
     float Esun = 0;
     float Esky = Rli;
 
-        for(int kiter=0;kiter< 5;kiter++)
+        for(int kiter=0;kiter< 3;kiter++)
         {
             voxel_raytracing_diffuse(voxelPos0, bufferId0, nanoVDBLink, kiter,kband_center,Esun,Esky);
             groupMemoryBarrier();  
@@ -459,7 +491,7 @@ void main()
     // accumulated incident radiation to four components: direct/diffuse VNIN/TIR radiation
     //------------------------------------------------------------
 
-        float rads=0,radtemp = 0,absorb;
+        float rads=0,radtemp = 0,absorb = 1.0;
         // iteration in diffuse angle
         int effeNum = 0;
         for(uint iangle=0;iangle < DIFFUSE_ANGLE_NUM;iangle++)
@@ -471,7 +503,7 @@ void main()
            if(abc <=0) {continue;}
             uint index = bufferId0*DIFFUSE_ANGLE_NUM+iangle;
             radtemp = voxelRads[index].cumulated;
-            if(radtemp>0.5)
+            if(radtemp>1)
             {
               effeNum = effeNum + 1;
               rads = rads + radtemp;
@@ -479,25 +511,35 @@ void main()
 
 
         }// for iteration
-
+        if (effeNum < 1) effeNum=1;
+        uint spectralIdBase = spectralId0*NBAND;
+        absorb = 1- spectralMaterials[spectralIdBase+kband_center].transmittance - 
+                    spectralMaterials[spectralIdBase+kband_center].reflectance;
         if(effeNum >0){
           if (typeId0 == TYPE_SOIL || typeId0 == TYPE_BUILDING)
           {
               rads = rads/effeNum;
+              // rads = rads/(DIFFUSE_ANGLE_NUM / 2.0);
           }
           else
-          {rads = rads/effeNum;}
+          {
+            rads = rads/effeNum;   
+            // rads = rads/DIFFUSE_ANGLE_NUM;
+
+            float lai = canopies[canopyId].lai;
+            float p = calReCor(lai);
+            float refl = spectralMaterials[spectralIdBase + kband_center].reflectance;
+            float trans = spectralMaterials[spectralIdBase + kband_center].transmittance;
+            float w = refl + trans;
+            float s = (w - p* w) / (1 - p* w);
+            float a = (1-w) / (1 - p *w); 
+            // absorb = a;
+          }
         }
         
-        
-        // absorb = 1- spectralMaterials[spectralIdBase+kband_center].transmittance - 
-        //     spectralMaterials[spectralIdBase+kband_center].reflectance;
-        // rads = rads *absorb;
+        rads = rads *absorb;
 
-
-        atomicAdd(voxelNetRads[bufferId0].diffuseTrad, rads, gl_ScopeDevice,gl_StorageSemanticsBuffer,gl_SemanticsRelaxed);
+        atomicStore(voxelNetRads[bufferId0].diffuseTrad, rads, gl_ScopeDevice,gl_StorageSemanticsBuffer,gl_SemanticsRelaxed);
     //}// for band
 
-    // float rads = typeId0;
-    // atomicAdd(voxelNetRads[bufferId0].diffuseTrad, rads, gl_ScopeDevice,gl_StorageSemanticsBuffer,gl_SemanticsRelaxed);
 }

@@ -90,6 +90,12 @@ int AppSetting::initVulkan()
 	VK_FALSE };
 	m_contextInfo.addDeviceExtension(VK_EXT_FRAGMENT_SHADER_INTERLOCK_EXTENSION_NAME, true, &m_fragmentShaderInterlockFeatures);
 
+	// VkPhysicalDeviceScalarBlockLayoutFeatures scalarLayout{
+	// 	VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES
+	// };
+	// scalarLayout.scalarBlockLayout = VK_TRUE;
+	// m_contextInfo.addDeviceExtension(VK_EXT_SCALAR_BLOCK_LAYOUT_EXTENSION_NAME, true, &scalarLayout);
+
 	VkPhysicalDeviceRayTracingPipelineFeaturesKHR rayTracingPipelineFeatures{};
 	rayTracingPipelineFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PIPELINE_FEATURES_KHR;
 	rayTracingPipelineFeatures.rayTracingPipeline = VK_TRUE;
@@ -125,6 +131,12 @@ int AppSetting::initVulkan()
 	// Creating Vulkan base application
 	//nvvk::Context m_context{};
 	//m_context.init(m_contextInfo);
+
+
+	m_contextInfo.verboseCompatibleDevices = false; // 关闭“兼容设备”列表打印
+	m_contextInfo.verboseUsed              = false; // 关闭“当前使用的设备/扩展”打印
+	m_contextInfo.verboseAvailable         = false; // 关闭“所有可用扩展”列表打印
+
 	m_context.initInstance(m_contextInfo);
 
 	//assert(asFeatures.accelerationStructure == VK_TRUE && rayQueryFeatures.rayQuery == VK_TRUE);

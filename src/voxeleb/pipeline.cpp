@@ -55,8 +55,8 @@ bool Pipeline::createPipeline(std::shared_ptr<VoxelebIO> &modelio)
             {VoxelEBStage::updateTp,    baseDirectory + "/shader/voxeleb/updateTp.comp.spv"},
             {VoxelEBStage::updateL,     baseDirectory + "/shader/voxeleb/updateL.comp.spv"},
             {VoxelEBStage::aero,        baseDirectory + "/shader/voxeleb/aeresist.comp.spv"},
-            {VoxelEBStage::bio,         baseDirectory + "/shader/voxeleb/biochemical_m12.comp.spv"},
-            // {VoxelEBStage::bio,         baseDirectory + "/shader/voxeleb/biochemical.comp.spv"},
+            //{VoxelEBStage::bio,         baseDirectory + "/shader/voxeleb/biochemical_m12.comp.spv"},
+             {VoxelEBStage::bio,         baseDirectory + "/shader/voxeleb/biochemical.comp.spv"},
             {VoxelEBStage::out,         baseDirectory + "/shader/voxeleb/voxelrad_image.comp.spv"}};
 
 
@@ -76,7 +76,7 @@ bool Pipeline::createPipeline(std::shared_ptr<VoxelebIO> &modelio)
 
         vkCreateComputePipelines(m_device, {}, 1, &computePipelineCreateInfo, nullptr, &m_pipelines[stage]);
 
-        // m_debug.setObjectName(m_pipelines[stage], "VoxelLST");
+        m_debug.setObjectName(m_pipelines[stage], "VoxelEB");
         vkDestroyShaderModule(m_device, computePipelineCreateInfo.stage.module, nullptr);
     }
 

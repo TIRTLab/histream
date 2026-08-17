@@ -268,7 +268,7 @@ void main()
 			{
 
 				GSTAR = 0.5*O / SCO;                             // [bar]             CO2 compensation point in the absence of mitochondrial respiration
-				Ci = cs*(1 - 1.6 / (leafBios[bufferId0].leafM*RH*stress));
+				Ci = cs*(1 - 1.6 / (leafBios[bioId].leafM*RH*stress));
 				if (Ci<GSTAR) Ci = GSTAR;
 				// [bar]             intercellular CO2 concentration from Ball-Berry model (Ball et al. 1987)
 				Cc = Ci;                                        // [bar]             CO2 concentration at carboxylation sites (neglecting mesophyll resistance)
@@ -284,7 +284,7 @@ void main()
 			}
 			else                                             // C4 species, based on von Caemmerer model (von Caemmerer 2000)
 			{
-				Ci = max(9.9e-6*(p*1e-5), cs*(1 - 1.6 / (leafBios[bufferId0].leafM*RH*stress)));
+				Ci = max(9.9e-6*(p*1e-5), cs*(1 - 1.6 / (leafBios[bioId].leafM*RH*stress)));
 				// [bar]             intercellular CO2 concentration from Ball-Berry model (Ball et al. 1987)
 				Cm = Ci;                                     // [bar]             mesophyll CO2 concentration (neglecting mesophyll resistance)
 				Rs = 0.5 * Rd;                               // [umol/m2/s]       bundle sheath mitochondrial respiration (von Caemmerer 2000)
